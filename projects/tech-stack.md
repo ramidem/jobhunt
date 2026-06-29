@@ -10,15 +10,20 @@ Counting rule: count a technology once per product/project, even if it appears i
 
 | Technology | Project Count | Projects | Resume Priority | Notes |
 | --- | ---: | --- | --- | --- |
-| React | 2 | Gussy, Coaxis CMS | High | Repeated across public/shop UI and Strapi admin plugin work. |
+| React | 3 | Gussy, Coaxis CMS, Lesson Planner | High | Repeated across public/shop UI, Strapi admin plugins, and Lesson Planner web UX. |
+| TypeScript | 2 | Coaxis CMS, Lesson Planner | High | Strong signal across Strapi plugins and Lesson Planner web/export utilities. |
+| Node.js | 2 | Coaxis CMS, Lesson Planner | High | Runtime across Strapi CMS and Lesson Planner monorepo/backend context. |
+| Google Cloud Platform | 2 | Coaxis CMS, Lesson Planner | High | App Engine/Cloud Build/Storage in Coaxis; Datastore/GCP setup in Lesson Planner context. |
 | SendGrid | 2 | Gussy, Coaxis CMS | Medium | Email/template integration appears in both projects; mention when relevant to backend integrations. |
 | Google Cloud Build | 2 | Gussy, Coaxis CMS | Medium | Deployment automation appears in both projects; Coaxis ownership is stronger from source evidence. |
 | Firebase | 1 | Gussy | High | Umbrella platform across Hosting, Realtime Database, Firestore, Storage, Auth, and Cloud Functions. |
 | JavaScript | 1 | Gussy | High | Primary language across GussyApp and Gussy website. |
-| TypeScript | 1 | Coaxis CMS | High | Primary language for Strapi config, APIs, plugins, and admin extensions. |
 | Strapi | 1 | Coaxis CMS | High | Resume-defining CMS and admin-platform framework. |
-| Node.js | 1 | Coaxis CMS | High | Runtime for Strapi CMS, plugins, scripts, and deployment. |
-| Google Cloud Platform | 1 | Coaxis CMS | High | App Engine, Cloud Build, Cloud Storage, Secret Manager, database configuration, and Artifact Registry. |
+| Next.js | 1 | Lesson Planner | High | Main web framework for Lesson Planner web app. |
+| Nx | 1 | Lesson Planner | Medium | Monorepo tooling for multi-app Lesson Planner repository. |
+| DOCX generation | 1 | Lesson Planner | Medium | Resume-relevant export workflow around generated lesson documents. |
+| docx | 1 | Lesson Planner | Medium | Used for Word document generation in Daily Lesson Log export. |
+| TailwindCSS | 1 | Lesson Planner | Medium | Used in responsive landing/modal UI work. |
 | Firebase Hosting | 1 | Gussy | Medium | Hosted the GussyApp/collage surface. |
 | Firebase Cloud Functions | 1 | Gussy | Medium | Present in the platform; use direct-ownership wording only if confirmed. |
 | Firebase Realtime Database | 1 | Gussy | Medium | Project, commerce, and app data paths. |
@@ -36,6 +41,13 @@ Counting rule: count a technology once per product/project, even if it appears i
 | Secret Manager | 1 | Coaxis CMS | Medium | Managed deployment secrets in build pipeline. |
 | JWT | 1 | Coaxis CMS | Medium | Reviewer token generation for opportunity review links. |
 | Axios | 1 | Coaxis CMS | Medium | Service/client integration with Coaxis APIs. |
+| file-saver | 1 | Lesson Planner | Low | Browser-side document download support. |
+| Headless UI | 1 | Lesson Planner | Low | Modal/dialog UI support. |
+| Heroicons | 1 | Lesson Planner | Low | Landing carousel and modal navigation icons. |
+| Google Cloud Datastore | 1 | Lesson Planner | Low | Product setup/session context; direct Med ownership needs confirmation. |
+| OpenAI / AI SDK | 1 | Lesson Planner | Low | Product context; direct Med ownership not confirmed in this evidence pass. |
+| NestJS | 1 | Lesson Planner | Low | Backend app context; direct Med ownership not confirmed in this evidence pass. |
+| Playwright | 1 | Lesson Planner | Low | E2E test app present; direct ownership is limited from source evidence. |
 | MySQL | 1 | Coaxis CMS | Low | Supported database mode; mention only for database/platform roles. |
 | PostgreSQL | 1 | Coaxis CMS | Low | Supported database mode; mention only for database/platform roles. |
 | SQLite | 1 | Coaxis CMS | Low | Local development database. |
@@ -128,6 +140,35 @@ Notes:
 - Coaxis CMS should emphasize Strapi, TypeScript, custom admin plugins, Coaxis API integration, and GCP deployment support.
 - Mention AI/II verification as a product-domain workflow, not as an AI-assisted development claim.
 - Mention specific database engines only for backend/platform roles; the stronger public claim is database configuration support.
+
+### Lesson Planner
+
+Primary resume technologies:
+
+- TypeScript
+- React
+- Next.js
+- Nx
+- DOCX generation
+
+Supporting technologies:
+
+- docx
+- file-saver
+- TailwindCSS
+- Headless UI
+- Heroicons
+- Google Cloud Platform
+- Google Cloud Datastore
+- OpenAI / AI SDK
+- NestJS
+- Playwright
+
+Notes:
+
+- Lesson Planner should emphasize generated document exports and React/Next.js UX work first.
+- Mention OpenAI, NestJS, and Datastore as product context unless broader ownership is later confirmed.
+- The source-backed work from this pass is centered on DLL DOCX export and landing/modal UX polish.
 
 ## Maintenance Rules
 
