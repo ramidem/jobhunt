@@ -243,51 +243,59 @@ h1 {
   margin: 0;
 }
 
-.floating-contact {
-  bottom: 20px;
-  position: fixed;
-  right: 20px;
-  z-index: 10;
+.toolbar-contact {
+  position: relative;
 }
 
-.floating-contact summary {
+.toolbar-contact summary {
   align-items: center;
-  background: #11161a;
-  border: 1px solid #11161a;
-  border-radius: 999px;
-  box-shadow: var(--shadow);
-  color: #ffffff;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
   cursor: pointer;
   display: inline-flex;
+  font-size: 0.88rem;
   font-weight: 700;
   gap: 8px;
   list-style: none;
-  min-height: 44px;
-  padding: 10px 16px;
+  min-height: 40px;
+  padding: 9px 12px;
+  transition:
+    background 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
 }
 
-.floating-contact summary::-webkit-details-marker {
+.toolbar-contact summary:hover {
+  background: var(--field);
+  border-color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.toolbar-contact summary::-webkit-details-marker {
   display: none;
 }
 
-.floating-contact-panel {
+.toolbar-contact-panel {
   background: #ffffff;
   border: 1px solid rgb(17 22 26 / 16%);
   border-radius: 8px;
-  bottom: 56px;
   box-shadow: var(--shadow);
   padding: 16px;
   position: absolute;
   right: 0;
+  top: calc(100% + 10px);
   width: min(360px, calc(100vw - 32px));
+  z-index: 10;
 }
 
-.floating-contact-panel h2 {
+.toolbar-contact-panel h2 {
   font-size: 1rem;
   margin-bottom: 6px;
 }
 
-.floating-contact-panel p {
+.toolbar-contact-panel p {
   align-items: center;
   color: var(--muted);
   display: flex;
@@ -331,7 +339,7 @@ h1 {
 }
 
 .form-note {
-  color: var(--accent-ink);
+  color: var(--ink);
   font-size: 0.86rem;
   font-weight: 700;
   margin: 0;
@@ -389,9 +397,9 @@ h1 {
     padding-left: 24px;
   }
 
-  .floating-contact {
-    bottom: 14px;
-    right: 14px;
+  .toolbar-contact-panel {
+    left: 0;
+    right: auto;
   }
 
   .skills dl div {

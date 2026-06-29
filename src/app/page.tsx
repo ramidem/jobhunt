@@ -10,6 +10,20 @@ export default function Home() {
     <main className="page-shell">
       <StructuredData resume={resume} />
       <div className="resume-toolbar no-print" aria-label="Resume actions">
+        <details className="toolbar-contact">
+          <summary>
+            <MessageSquare aria-hidden="true" size={18} />
+            Message
+          </summary>
+          <div className="toolbar-contact-panel">
+            <h2>Message Med</h2>
+            <p>
+              <Mail aria-hidden="true" size={14} />
+              <a href={`mailto:${resume.email}`}>{resume.email}</a>
+            </p>
+            <ContactForm />
+          </div>
+        </details>
         <ResumePdfDownload resume={resume} />
         <a className="icon-button" href="/api/resume">
           JSON
@@ -78,21 +92,6 @@ export default function Home() {
           </dl>
         </section>
       </section>
-
-      <details className="floating-contact no-print">
-        <summary>
-          <MessageSquare aria-hidden="true" size={18} />
-          Message
-        </summary>
-        <div className="floating-contact-panel">
-          <h2>Message Med</h2>
-          <p>
-            <Mail aria-hidden="true" size={14} />
-            <a href={`mailto:${resume.email}`}>{resume.email}</a>
-          </p>
-          <ContactForm />
-        </div>
-      </details>
     </main>
   );
 }
