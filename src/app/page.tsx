@@ -71,7 +71,7 @@ export default function Home() {
         </section>
 
         <DatedSection title="Experience" items={resume.experience} />
-        <DatedSection title="Projects" items={resume.projects} />
+        <DatedSection title="Notable Work" items={resume.projects} />
         <DatedSection title="Leadership & Activities" items={resume.leadership} />
 
         <section className="resume-section skills" aria-labelledby="skills">

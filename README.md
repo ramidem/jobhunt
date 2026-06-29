@@ -50,3 +50,13 @@ When Firebase is configured, `POST /api/messages` writes to the `resumeMessages`
 Resume content lives in `src/data/resume.ts` and is validated by `src/lib/resume-schema.ts`.
 
 The public machine-readable resume is available at `/api/resume`.
+
+## Project records
+
+Project evidence and resume synthesis live under `projects/`.
+
+- `projects/<slug>.md`: source-reviewed evidence log
+- `projects/<slug>-resume.md`: resume-ready synthesis and bullet candidates
+- `projects/tech-stack.md`: technology count and review-priority index
+
+The public app shows the most notable work. Role-specific resumes should be generated from the Markdown project records when applying to a specific job.

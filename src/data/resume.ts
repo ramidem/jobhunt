@@ -10,7 +10,7 @@ const draftResume = {
     { label: "Resume", href: "https://github.com/ramidem/resume" },
   ],
   summary:
-    "Software engineer focused on reliable web systems, developer tooling, and product workflows. This resume is structured for evidence-backed updates from GitHub repositories and production project history.",
+    "Software engineer focused on reliable web systems, product workflows, and practical tooling. This public profile highlights evidence-backed notable work; tailored resumes can be generated from the project records for each role.",
   education: [
     {
       institution: "Resume details pending",
@@ -40,19 +40,20 @@ const draftResume = {
   ],
   projects: [
     {
-      organization: "Public resume system",
-      location: "Next.js / Firebase",
-      role: "Creator",
-      start: "2026",
-      end: "Present",
+      organization: "Gussy",
+      location: "Firebase / React / Konva",
+      role: "Contributing Software Engineer",
+      start: "Nov 2020",
+      end: "Mar 2021",
       summary:
-        "A public, mobile-friendly, ATS-readable resume site with downloadable PDF and message capture.",
+        "Interior design and commerce platform with designer tools, PM/admin workflows, client review, public shopping, checkout, and order management.",
       bullets: [
-        "Modeled resume content with Zod so future GitHub-derived entries can be validated before publishing.",
-        "Rendered the same structured content to responsive HTML, JSON API, and text-based PDF output.",
-        "Added analytics and Firebase-ready message collection for recruiter and collaborator follow-up.",
+        "Contributed to a Firebase-backed platform spanning designer tools, admin workflows, client review, public shopping, checkout, and order management.",
+        "Improved GussyApp project workflows across collage-builder comments, uploaded files/photos, project questionnaire behavior, access controls, local storage compression, and client-facing review states.",
+        "Fixed commerce and admin workflows across order previews, delivery fees, paid/cancelled/delivered status actions, voucher storage, merchant/admin exports, Gussy Finds, Get That Look, and checkout edge cases.",
+        "Maintained React/Firebase shop surfaces, including responsive Get That Look layouts, related-product behavior, empty-cart checkout handling, product display fixes, and shop page cleanup.",
       ],
-      links: [{ label: "Repository", href: "https://github.com/ramidem/resume" }],
+      links: [],
     },
   ],
   leadership: [],
@@ -63,11 +64,15 @@ const draftResume = {
     },
     {
       label: "Web",
-      items: ["Next.js", "React", "Node.js", "Zod"],
+      items: ["React", "Next.js", "Node.js", "Zod"],
     },
     {
       label: "Cloud & data",
-      items: ["Firebase", "Firestore", "Vercel"],
+      items: ["Firebase", "Firestore", "Firebase Storage", "Vercel"],
+    },
+    {
+      label: "Product tooling",
+      items: ["Konva", "Contentful", "SendGrid"],
     },
     {
       label: "Practices",

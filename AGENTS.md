@@ -4,6 +4,16 @@
 
 Use this workflow when a repo is added under `/Users/ramidem/Code/Github/resume-reference` and the goal is to turn that codebase into resume material.
 
+## Public App Strategy
+
+The public app should show the most notable, evidence-backed work rather than trying to be every possible resume at once.
+
+- Keep the public page simple, readable, and broad.
+- Surface strongest project/work entries from `projects/*-resume.md`.
+- Do not overfit the public page to a single role.
+- When applying to a specific role, generate a tailored resume from the Markdown project records instead of manually rewriting source evidence.
+- Keep uncertain claims, metrics, and ownership out of the public app until confirmed.
+
 ### Goal
 
 Create two public-safe project files:
@@ -126,3 +136,15 @@ Before marking the project record done:
 - Run `npm run typecheck`
 - Run `npm run build`
 - Commit the project files with a conventional commit, usually `docs: add <project> project record`, `docs: synthesize <project> resume entry`, or `docs: update tech stack index`
+
+## Tailored Resume Workflow
+
+Use this workflow when the user provides a job description, role type, company, or target resume direction.
+
+1. Read `projects/tech-stack.md` to identify repeated technologies and strongest focus areas.
+2. Read the relevant `projects/*-resume.md` files, not raw source repos, unless evidence needs refreshing.
+3. Select the best matching bullets for the target role.
+4. Prefer confirmed work and avoid unverified metrics.
+5. Keep project dates, role framing, and ownership language consistent with the companion files.
+6. Produce a role-specific resume draft from the Markdown records.
+7. If the user approves, update `src/data/resume.ts` for that tailored version or create a separate export artifact, depending on the requested workflow.
