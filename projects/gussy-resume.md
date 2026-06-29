@@ -4,6 +4,8 @@
 
 This file translates `projects/gussy.md` into resume-ready material. It is not the evidence log; it is the working draft for what should eventually appear in the public resume.
 
+Source grouping: `gussy/` in the local `resume-reference` folder. Gussy is not currently marked as AI-augmented in the reference tree.
+
 Use this file to decide:
 
 - what to claim
@@ -136,6 +138,7 @@ High confidence:
 - The collage builder used Konva and persisted serialized canvas JSON.
 - The app generated PDFs for projects, tear sheets, receipts, and purchase orders.
 - Payment integrations included PayMaya, PayMongo, and Dragonpay.
+- Current source grouping places Gussy outside `ai-augmented/`, so do not label it AI-augmented unless the user later confirms otherwise.
 
 Needs confirmation:
 

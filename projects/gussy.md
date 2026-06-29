@@ -5,6 +5,8 @@
 Status: source-reviewed draft  
 Project name: Gussy  
 Related systems: GussyApp / collage builder, admin portal, public Gussy website and shop  
+Reference group: `gussy/` in the local `resume-reference` folder  
+AI augmentation: not marked in the current reference tree; source is outside `ai-augmented/`  
 Source privacy: private/local reference only; do not publish source links or private repository metadata  
 Resume category: Experience or Projects  
 Dates: TBD  
@@ -48,18 +50,18 @@ Gussy is an online interior styling platform with two connected surfaces:
 
 ## Evidence Pointers
 
-- `gussy-collage/README.md`: project relationship, stack, deployment notes, Firebase/Cloud Build setup.
-- `gussy-collage/package.json`: Firebase Hosting build scripts and environment targets.
-- `gussy-collage/functions/package.json`: Cloud Functions dependencies, lint/test scripts, Node 20 runtime.
-- `gussy-collage/firebase.json`: Firebase Hosting, Realtime Database, Storage, Firestore, Functions configuration.
-- `gussy-collage/public/js/index.js`: Konva canvas setup, drag/drop, keyboard shortcuts, versioning, thumbnail upload, project status transitions.
-- `gussy-collage/public/js/common/generateProjectPDF.js`: PDF export flow for project pages, images, and tear sheets.
-- `gussy-collage/functions/index.js`: callable and HTTP functions for review emails and payment callbacks.
-- `gussy-collage/functions/orders.js`: order reference generation, receipt PDFs, purchase orders, and merchant emails.
-- `gussy-website/package.json`: React/Firebase/Contentful/shop dependencies.
-- `gussy-website/src/routes.js`: public website, shop, cart, checkout, style quiz, and payment result routes.
-- `gussy-website/src/queries/shop.js`: product filtering, search, merchant/category lookup, featured products, and shop data access.
-- `gussy-website/src/queries/payments.js`: PayMaya, PayMongo, and Dragonpay checkout handoff.
+- `gussy/gussy-collage/README.md`: project relationship, stack, deployment notes, Firebase/Cloud Build setup.
+- `gussy/gussy-collage/package.json`: Firebase Hosting build scripts and environment targets.
+- `gussy/gussy-collage/functions/package.json`: Cloud Functions dependencies, lint/test scripts, Node 20 runtime.
+- `gussy/gussy-collage/firebase.json`: Firebase Hosting, Realtime Database, Storage, Firestore, Functions configuration.
+- `gussy/gussy-collage/public/js/index.js`: Konva canvas setup, drag/drop, keyboard shortcuts, versioning, thumbnail upload, project status transitions.
+- `gussy/gussy-collage/public/js/common/generateProjectPDF.js`: PDF export flow for project pages, images, and tear sheets.
+- `gussy/gussy-collage/functions/index.js`: callable and HTTP functions for review emails and payment callbacks.
+- `gussy/gussy-collage/functions/orders.js`: order reference generation, receipt PDFs, purchase orders, and merchant emails.
+- `gussy/gussy-website/package.json`: React/Firebase/Contentful/shop dependencies.
+- `gussy/gussy-website/src/routes.js`: public website, shop, cart, checkout, style quiz, and payment result routes.
+- `gussy/gussy-website/src/queries/shop.js`: product filtering, search, merchant/category lookup, featured products, and shop data access.
+- `gussy/gussy-website/src/queries/payments.js`: PayMaya, PayMongo, and Dragonpay checkout handoff.
 
 ## Open Questions
 
