@@ -54,7 +54,7 @@ textarea {
   display: flex;
   gap: 8px;
   justify-content: flex-start;
-  margin: 0 auto 12px;
+  margin: 0 auto 32px;
   max-width: 8.5in;
 }
 
