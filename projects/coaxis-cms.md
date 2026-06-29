@@ -8,11 +8,11 @@ Related systems: Coaxis web/API, Strapi CMS, opportunity review plugin, AI/II ve
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project
 Dates: Jan 2025 - May 2025
-Role: Software Engineer / contributing engineer
+Role: Project Lead / Software Engineer
 
 ## One-Line Summary
 
-Built and maintained a Strapi 5 CMS with custom admin plugins for Coaxis content, opportunity review, verification, and deployment workflows.
+Led development of a Strapi 5 CMS with custom admin plugins for Coaxis content, opportunity review, verification, and deployment workflows.
 
 ## Product Scope
 
@@ -39,6 +39,7 @@ The CMS also includes custom Strapi admin plugins for:
 
 ## Notable Work Areas
 
+- Led CMS architecture and implementation across Strapi content models, admin plugins, integrations, and deployment support.
 - Modeled a broad Strapi content system covering single types and collection types for public content, marketplace pages, events, partners, media, profile, footer/header, request introduction, and SEO.
 - Built and iterated on the opportunity admin plugin, including table views, status filtering, keyword search, pagination, sorting, loading/empty states, and query-string state.
 - Added opportunity review actions for publish/verify, withdraw, draft, deactivate, delete, reject, view, preview, and refetch flows.
@@ -51,7 +52,7 @@ The CMS also includes custom Strapi admin plugins for:
 
 ## Draft Resume Bullets
 
-- Built and maintained a Strapi 5 CMS for Coaxis content, marketplace pages, opportunity settings, and operational admin workflows.
+- Led development of a Strapi 5 CMS for Coaxis content, marketplace pages, opportunity settings, and admin workflows.
 - Built custom Strapi plugins for opportunity review, collaborators, preview links, and AI/II verification.
 - Integrated Coaxis APIs through TypeScript services, React admin hooks, JWT review tokens, and status endpoints.
 - Supported GCP deployment with Cloud Build, App Engine, managed secrets, Cloud Storage, and database config.
@@ -80,8 +81,8 @@ The CMS also includes custom Strapi admin plugins for:
 
 ## Open Questions
 
-- Confirm public-safe title: Software Engineer, Backend Engineer, Full-stack Engineer, or CMS Engineer.
+- Confirm public-safe title: Project Lead, Lead Software Engineer, Software Engineer, Backend Engineer, Full-stack Engineer, or CMS Engineer.
 - Confirm whether Coaxis can be named publicly in all resume versions.
 - Confirm whether this should be grouped under a broader Symph work entry or shown as a standalone project.
 - Confirm production impact: users served, internal CMS users, launch scope, or operational improvements.
-- Confirm ownership language for deployment and content-model work if other engineers shared implementation.
+- Confirm how much team-management or technical-lead responsibility should be shown in tailored resumes.
