@@ -45,33 +45,35 @@ export default function Home() {
           </p>
         </header>
 
-        <section className="resume-section" aria-labelledby="education">
-          <h2 id="education">Education</h2>
-          <div className="entry-list">
-            {resume.education.map((item) => (
-              <article className="entry" key={`${item.institution}-${item.degree}`}>
-                <div className="entry-line">
-                  <h3>{item.institution}</h3>
-                  {item.location ? <p>{item.location}</p> : null}
-                </div>
-                <div className="entry-line">
-                  <p>{item.degree}</p>
-                  <time>{item.dates}</time>
-                </div>
-                {item.details.length > 0 ? (
-                  <ul>
-                    {item.details.map((detail) => (
-                      <li key={detail}>{detail}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        </section>
+        {resume.education.length > 0 ? (
+          <section className="resume-section" aria-labelledby="education">
+            <h2 id="education">Education</h2>
+            <div className="entry-list">
+              {resume.education.map((item) => (
+                <article className="entry" key={`${item.institution}-${item.degree}`}>
+                  <div className="entry-line">
+                    <h3>{item.institution}</h3>
+                    {item.location ? <p>{item.location}</p> : null}
+                  </div>
+                  <div className="entry-line">
+                    <p>{item.degree}</p>
+                    <time>{item.dates}</time>
+                  </div>
+                  {item.details.length > 0 ? (
+                    <ul>
+                      {item.details.map((detail) => (
+                        <li key={detail}>{detail}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         <DatedSection title="Experience" items={resume.experience} />
-        <DatedSection title="Notable Work" items={resume.projects} />
+        <DatedSection title="Work" items={resume.projects} />
         <DatedSection title="Leadership & Activities" items={resume.leadership} />
 
         <section className="resume-section skills" aria-labelledby="skills">
