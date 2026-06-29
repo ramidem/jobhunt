@@ -21,11 +21,11 @@ const draftResume = {
       start: "Nov 2020",
       end: "Mar 2021",
       summary:
-        "Interior design and commerce platform for designer workflows, client review, public shopping, checkout, and order management.",
+        "Interior design and commerce platform for designer workflows, client review, shopping, and checkout.",
       bullets: [
-        "Improved project workflows for collage comments, file uploads, questionnaires, access controls, and client review states.",
-        "Fixed order previews, delivery fees, payment status actions, voucher storage, and merchant/admin exports.",
-        "Maintained React/Firebase shop surfaces, including Get That Look layouts, related products, checkout handling, and product display fixes.",
+        "Improved collage comments, uploads, questionnaires, access controls, and client review states.",
+        "Fixed order previews, delivery fees, payment statuses, vouchers, and admin exports.",
+        "Maintained React/Firebase shop pages, checkout flows, related products, and product displays.",
       ],
       links: [],
     },
