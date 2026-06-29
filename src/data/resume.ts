@@ -15,6 +15,21 @@ const draftResume = {
   experience: [],
   projects: [
     {
+      organization: "Coaxis CMS",
+      location: "Strapi / TypeScript / GCP",
+      role: "Project Lead / Software Engineer",
+      start: "Jan 2025",
+      end: "May 2025",
+      summary:
+        "Strapi CMS for content, marketplace, opportunity review, and verification workflows.",
+      bullets: [
+        "Led CMS development for Coaxis content, marketplace pages, opportunity settings, and admin workflows.",
+        "Built custom Strapi plugins for opportunity review, collaborators, preview links, and AI/II verification.",
+        "Integrated Coaxis APIs with TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
+      ],
+      links: [],
+    },
+    {
       organization: "Gussy",
       location: "Firebase / React / Konva",
       role: "Contributing Software Engineer",
@@ -38,11 +53,11 @@ const draftResume = {
     },
     {
       label: "Web",
-      items: ["React", "Next.js", "Node.js", "Zod"],
+      items: ["React", "Next.js", "Node.js", "Strapi", "Zod"],
     },
     {
       label: "Cloud & data",
-      items: ["Firebase", "Firestore", "Firebase Storage", "Vercel"],
+      items: ["Google Cloud", "Firebase", "Firestore", "Firebase Storage", "Vercel"],
     },
     {
       label: "Product tooling",
