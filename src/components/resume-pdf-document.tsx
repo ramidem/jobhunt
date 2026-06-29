@@ -12,7 +12,7 @@ import type { Resume } from "@/lib/resume-schema";
 
 const styles = StyleSheet.create({
   page: {
-    padding: 42,
+    padding: 46,
     color: "#101417",
     fontFamily: "Helvetica",
     fontSize: 9.5,
@@ -20,36 +20,31 @@ const styles = StyleSheet.create({
   },
   header: {
     borderBottom: "1 solid #101417",
-    marginBottom: 14,
+    marginBottom: 18,
     paddingBottom: 8,
+    textAlign: "center",
   },
   name: {
-    fontSize: 20,
+    fontSize: 15,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 0,
   },
-  headline: {
-    marginTop: 3,
-    fontSize: 10,
-  },
   contact: {
-    marginTop: 5,
+    justifyContent: "center",
+    marginTop: 9,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 5,
     color: "#2f3a40",
   },
   section: {
-    marginTop: 11,
+    marginTop: 13,
   },
   sectionTitle: {
-    borderBottom: "0.5 solid #7b858c",
     fontFamily: "Helvetica-Bold",
-    fontSize: 10,
-    letterSpacing: 0.8,
-    marginBottom: 5,
-    paddingBottom: 2,
-    textTransform: "uppercase",
+    fontSize: 11,
+    marginBottom: 7,
+    textAlign: "center",
   },
   row: {
     marginBottom: 7,
@@ -103,7 +98,6 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
       <Page size="LETTER" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{resume.name}</Text>
-          <Text style={styles.headline}>{resume.headline}</Text>
           <View style={styles.contact}>
             <Text>{resume.location}</Text>
             <Text>•</Text>
@@ -120,11 +114,6 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
               </Link>
             ))}
           </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Summary</Text>
-          <Text>{resume.summary}</Text>
         </View>
 
         <View style={styles.section}>

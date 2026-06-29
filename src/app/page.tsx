@@ -1,4 +1,4 @@
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MessageSquare } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { ResumePdfDownload } from "@/components/resume-pdf-download";
 import { DatedSection } from "@/components/resume-section";
@@ -9,56 +9,39 @@ export default function Home() {
   return (
     <main className="page-shell">
       <StructuredData resume={resume} />
+      <div className="resume-toolbar no-print" aria-label="Resume actions">
+        <ResumePdfDownload resume={resume} />
+        <a className="icon-button" href="/api/resume">
+          JSON
+        </a>
+      </div>
+
       <section className="resume-paper" aria-label="Resume">
         <header className="resume-header">
-          <div>
-            <p className="kicker">Public resume</p>
-            <h1>{resume.name}</h1>
-            <p className="headline">{resume.headline}</p>
-          </div>
-          <div className="header-actions no-print">
-            <ResumePdfDownload resume={resume} />
-            <a className="icon-button" href="/api/resume">
-              JSON
-            </a>
-          </div>
+          <h1>{resume.name}</h1>
+          <p className="contact-line">
+            <span>{resume.location}</span>
+            <span>{resume.email}</span>
+            {resume.phone ? <span>{resume.phone}</span> : null}
+            {resume.links.map((link) => (
+              <a href={link.href} key={link.href} rel="noreferrer" target="_blank">
+                {link.label}
+              </a>
+            ))}
+          </p>
         </header>
-
-        <address className="contact-line">
-          <span>
-            <MapPin aria-hidden="true" size={15} />
-            {resume.location}
-          </span>
-          <a href={`mailto:${resume.email}`}>
-            <Mail aria-hidden="true" size={15} />
-            {resume.email}
-          </a>
-          {resume.phone ? <span>{resume.phone}</span> : null}
-          {resume.links.map((link) => (
-            <a href={link.href} key={link.href} rel="noreferrer" target="_blank">
-              {link.label}
-            </a>
-          ))}
-        </address>
-
-        <section className="resume-section summary" aria-labelledby="summary">
-          <h2 id="summary">Summary</h2>
-          <p>{resume.summary}</p>
-        </section>
 
         <section className="resume-section" aria-labelledby="education">
           <h2 id="education">Education</h2>
           <div className="entry-list">
             {resume.education.map((item) => (
               <article className="entry" key={`${item.institution}-${item.degree}`}>
-                <div className="entry-header">
-                  <div>
-                    <h3>{item.institution}</h3>
-                    <p>
-                      {item.degree}
-                      {item.location ? <span> · {item.location}</span> : null}
-                    </p>
-                  </div>
+                <div className="entry-line">
+                  <h3>{item.institution}</h3>
+                  {item.location ? <p>{item.location}</p> : null}
+                </div>
+                <div className="entry-line">
+                  <p>{item.degree}</p>
                   <time>{item.dates}</time>
                 </div>
                 {item.details.length > 0 ? (
@@ -96,19 +79,20 @@ export default function Home() {
         </section>
       </section>
 
-      <aside className="side-panel no-print" aria-label="Contact Med">
-        <div className="panel-block status-block">
-          <span className="status-mark" aria-hidden="true" />
-          <div>
-            <h2>Open to useful work</h2>
-            <p>Messages route through the site API and into Firebase when configured.</p>
-          </div>
-        </div>
-        <div className="panel-block">
-          <h2>Message</h2>
+      <details className="floating-contact no-print">
+        <summary>
+          <MessageSquare aria-hidden="true" size={18} />
+          Message
+        </summary>
+        <div className="floating-contact-panel">
+          <h2>Message Med</h2>
+          <p>
+            <Mail aria-hidden="true" size={14} />
+            <a href={`mailto:${resume.email}`}>{resume.email}</a>
+          </p>
           <ContactForm />
         </div>
-      </aside>
+      </details>
     </main>
   );
 }

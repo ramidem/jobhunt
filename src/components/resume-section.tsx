@@ -1,4 +1,3 @@
-import { ExternalLink } from "lucide-react";
 import type { Resume } from "@/lib/resume-schema";
 
 type DatedItem = Resume["experience"][number];
@@ -20,14 +19,12 @@ export function DatedSection({
       <div className="entry-list">
         {items.map((item) => (
           <article className="entry" key={`${item.organization}-${item.role}`}>
-            <div className="entry-header">
-              <div>
-                <h3>{item.organization}</h3>
-                <p>
-                  {item.role}
-                  {item.location ? <span> · {item.location}</span> : null}
-                </p>
-              </div>
+            <div className="entry-line">
+              <h3>{item.organization}</h3>
+              {item.location ? <p>{item.location}</p> : null}
+            </div>
+            <div className="entry-line">
+              <p>{item.role}</p>
               <time>
                 {item.start} - {item.end}
               </time>
@@ -38,16 +35,6 @@ export function DatedSection({
                 <li key={bullet}>{bullet}</li>
               ))}
             </ul>
-            {item.links.length > 0 ? (
-              <div className="entry-links">
-                {item.links.map((link) => (
-                  <a href={link.href} key={link.href} rel="noreferrer" target="_blank">
-                    {link.label}
-                    <ExternalLink aria-hidden="true" size={14} />
-                  </a>
-                ))}
-              </div>
-            ) : null}
           </article>
         ))}
       </div>
