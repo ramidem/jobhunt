@@ -9,12 +9,12 @@ Reference group: `gussy/` in the local `resume-reference` folder
 AI augmentation: not marked in the current reference tree; source is outside `ai-augmented/`  
 Source privacy: private/local reference only; do not publish source links or private repository metadata  
 Resume category: Experience or Projects  
-Dates: TBD  
-Role: TBD
+Dates: Nov 2020 - Mar 2021, based on matching Git commits  
+Role: Contributing Software Engineer; not project lead
 
 ## One-Line Summary
 
-Built and maintained product, design-collaboration, admin, commerce, and payment workflows for Gussy, combining a Firebase-backed collage builder with a React public website and shop.
+Contributed to product, design-collaboration, admin, commerce, and payment workflows for Gussy, combining a Firebase-backed collage builder with a React public website and shop.
 
 ## Product Scope
 
@@ -32,21 +32,19 @@ Gussy is an online interior styling platform with two connected surfaces:
 
 ## Notable Work Areas
 
-- Implemented a Konva-based drag-and-drop collage canvas for placing, resizing, mirroring, cropping, labeling, copying, pasting, undoing, redoing, and saving furniture/product items.
-- Persisted collage state as serialized canvas JSON and stored generated thumbnails in Firebase Storage for project/version previews.
+- Contributed fixes and enhancements to a Konva-based drag-and-drop collage canvas for furniture/product placement, transforms, review flow, comments, and local storage behavior.
 - Supported project lifecycle workflows across designer, project manager, admin, and client roles, including review handoff, client delivery, status updates, and access locking.
-- Generated client-facing project PDFs with cover/back pages, floor plans, 2D schematic images, 3D renders, and furniture tear sheets.
-- Built commerce workflows around furniture/product filtering, search tags, merchant/category filters, carts, checkout, vouchers, receipts, purchase orders, and payment callbacks.
-- Connected the public Gussy website to Contentful/Firebase data for landing pages, projects, reviews, shop inventory, style quiz, checkout, and payment redirect states.
-- Added deployment support for Firebase Hosting and Cloud Functions through Google Cloud Build configuration.
+- Improved client/project file visibility, uploaded photo viewing, questionnaire/project access behavior, and finished-project navigation.
+- Improved commerce/admin workflows around order previews, delivery fees, order status actions, voucher handling, Gussy Finds, Get That Look, product/category behavior, exports, and checkout edge cases.
+- Contributed to the public Gussy website and shop experience, including Get That Look behavior, responsive layouts, checkout button states, related-product randomization, and shop page fixes.
+- Source also contains broader PDF, payment, receipt, purchase order, Cloud Functions, and Cloud Build systems; confirm personal ownership before claiming those as primary work.
 
 ## Draft Resume Bullets
 
-- Built a Firebase-backed interior design platform spanning designer tools, admin workflows, client review, shopping, checkout, and payment processing.
-- Implemented a Konva-based collage builder that let designers compose 2D schematic rooms with drag-and-drop products, object transforms, labels, version history, thumbnails, and PDF export.
-- Automated project delivery workflows by persisting canvas state, generating project PDFs and furniture tear sheets, sending review emails, and updating role-based project statuses.
-- Integrated React/Firebase shop and checkout flows with product search/filtering, merchant inventory, vouchers, receipts, purchase orders, and PayMaya, PayMongo, and Dragonpay payment paths.
-- Maintained connected marketing and commerce surfaces for Gussy, including public website routes, Contentful-backed content, style quiz, shop, cart, checkout, and payment result pages.
+- Contributed to a Firebase-backed interior design platform spanning designer tools, admin workflows, client review, shopping, checkout, and order management.
+- Improved GussyApp collage and project workflows, including project access controls, uploaded files/photos, comments, local storage behavior, redirects, and client-facing review states.
+- Fixed and refined commerce workflows across orders, delivery fees, vouchers, merchant/admin exports, Gussy Finds, Get That Look, checkout states, and product display behavior.
+- Maintained React/Firebase shop surfaces for Gussy, including responsive Get That Look layouts, related-product behavior, empty-cart checkout handling, and shop page fixes.
 
 ## Evidence Pointers
 
@@ -63,8 +61,15 @@ Gussy is an online interior styling platform with two connected surfaces:
 - `gussy/gussy-website/src/queries/shop.js`: product filtering, search, merchant/category lookup, featured products, and shop data access.
 - `gussy/gussy-website/src/queries/payments.js`: PayMaya, PayMongo, and Dragonpay checkout handoff.
 
+## Commit Evidence
+
+- `gussy/gussy-collage`: 52 matching commits, including 32 non-merge commits, from Nov 25, 2020 to Mar 26, 2021.
+- `gussy/gussy-website`: 18 matching commits, including 12 non-merge commits, from Dec 8, 2020 to Jan 8, 2021.
+- Author identities found in these repos: `Med Aduh <med@symph.co>` and `Med Aduh <im.ramidem@gmail.com>`.
+- Shortlog confirms this was a team project with multiple larger contributors; use contributor language, not lead-owner language.
+
 ## Open Questions
 
-- Confirm exact dates, title, employer/client context, and whether this belongs under Experience or Projects.
-- Confirm which bullets reflect work personally owned versus inherited or maintained.
+- Confirm title and employer/client context.
+- Confirm which broader platform areas were personally owned versus inherited or maintained.
 - Add measurable impact if available: users, projects processed, checkout volume, designer time saved, PDF/export usage, deployment frequency, or support reduction.
