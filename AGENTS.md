@@ -10,6 +10,7 @@ Create two public-safe project files:
 
 - `projects/<project-slug>.md`: source-reviewed evidence log
 - `projects/<project-slug>-resume.md`: resume-ready synthesis and bullet candidates
+- update `projects/tech-stack.md`: cumulative technology count and review-priority index
 
 If multiple repos belong to the same product, combine them under one product slug. Example: `gussy-collage` and `gussy-website` become `projects/gussy.md` and `projects/gussy-resume.md`.
 
@@ -107,6 +108,16 @@ This file is the decision layer. It should synthesize what belongs in the actual
 - Do not invent metrics. Add placeholders or questions for missing impact data.
 - If ownership is uncertain, use safer wording such as "built and maintained" or "supported" until confirmed.
 
+### Tech Stack Index
+
+Maintain `projects/tech-stack.md` after each project workflow run.
+
+- Count each technology once per product/project, even if multiple repos under that product use it.
+- Keep a summary table with technology, project count, project names, resume priority, and notes.
+- Add a per-project section listing primary resume technologies and supporting technologies.
+- Use `High` priority for resume-defining or repeated tools, `Medium` for useful differentiators, and `Low` for supporting tools or unconfirmed ownership.
+- Do not inflate counts by listing framework subfeatures as separate technologies unless they matter for resume review.
+
 ### Final Checks
 
 Before marking the project record done:
@@ -114,4 +125,4 @@ Before marking the project record done:
 - Run `npm run lint`
 - Run `npm run typecheck`
 - Run `npm run build`
-- Commit the project files with a conventional commit, usually `docs: add <project> project record` or `docs: synthesize <project> resume entry`
+- Commit the project files with a conventional commit, usually `docs: add <project> project record`, `docs: synthesize <project> resume entry`, or `docs: update tech stack index`
