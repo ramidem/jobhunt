@@ -3,7 +3,7 @@ import { resumeSchema, type Resume } from "@/lib/resume-schema";
 const draftResume = {
   name: "Med Aduh",
   headline: "Software Engineer | Backend-leaning full-stack systems and product delivery",
-  location: "Manila, Philippines / Remote",
+  location: "Davao City, Philippines / Remote",
   email: "im.ramidem@gmail.com",
   links: [
     { label: "GitHub", href: "https://github.com/ramidem" },
