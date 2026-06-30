@@ -15,6 +15,21 @@ const draftResume = {
   experience: [],
   projects: [
     {
+      organization: "MyPetCare",
+      location: "NestJS / Next.js / CASL",
+      role: "Software Engineer",
+      start: "Jan 2026",
+      end: "Jan 2026",
+      summary:
+        "Veterinary clinic management platform for clinic operations, medical records, billing, and role-based access.",
+      bullets: [
+        "Implemented CASL-based RBAC across a NestJS backend and Next.js admin UI.",
+        "Migrated role and clinic-membership authorization with PostgreSQL/Drizzle schema changes and service-layer checks.",
+        "Built service management foundations and fixed encounter, inventory, SMS history, payroll, and frontend permission issues.",
+      ],
+      links: [],
+    },
+    {
       organization: "Coaxis CMS",
       location: "Strapi / TypeScript / GCP",
       role: "Project Lead / Software Engineer",
@@ -53,15 +68,23 @@ const draftResume = {
     },
     {
       label: "Web",
-      items: ["React", "Next.js", "Node.js", "Strapi", "Zod"],
+      items: ["React", "Next.js", "Node.js", "NestJS", "Strapi", "Zod"],
     },
     {
       label: "Cloud & data",
-      items: ["Google Cloud", "Firebase", "Firestore", "Firebase Storage", "Vercel"],
+      items: [
+        "Google Cloud",
+        "Firebase",
+        "PostgreSQL",
+        "Drizzle ORM",
+        "Firestore",
+        "Firebase Storage",
+        "Vercel",
+      ],
     },
     {
       label: "Product tooling",
-      items: ["Konva", "Contentful", "SendGrid"],
+      items: ["CASL", "Konva", "Contentful", "SendGrid"],
     },
     {
       label: "Practices",
@@ -69,7 +92,7 @@ const draftResume = {
     },
   ],
   interests: ["Product systems", "developer experience", "automation"],
-  updatedAt: new Date("2026-06-29T00:00:00.000Z").toISOString(),
+  updatedAt: new Date("2026-06-30T00:00:00.000Z").toISOString(),
 } satisfies Resume;
 
 export const resume = resumeSchema.parse(draftResume);
