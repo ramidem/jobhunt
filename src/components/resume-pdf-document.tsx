@@ -29,9 +29,14 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     letterSpacing: 0,
   },
+  headline: {
+    marginTop: 5,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 9.5,
+  },
   contact: {
     justifyContent: "center",
-    marginTop: 9,
+    marginTop: 8,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 5,
@@ -92,12 +97,17 @@ function Bullet({ children }: { children: string }) {
   );
 }
 
+function formatDates(start: string, end: string) {
+  return start === end ? start : `${start} - ${end}`;
+}
+
 export function ResumePdfDocument({ resume }: { resume: Resume }) {
   return (
     <Document title={`${resume.name} Resume`} author={resume.name}>
       <Page size="LETTER" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{resume.name}</Text>
+          <Text style={styles.headline}>{resume.headline}</Text>
           <View style={styles.contact}>
             <Text>{resume.location}</Text>
             <Text>•</Text>
@@ -116,44 +126,46 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Education</Text>
-          {resume.education.map((item) => (
-            <View key={`${item.institution}-${item.degree}`} style={styles.row}>
-              <View style={styles.roleLine}>
-                <Text style={styles.bold}>{item.institution}</Text>
-                <Text style={styles.muted}>{item.dates}</Text>
+        {resume.education.length > 0 ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Education</Text>
+            {resume.education.map((item) => (
+              <View key={`${item.institution}-${item.degree}`} style={styles.row}>
+                <View style={styles.roleLine}>
+                  <Text style={styles.bold}>{item.institution}</Text>
+                  <Text style={styles.muted}>{item.dates}</Text>
+                </View>
+                <Text>{item.degree}</Text>
+                {item.details.map((detail) => (
+                  <Bullet key={detail}>{detail}</Bullet>
+                ))}
               </View>
-              <Text>{item.degree}</Text>
-              {item.details.map((detail) => (
-                <Bullet key={detail}>{detail}</Bullet>
-              ))}
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        ) : null}
+
+        {resume.experience.length > 0 ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Experience</Text>
+            {resume.experience.map((item) => (
+              <View key={`${item.organization}-${item.role}`} style={styles.row}>
+                <View style={styles.roleLine}>
+                  <Text>
+                    <Text style={styles.bold}>{item.organization}</Text>
+                    <Text> — {item.role}</Text>
+                  </Text>
+                  <Text style={styles.muted}>{formatDates(item.start, item.end)}</Text>
+                </View>
+                {item.bullets.map((bullet) => (
+                  <Bullet key={bullet}>{bullet}</Bullet>
+                ))}
+              </View>
+            ))}
+          </View>
+        ) : null}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Experience</Text>
-          {resume.experience.map((item) => (
-            <View key={`${item.organization}-${item.role}`} style={styles.row}>
-              <View style={styles.roleLine}>
-                <Text>
-                  <Text style={styles.bold}>{item.organization}</Text>
-                  <Text> — {item.role}</Text>
-                </Text>
-                <Text style={styles.muted}>
-                  {item.start} - {item.end}
-                </Text>
-              </View>
-              {item.bullets.map((bullet) => (
-                <Bullet key={bullet}>{bullet}</Bullet>
-              ))}
-            </View>
-          ))}
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Projects</Text>
+          <Text style={styles.sectionTitle}>Work</Text>
           {resume.projects.map((item) => (
             <View key={`${item.organization}-${item.role}`} style={styles.row}>
               <View style={styles.roleLine}>
@@ -161,9 +173,7 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
                   <Text style={styles.bold}>{item.organization}</Text>
                   <Text> — {item.role}</Text>
                 </Text>
-                <Text style={styles.muted}>
-                  {item.start} - {item.end}
-                </Text>
+                <Text style={styles.muted}>{formatDates(item.start, item.end)}</Text>
               </View>
               {item.bullets.map((bullet) => (
                 <Bullet key={bullet}>{bullet}</Bullet>

@@ -2,6 +2,10 @@ import type { Resume } from "@/lib/resume-schema";
 
 type DatedItem = Resume["experience"][number];
 
+function formatDates(start: string, end: string) {
+  return start === end ? start : `${start} - ${end}`;
+}
+
 export function DatedSection({
   title,
   items,
@@ -25,9 +29,7 @@ export function DatedSection({
             </div>
             <div className="entry-line entry-meta">
               <p>{item.role}</p>
-              <time>
-                {item.start} - {item.end}
-              </time>
+              <time>{formatDates(item.start, item.end)}</time>
             </div>
             {item.summary ? <p className="entry-summary">{item.summary}</p> : null}
             <ul>

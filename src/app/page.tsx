@@ -33,6 +33,7 @@ export default function Home() {
       <section className="resume-paper" aria-label="Resume">
         <header className="resume-header">
           <h1>{resume.name}</h1>
+          <p className="headline-line">{resume.headline}</p>
           <p className="contact-line">
             <span>{resume.location}</span>
             <span>{resume.email}</span>

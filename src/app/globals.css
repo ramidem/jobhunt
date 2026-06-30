@@ -150,6 +150,14 @@ h1 {
   margin: 0;
 }
 
+.headline-line {
+  color: #000000;
+  font-size: 0.96rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0 0 8px;
+}
+
 .contact-line span,
 .contact-line a {
   display: inline;
@@ -411,6 +419,10 @@ h1 {
     font-size: 0.98rem;
     min-height: auto;
     padding: 26px 20px 96px;
+  }
+
+  .headline-line {
+    font-size: 0.94rem;
   }
 
   .resume-toolbar {

@@ -2,7 +2,7 @@ import { resumeSchema, type Resume } from "@/lib/resume-schema";
 
 const draftResume = {
   name: "Med Aduh",
-  headline: "Software Engineer",
+  headline: "AI-assisted software engineer | Product systems and backend workflows",
   location: "Manila, Philippines / Remote",
   email: "im.ramidem@gmail.com",
   links: [
@@ -10,7 +10,7 @@ const draftResume = {
     { label: "Resume", href: "https://github.com/ramidem/resume" },
   ],
   summary:
-    "Software engineer focused on reliable web systems, product workflows, and practical tooling.",
+    "Full-stack engineer using AI-assisted workflows to ship reliable product systems, backend services, and operational tooling.",
   education: [],
   experience: [],
   projects: [
@@ -23,9 +23,9 @@ const draftResume = {
       summary:
         "Veterinary clinic management platform for clinic operations, medical records, billing, and role-based access.",
       bullets: [
-        "Implemented CASL-based RBAC across a NestJS backend and Next.js admin UI.",
-        "Migrated role and clinic-membership authorization with PostgreSQL/Drizzle schema changes and service-layer checks.",
-        "Built service management foundations and fixed encounter, inventory, SMS history, payroll, and frontend permission issues.",
+        "Implemented CASL-based RBAC across NestJS and Next.js for platform admins, clinic owners, vets, staff, and pet owners.",
+        "Migrated role and clinic-membership checks with PostgreSQL/Drizzle schema changes, service-layer guards, and API client updates.",
+        "Stabilized encounter autosave, inventory pagination, SMS history, payroll visibility, and permission-gated navigation.",
       ],
       links: [],
     },
@@ -38,9 +38,9 @@ const draftResume = {
       summary:
         "Branch operations and commerce platform for KYC, money transfer, ShopSafe, vault, reporting, and checkout workflows.",
       bullets: [
-        "Maintained branch-facing financial workflows across KYC, money transfer, ShopSafe, vault, reports, receipts, and checkout.",
-        "Built React, TypeScript, Node/NestJS, and MySQL changes across dependent services and stored procedures.",
-        "Delivered bank/vault reports, fund-request receipts, OTP controls, branch pickup, and MCash/PayMongo checkout fixes.",
+        "Maintained branch-facing workflows for KYC, remittance, ShopSafe, vault, reports, receipts, and checkout.",
+        "Built React, TypeScript, Node/NestJS, and MySQL changes across dependent services, APIs, and stored procedures.",
+        "Delivered bank/vault reports, fund-request receipts, OTP controls, branch pickup, and payment workflow fixes.",
       ],
       links: [],
     },
@@ -53,9 +53,9 @@ const draftResume = {
       summary:
         "Strapi CMS for content, marketplace, review, verification, and admin workflows.",
       bullets: [
-        "Led CMS development for content, marketplace pages, opportunity settings, and admin workflows.",
-        "Built custom Strapi plugins for opportunity review, collaborators, preview links, and AI/II verification.",
-        "Integrated platform APIs with TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
+        "Led Strapi 5 CMS development for content, marketplace pages, opportunity settings, and admin workflows.",
+        "Built custom admin plugins for opportunity review, collaborators, preview links, and AI/II verification.",
+        "Integrated platform APIs through TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
       ],
       links: [],
     },
@@ -68,9 +68,9 @@ const draftResume = {
       summary:
         "Interior design and commerce platform for designer workflows, client review, shopping, and checkout.",
       bullets: [
-        "Improved collage comments, uploads, questionnaires, access controls, and client review states.",
-        "Fixed order previews, delivery fees, payment statuses, vouchers, and admin exports.",
-        "Maintained React/Firebase shop pages, checkout flows, related products, and product displays.",
+        "Improved collage comments, uploads, questionnaires, access controls, and client review workflows.",
+        "Fixed order previews, delivery fees, payment status actions, voucher storage, and admin exports.",
+        "Maintained React/Firebase shop pages, checkout handling, related products, and product display behavior.",
       ],
       links: [],
     },
