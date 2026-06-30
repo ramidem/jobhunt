@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
   },
   nestedRow: {
     borderLeft: "1 solid #d9dde1",
-    marginLeft: 8,
-    marginTop: 7,
-    paddingLeft: 8,
+    marginLeft: 7,
+    marginTop: 5,
+    paddingLeft: 7,
   },
   roleLine: {
     flexDirection: "row",

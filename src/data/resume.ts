@@ -22,9 +22,7 @@ const draftResume = {
       summary:
         "Client and product engineering across NDA platforms, using full-stack and AI-assisted workflows to ship operational software.",
       bullets: [
-        "Built and maintained full-stack product workflows across financial services, CMS/admin, clinic operations, and commerce platforms.",
-        "Worked across React, TypeScript, Next.js, NestJS, Firebase, Strapi, MySQL, PostgreSQL, and Google Cloud systems.",
-        "Used AI-assisted development to speed up implementation while keeping source review, tests, and production constraints explicit.",
+        "Shipped production work across React, TypeScript, Next.js, NestJS, Firebase, Strapi, MySQL/PostgreSQL, and Google Cloud.",
       ],
       highlights: [
         {
@@ -33,11 +31,8 @@ const draftResume = {
           role: "Software Engineer",
           start: "Jan 2021",
           end: "Nov 2025",
-          summary:
-            "Branch operations and commerce platform for KYC, remittance, reporting, vault, and checkout workflows.",
           bullets: [
-            "Maintained branch-facing workflows for KYC, remittance, ShopSafe, vault, reports, receipts, and checkout.",
-            "Built React, TypeScript, Node/NestJS, and MySQL changes across dependent services, APIs, and stored procedures.",
+            "Maintained KYC, remittance, ShopSafe, vault, reporting, receipt, and checkout workflows across React, Node/NestJS, MySQL, and stored procedures.",
             "Delivered bank/vault reports, fund-request receipts, OTP controls, branch pickup, and payment workflow fixes.",
           ],
           links: [],
@@ -48,11 +43,8 @@ const draftResume = {
           role: "Project Lead / Software Engineer",
           start: "Jan 2025",
           end: "May 2025",
-          summary:
-            "Strapi CMS for content, marketplace, review, verification, and admin workflows.",
           bullets: [
-            "Led Strapi 5 CMS development for content, marketplace pages, opportunity settings, and admin workflows.",
-            "Built custom admin plugins for opportunity review, collaborators, preview links, and AI/II verification.",
+            "Led Strapi 5 CMS work for content, marketplace pages, opportunity settings, custom admin plugins, and verification workflows.",
             "Integrated platform APIs through TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
           ],
           links: [],
@@ -63,12 +55,9 @@ const draftResume = {
           role: "Software Engineer",
           start: "Jan 2026",
           end: "Jan 2026",
-          summary:
-            "Veterinary clinic management platform for clinic operations, medical records, billing, and role-based access.",
           bullets: [
             "Implemented CASL-based RBAC across NestJS and Next.js for platform admins, clinic owners, vets, staff, and pet owners.",
-            "Migrated role and clinic-membership checks with PostgreSQL/Drizzle schema changes, service-layer guards, and API client updates.",
-            "Stabilized encounter autosave, inventory pagination, SMS history, payroll visibility, and permission-gated navigation.",
+            "Migrated role/clinic-membership checks with PostgreSQL/Drizzle schema changes, service-layer guards, and API client updates.",
           ],
           links: [],
         },
@@ -78,12 +67,8 @@ const draftResume = {
           role: "Contributing Software Engineer",
           start: "Nov 2020",
           end: "Mar 2021",
-          summary:
-            "Interior design and commerce platform for designer workflows, client review, shopping, and checkout.",
           bullets: [
-            "Improved collage comments, uploads, questionnaires, access controls, and client review workflows.",
-            "Fixed order previews, delivery fees, payment status actions, voucher storage, and admin exports.",
-            "Maintained React/Firebase shop pages, checkout handling, related products, and product display behavior.",
+            "Improved React/Firebase design, client review, upload, questionnaire, access-control, shop, checkout, voucher, and admin export workflows.",
           ],
           links: [],
         },
