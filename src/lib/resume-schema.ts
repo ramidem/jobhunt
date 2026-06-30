@@ -5,7 +5,7 @@ const linkSchema = z.object({
   href: z.string().url(),
 });
 
-const datedItemSchema = z.object({
+const workItemSchema = z.object({
   organization: z.string().min(1),
   location: z.string().optional(),
   role: z.string().min(1),
@@ -14,6 +14,10 @@ const datedItemSchema = z.object({
   summary: z.string().optional(),
   bullets: z.array(z.string().min(1)).min(1),
   links: z.array(linkSchema).default([]),
+});
+
+const datedItemSchema = workItemSchema.extend({
+  highlights: z.array(workItemSchema).default([]),
 });
 
 export const resumeSchema = z.object({
