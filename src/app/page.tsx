@@ -51,11 +51,11 @@ export default function Home() {
             <div className="entry-list">
               {resume.education.map((item) => (
                 <article className="entry" key={`${item.institution}-${item.degree}`}>
-                  <div className="entry-line">
+                  <div className="entry-line entry-heading">
                     <h3>{item.institution}</h3>
                     {item.location ? <p>{item.location}</p> : null}
                   </div>
-                  <div className="entry-line">
+                  <div className="entry-line entry-meta">
                     <p>{item.degree}</p>
                     <time>{item.dates}</time>
                   </div>

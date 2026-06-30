@@ -19,11 +19,11 @@ export function DatedSection({
       <div className="entry-list">
         {items.map((item) => (
           <article className="entry" key={`${item.organization}-${item.role}`}>
-            <div className="entry-line">
+            <div className="entry-line entry-heading">
               <h3>{item.organization}</h3>
               {item.location ? <p>{item.location}</p> : null}
             </div>
-            <div className="entry-line">
+            <div className="entry-line entry-meta">
               <p>{item.role}</p>
               <time>
                 {item.start} - {item.end}
