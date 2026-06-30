@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: Lesson Planner
+Public name: Education Planning Tool
+Private name: Lesson Planner
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: Lesson Planner PH web app, Daily Lesson Log export, landing/blog content surfaces
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

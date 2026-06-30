@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: Nookbud
+Public name: Nookbud
+Private name: Nookbud
+NDA status: personal product; public name is allowed unless launch strategy changes
 Related systems: product-nookbud
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: AI-augmented personal product; mobile/local-first product; founder-led work

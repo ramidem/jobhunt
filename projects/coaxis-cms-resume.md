@@ -4,6 +4,12 @@
 
 Turn the Coaxis CMS source review into concise resume material for backend, full-stack, CMS/platform, and product-engineering roles.
 
+## Public / NDA Handling
+
+Public name: CMS / Marketplace Admin Platform
+Private name: Coaxis CMS
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as Symph client work that Med led, not a hobby project. The strongest angle is leading a Strapi/TypeScript CMS platform with custom admin plugins that connected internal CMS operators to Coaxis opportunity, verification, and content workflows.

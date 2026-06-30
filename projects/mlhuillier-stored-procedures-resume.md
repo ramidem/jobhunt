@@ -4,6 +4,12 @@
 
 Turn the `mlkp-symph-sp` source review into concise resume material for backend, database, reporting, and financial-systems roles.
 
+## Public / NDA Handling
+
+Public name: Financial Services Stored Procedure Layer
+Private name: MLhuillier Stored Procedures
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Use this when a role values database-heavy backend work, reporting logic, and careful changes to procedures consumed by multiple dependent services. It should usually support a broader MLhuillier experience entry, not replace it.

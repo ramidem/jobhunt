@@ -4,6 +4,12 @@
 
 Turn the RoundSave source review into concise resume material for founder/product engineering, fintech-adjacent workflow, Firebase, PWA, and AI-augmented product roles.
 
+## Public / NDA Handling
+
+Public name: RoundSave
+Private name: RoundSave
+NDA status: personal product; public name is allowed unless launch strategy changes.
+
 ## Best Resume Positioning
 
 Position this as founder-led personal product work. The strongest angle is building a practical savings-circle system with real workflow complexity: groups, contributions, payouts, wallet accounting, disputes, trust scoring, KYC, notifications, Firestore rules, and web/mobile surfaces.

@@ -4,6 +4,12 @@
 
 Turn the `ml-shop` source review into concise resume material for ecommerce, full-stack, checkout/payment, and Next.js/NestJS roles.
 
+## Public / NDA Handling
+
+Public name: Financial Services Ecommerce Platform
+Private name: MLhuillier Shop
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as a focused commerce project inside the larger MLhuillier ecosystem. It is separate from the broad KP platform because the work is concentrated in checkout, catalog, OTP, payment, branch pickup, and order APIs.

@@ -15,7 +15,7 @@ const draftResume = {
   experience: [],
   projects: [
     {
-      organization: "MyPetCare",
+      organization: "Veterinary Clinic Platform",
       location: "NestJS / Next.js / CASL",
       role: "Software Engineer",
       start: "Jan 2026",
@@ -30,7 +30,7 @@ const draftResume = {
       links: [],
     },
     {
-      organization: "MLhuillier Platform",
+      organization: "Financial Services Operations Platform",
       location: "React / TypeScript / MySQL",
       role: "Software Engineer",
       start: "Jan 2021",
@@ -45,22 +45,22 @@ const draftResume = {
       links: [],
     },
     {
-      organization: "Coaxis CMS",
+      organization: "CMS / Marketplace Admin Platform",
       location: "Strapi / TypeScript / GCP",
       role: "Project Lead / Software Engineer",
       start: "Jan 2025",
       end: "May 2025",
       summary:
-        "Strapi CMS for content, marketplace, opportunity review, and verification workflows.",
+        "Strapi CMS for content, marketplace, review, verification, and admin workflows.",
       bullets: [
-        "Led CMS development for Coaxis content, marketplace pages, opportunity settings, and admin workflows.",
+        "Led CMS development for content, marketplace pages, opportunity settings, and admin workflows.",
         "Built custom Strapi plugins for opportunity review, collaborators, preview links, and AI/II verification.",
-        "Integrated Coaxis APIs with TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
+        "Integrated platform APIs with TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
       ],
       links: [],
     },
     {
-      organization: "Gussy",
+      organization: "Interior Design Commerce Platform",
       location: "Firebase / React / Konva",
       role: "Contributing Software Engineer",
       start: "Nov 2020",

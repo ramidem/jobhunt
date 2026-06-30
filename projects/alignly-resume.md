@@ -4,6 +4,12 @@
 
 Turn the Alignly source review into concise resume material for lead full-stack, backend/platform, product engineering, and AI-augmented development roles.
 
+## Public / NDA Handling
+
+Public name: HRIS / Payroll Platform
+Private name: Alignly / Alignly GloryReborn
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as Symph client work that Med led with AI-augmented execution. The strongest angle is leading a production HRIS/payroll platform across product workflows, Firebase architecture, RBAC, verification, documentation, and release readiness.

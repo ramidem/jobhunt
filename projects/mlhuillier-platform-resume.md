@@ -4,6 +4,12 @@
 
 Turn the `mlkpsymph` source review into concise resume material for backend, full-stack, financial operations, and enterprise workflow roles.
 
+## Public / NDA Handling
+
+Public name: Financial Services Operations Platform
+Private name: MLhuillier KP Platform
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Use this as the broadest MLhuillier experience entry. It shows long-running ownership across enterprise transaction workflows, not a single feature sprint.

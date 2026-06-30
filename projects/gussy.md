@@ -2,14 +2,17 @@
 
 ## Resume Record
 
-Status: source-reviewed draft  
-Project name: Gussy  
-Related systems: GussyApp / collage builder, admin portal, public Gussy website and shop  
-Reference group: `gussy/` in the local `resume-reference` folder  
-AI augmentation: not marked in the current reference tree; source is outside `ai-augmented/`  
-Source privacy: private/local reference only; do not publish source links or private repository metadata  
-Resume category: Experience or Projects  
-Dates: Nov 2020 - Mar 2021, based on matching Git commits  
+Status: source-reviewed draft
+Project name: Gussy
+Public name: Interior Design Commerce Platform
+Private name: Gussy
+NDA status: anonymize in public resume unless naming is explicitly approved
+Related systems: GussyApp / collage builder, admin portal, public Gussy website and shop
+Reference group: `gussy/` in the local `resume-reference` folder
+AI augmentation: not marked in the current reference tree; source is outside `ai-augmented/`
+Source privacy: private/local reference only; do not publish source links or private repository metadata
+Resume category: Experience or Projects
+Dates: Nov 2020 - Mar 2021, based on matching Git commits
 Role: Contributing Software Engineer; not project lead
 
 ## One-Line Summary

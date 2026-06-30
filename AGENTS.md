@@ -13,6 +13,7 @@ The public app should show the most notable, evidence-backed work rather than tr
 - Do not overfit the public page to a single role.
 - When applying to a specific role, generate a tailored resume from the Markdown project records instead of manually rewriting source evidence.
 - Keep uncertain claims, metrics, and ownership out of the public app until confirmed.
+- For NDA/client work, default to public-safe names and domain descriptions. Keep private project/client names only in local Markdown records.
 
 ### Goal
 
@@ -53,6 +54,9 @@ Use this structure:
 
 Status: source-reviewed draft
 Project name:
+Public name:
+Private name:
+NDA status:
 Related systems:
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category:
@@ -143,8 +147,9 @@ Use this workflow when the user provides a job description, role type, company, 
 
 1. Read `projects/tech-stack.md` to identify repeated technologies and strongest focus areas.
 2. Read the relevant `projects/*-resume.md` files, not raw source repos, unless evidence needs refreshing.
-3. Select the best matching bullets for the target role.
-4. Prefer confirmed work and avoid unverified metrics.
-5. Keep project dates, role framing, and ownership language consistent with the companion files.
-6. Produce a role-specific resume draft from the Markdown records.
-7. If the user approves, update `src/data/resume.ts` for that tailored version or create a separate export artifact, depending on the requested workflow.
+3. Use the `Public name` for NDA/client work unless the user explicitly approves the private name for that target resume.
+4. Select the best matching bullets for the target role.
+5. Prefer confirmed work and avoid unverified metrics.
+6. Keep project dates, role framing, and ownership language consistent with the companion files.
+7. Produce a role-specific resume draft from the Markdown records.
+8. If the user approves, update `src/data/resume.ts` for that tailored version or create a separate export artifact, depending on the requested workflow.

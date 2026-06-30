@@ -4,6 +4,12 @@
 
 Turn the Lesson Planner source review into concise resume material for frontend, full-stack, product-engineering, and AI-product roles.
 
+## Public / NDA Handling
+
+Public name: Education Planning Tool
+Private name: Lesson Planner
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as Symph client/product work on an AI-assisted lesson-planning platform. The strongest source-backed angle is practical product engineering: improving teacher-facing document exports and landing/content UX.

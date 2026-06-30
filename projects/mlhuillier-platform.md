@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: MLhuillier KP Platform
+Public name: Financial Services Operations Platform
+Private name: MLhuillier KP Platform
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: `mlkpsymph`, branch operations, KYC, money transfer, reports, ShopSafe, vault/fund requests
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

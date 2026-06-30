@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: MLhuillier Services
+Public name: Financial Services Microservices Platform
+Private name: MLhuillier Services
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: `ml-services`, ML ShopSafe, CKYC, watchlist, reports, payroll, wallet/payment services
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

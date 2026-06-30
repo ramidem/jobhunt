@@ -4,6 +4,12 @@
 
 This file translates `projects/<project-slug>.md` into resume-ready material. It is not the evidence log; it is the working draft for what should eventually appear in the public resume.
 
+## Public / NDA Handling
+
+Public name:
+Private name:
+NDA status:
+
 ## Best Resume Positioning
 
 TBD
@@ -46,7 +52,7 @@ Project Name - TBD
 
 ## Final Resume Entry Draft
 
-Project Name - Software Engineer  
+Project Name - Software Engineer
 Dates TBD
 
 - TBD

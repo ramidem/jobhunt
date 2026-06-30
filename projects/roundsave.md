@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: RoundSave
+Public name: RoundSave
+Private name: RoundSave
+NDA status: personal product; public name is allowed unless launch strategy changes
 Related systems: roundsave, product-roundsave-monorepo
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: AI-augmented personal product; fintech/community savings product; founder-led work

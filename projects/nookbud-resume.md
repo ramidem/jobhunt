@@ -4,6 +4,12 @@
 
 Turn the Nookbud source review into concise resume material for founder/product engineering, React Native, local-first, and AI-augmented product roles.
 
+## Public / NDA Handling
+
+Public name: Nookbud
+Private name: Nookbud
+NDA status: personal product; public name is allowed unless launch strategy changes.
+
 ## Best Resume Positioning
 
 Position this as founder-led personal product work. The strongest angle is not "an app idea"; it is the combination of AI-augmented product discovery, mobile-first architecture, local data modeling, auditability, product design systems, and multi-surface delivery.

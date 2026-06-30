@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: MyPetCare
+Public name: Veterinary Clinic Platform
+Private name: MyPetCare
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: MyPetCare web app, backend API, pet-owner app, CASL/RBAC, clinic services, EMR, inventory, billing, payroll, financial reports
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: FCCD / ARC Operations Platform
+Public name: Distributor Operations Platform
+Private name: FCCD / ARC Operations Platform
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: fccd, fccd-poc
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: AI-augmented Symph client work; operations platform; project leadership

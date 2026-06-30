@@ -4,6 +4,12 @@
 
 This file translates `projects/gussy.md` into resume-ready material. It is not the evidence log; it is the working draft for what should eventually appear in the public resume.
 
+## Public / NDA Handling
+
+Public name: Interior Design Commerce Platform
+Private name: Gussy
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 Source grouping: `gussy/` in the local `resume-reference` folder. Gussy is not currently marked as AI-augmented in the reference tree.
 
 Confirmed contribution window: Nov 2020 - Mar 2021, based on matching commits in `gussy/gussy-collage` and `gussy/gussy-website`. Use contributor language because this was a team project and the user was not the project lead.
@@ -116,7 +122,7 @@ Gussy - Interior Design and Commerce Platform
 
 This is the current best draft before dates/role/metrics are confirmed:
 
-Gussy - Contributing Software Engineer  
+Gussy - Contributing Software Engineer
 Nov 2020 - Mar 2021
 
 - Contributed to a Firebase-backed interior design platform spanning designer tools, PM/admin workflows, client review, public shopping, checkout, and order management.

@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: MLhuillier Stored Procedures
+Public name: Financial Services Stored Procedure Layer
+Private name: MLhuillier Stored Procedures
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: `mlkp-symph-sp`, KPX, CKYC, ShopSafe, ML Shop, vault/fund requests, domestic reports
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

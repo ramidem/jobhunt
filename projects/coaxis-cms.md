@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: Coaxis CMS
+Public name: CMS / Marketplace Admin Platform
+Private name: Coaxis CMS
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: Coaxis web/API, Strapi CMS, opportunity review plugin, AI/II verification plugin
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

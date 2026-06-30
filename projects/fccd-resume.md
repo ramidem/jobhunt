@@ -4,6 +4,12 @@
 
 Turn the FCCD source review into concise resume material for lead full-stack, operations-platform, Firebase, and product engineering roles.
 
+## Public / NDA Handling
+
+Public name: Distributor Operations Platform
+Private name: FCCD / ARC Operations Platform
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as Symph client work that Med led with AI-augmented execution. The strongest angle is building an internal operations platform across distributor reports, account visits, purchase order/consignment workflows, admin policies, exports, and Firebase-backed authentication/data flows.

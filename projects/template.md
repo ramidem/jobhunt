@@ -2,12 +2,15 @@
 
 ## Resume Record
 
-Status: source-reviewed draft  
-Project name:  
-Related systems:  
-Source privacy: private/local reference only; do not publish source links or private repository metadata  
-Resume category: Experience or Projects  
-Dates: TBD  
+Status: source-reviewed draft
+Project name:
+Public name:
+Private name:
+NDA status:
+Related systems:
+Source privacy: private/local reference only; do not publish source links or private repository metadata
+Resume category: Experience or Projects
+Dates: TBD
 Role: TBD
 
 ## One-Line Summary

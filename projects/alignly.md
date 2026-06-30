@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: Alignly / Alignly GloryReborn
+Public name: HRIS / Payroll Platform
+Private name: Alignly / Alignly GloryReborn
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: alignly-gloryreborn, glory-reborn-philhealth-forms, alignly-app, product-alignly, product-alignly-gloryreborn
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: AI-augmented Symph client work; HRIS/payroll platform; project leadership

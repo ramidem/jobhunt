@@ -4,6 +4,12 @@
 
 Turn the `ml-services` source review into concise resume material for backend, microservices, platform, reporting, and fintech roles.
 
+## Public / NDA Handling
+
+Public name: Financial Services Microservices Platform
+Private name: MLhuillier Services
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as backend microservices work in a multi-service fintech environment. The clearest angle is not "I touched every microservice"; it is "I built service-level workflows across ShopSafe, CKYC/watchlist, reports, payroll, and shared libraries."

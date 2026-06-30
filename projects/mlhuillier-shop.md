@@ -4,6 +4,9 @@
 
 Status: source-reviewed draft
 Project name: MLhuillier Shop
+Public name: Financial Services Ecommerce Platform
+Private name: MLhuillier Shop
+NDA status: anonymize in public resume unless naming is explicitly approved
 Related systems: `ml-shop`, ML Shop Mall, checkout, product catalog, cart, OTP, MCash, PayMongo, branch pickup
 Source privacy: private/local reference only; do not publish source links or private repository metadata
 Resume category: Work / Symph client project

@@ -4,6 +4,12 @@
 
 Turn the MyPetCare source review into concise resume material for backend, full-stack, platform, and product-engineering roles.
 
+## Public / NDA Handling
+
+Public name: Veterinary Clinic Platform
+Private name: MyPetCare
+NDA status: anonymize in public resume unless naming is explicitly approved.
+
 ## Best Resume Positioning
 
 Position this as Symph client/product work on a veterinary clinic management platform. The strongest source-backed angle is backend/platform engineering: role-based authorization, service-layer permission checks, database migrations, generated API contracts, and frontend permission visibility.
