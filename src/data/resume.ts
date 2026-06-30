@@ -30,6 +30,21 @@ const draftResume = {
       links: [],
     },
     {
+      organization: "MLhuillier Platform",
+      location: "React / TypeScript / MySQL",
+      role: "Software Engineer",
+      start: "Jan 2021",
+      end: "Nov 2025",
+      summary:
+        "Branch operations and commerce platform for KYC, money transfer, ShopSafe, vault, reporting, and checkout workflows.",
+      bullets: [
+        "Maintained branch-facing financial workflows across KYC, money transfer, ShopSafe, vault, reports, receipts, and checkout.",
+        "Built React, TypeScript, Node/NestJS, and MySQL changes across dependent services and stored procedures.",
+        "Delivered bank/vault reports, fund-request receipts, OTP controls, branch pickup, and MCash/PayMongo checkout fixes.",
+      ],
+      links: [],
+    },
+    {
       organization: "Coaxis CMS",
       location: "Strapi / TypeScript / GCP",
       role: "Project Lead / Software Engineer",
@@ -75,6 +90,7 @@ const draftResume = {
       items: [
         "Google Cloud",
         "Firebase",
+        "MySQL",
         "PostgreSQL",
         "Drizzle ORM",
         "Firestore",
