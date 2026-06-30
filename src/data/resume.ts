@@ -2,7 +2,7 @@ import { resumeSchema, type Resume } from "@/lib/resume-schema";
 
 const draftResume = {
   name: "Med Aduh",
-  headline: "AI-assisted software engineer | Product systems and backend workflows",
+  headline: "Software Engineer | Product systems, backend workflows, and AI-assisted delivery",
   location: "Manila, Philippines / Remote",
   email: "im.ramidem@gmail.com",
   links: [

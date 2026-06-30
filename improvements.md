@@ -2,15 +2,7 @@
 
 Active tracker for resume fixes and decisions. Keep this focused on what is still useful to change.
 
-## Completed
-
-Problem: Employer context was missing, so the work could read like disconnected short projects.
-Solution: Added Symph as the public experience umbrella and nested anonymized client/product platforms underneath it.
-
 ## Highest Priority
-
-Problem: The headline leads with AI too strongly for non-AI roles.
-Solution: Use a safer default such as `Software Engineer | Product systems, backend workflows, and AI-assisted delivery`.
 
 Problem: Bullets are clearer but still light on impact.
 Solution: Keep action verbs and details, but sharpen each bullet toward responsibility, outcome, system boundary, or business workflow. Add metrics only when verified.
