@@ -10,42 +10,42 @@ Counting rule: count a technology once per product/project, even if it appears i
 
 | Technology | Project Count | Projects | Resume Priority | Notes |
 | --- | ---: | --- | --- | --- |
-| React | 6 | Gussy, Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Shop | High | Repeated across public/shop UI, Strapi admin plugins, Lesson Planner web UX, MyPetCare admin UI, MLhuillier operations UI, and MLhuillier Shop. |
-| TypeScript | 6 | Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop | High | Strong signal across Strapi plugins, web/export utilities, full-stack apps, microservices, and MLhuillier operations work. |
-| Node.js | 6 | Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop | High | Runtime across Strapi CMS, NestJS services, legacy Express services, and full-stack commerce/platform work. |
-| Google Cloud Platform | 6 | Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop | High | Repeated deployment, storage, managed configuration, and reporting context across client systems. |
+| React | 10 | Gussy, Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | High | Strongest recurring frontend signal across public/shop UI, admin platforms, operations dashboards, HRIS/payroll, and personal products. |
+| TypeScript | 10 | Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | High | Strong signal across Strapi plugins, web/export utilities, full-stack apps, microservices, Firebase apps, and AI-augmented products. |
+| Node.js | 10 | Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | High | Runtime across Strapi CMS, NestJS services, legacy Express services, Next.js APIs, Firebase admin flows, and full-stack products. |
+| Google Cloud Platform | 8 | Coaxis CMS, Lesson Planner, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop, Alignly, FCCD | High | Repeated deployment, storage, managed configuration, Firebase/GCP, and reporting context across client systems. |
 | MySQL | 5 | Coaxis CMS, MLhuillier KP Platform, MLhuillier Services, MLhuillier Stored Procedures, MLhuillier Shop | High | Direct database and stored procedure work is strongest in the MLhuillier records. |
-| Next.js | 3 | Lesson Planner, MyPetCare, MLhuillier Shop | High | Main web framework in Lesson Planner, MyPetCare web/pet-owner apps, and MLhuillier Shop. |
-| NestJS | 4 | Lesson Planner, MyPetCare, MLhuillier Services, MLhuillier Shop | High | Backend context in Lesson Planner and direct backend work in MyPetCare, MLhuillier Services, and MLhuillier Shop. |
-| Nx | 4 | Lesson Planner, MyPetCare, MLhuillier Services, MLhuillier Shop | Medium | Monorepo tooling across multi-app TypeScript repositories. |
-| Firebase Auth | 3 | Gussy, MyPetCare, MLhuillier Shop | Medium | Role-based app access in Gussy; Firebase Auth/Admin context in MyPetCare and MLhuillier Shop. |
-| Google Cloud Storage | 4 | Coaxis CMS, MyPetCare, MLhuillier KP Platform, MLhuillier Services | Medium | Upload/storage work across CMS, product platforms, and MLhuillier service workflows. |
+| Next.js | 7 | Lesson Planner, MyPetCare, MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | High | Main web framework across document tools, pet care, ecommerce, HRIS/payroll, operations, and personal product surfaces. |
+| Firebase | 5 | Gussy, Alignly, FCCD, Nookbud, RoundSave | High | Strong platform pattern across public apps, HRIS/payroll, operations, mobile products, and savings workflows. |
+| Firebase Auth | 7 | Gussy, MyPetCare, MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | Medium | Role-based access, session handling, and user identity context across Firebase-backed products. |
+| Firestore | 5 | Gussy, Alignly, FCCD, Nookbud, RoundSave | Medium | Product data layer across commerce, HRIS/payroll, operations, family coordination, and savings-circle workflows. |
+| NestJS | 5 | Lesson Planner, MyPetCare, MLhuillier Services, MLhuillier Shop, Nookbud | High | Backend context in Lesson Planner and Nookbud; direct backend work in MyPetCare, MLhuillier Services, and MLhuillier Shop. |
+| Nx | 6 | Lesson Planner, MyPetCare, MLhuillier Services, MLhuillier Shop, Nookbud, RoundSave | Medium | Monorepo tooling across multi-app TypeScript repositories and mobile/web personal products. |
+| Google Cloud Storage | 6 | Coaxis CMS, MyPetCare, MLhuillier KP Platform, MLhuillier Services, Alignly, FCCD | Medium | Upload/storage work across CMS, product platforms, Firebase apps, and MLhuillier service workflows. |
 | JWT | 5 | Coaxis CMS, MyPetCare, MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop | Medium | Reviewer tokens, service auth, and transaction platform auth context. |
 | PostgreSQL | 2 | Coaxis CMS, MyPetCare | Medium | Supported database mode in Coaxis; primary Drizzle/PostgreSQL schema work in MyPetCare. |
-| React Query / TanStack Query | 4 | Gussy, MyPetCare, MLhuillier KP Platform, MLhuillier Shop | Medium | Data-fetching layer across public web, admin UI, branch operations, and commerce checkout. |
-| TailwindCSS | 3 | Lesson Planner, MyPetCare, MLhuillier Shop | Medium | Used in responsive Lesson Planner UX, MyPetCare web UI, and MLhuillier Shop. |
+| React Query / TanStack Query | 7 | Gussy, MyPetCare, MLhuillier KP Platform, MLhuillier Shop, Alignly, Nookbud, RoundSave | Medium | Data-fetching layer across public web, admin UI, operations, commerce checkout, HRIS/payroll, and personal products. |
+| TailwindCSS | 7 | Lesson Planner, MyPetCare, MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | Medium | Repeated responsive UI framework across web apps, dashboards, and product surfaces. |
 | SendGrid | 2 | Gussy, Coaxis CMS | Medium | Email/template integration appears in both projects; mention when relevant to backend integrations. |
-| Google Cloud Build | 2 | Gussy, Coaxis CMS | Medium | Deployment automation appears in both projects; Coaxis ownership is stronger from source evidence. |
-| Firebase | 1 | Gussy | High | Umbrella platform across Hosting, Realtime Database, Firestore, Storage, Auth, and Cloud Functions. |
+| Google Cloud Build | 4 | Gussy, Coaxis CMS, Alignly, FCCD | Medium | Deployment automation appears across earlier client systems and AI-augmented client apps. |
 | JavaScript | 1 | Gussy | High | Primary language across GussyApp and Gussy website. |
 | Strapi | 1 | Coaxis CMS | High | Resume-defining CMS and admin-platform framework. |
-| CASL | 3 | MyPetCare, MLhuillier KP Platform, MLhuillier Shop | High | Resume-defining authorization work in MyPetCare and permission context in MLhuillier apps. |
+| CASL | 4 | MyPetCare, MLhuillier KP Platform, MLhuillier Shop, Alignly | High | Resume-defining authorization work in MyPetCare and Alignly, with permission context in MLhuillier apps. |
 | SQL | 1 | MLhuillier Stored Procedures | High | Database-side implementation for financial workflows and reporting. |
 | Stored procedures | 1 | MLhuillier Stored Procedures | High | Resume-defining database contracts behind MLhuillier services. |
-| Drizzle ORM | 1 | MyPetCare | High | Primary ORM for MyPetCare schema and migration work. |
+| Drizzle ORM | 2 | MyPetCare, Nookbud | High | Primary ORM for MyPetCare schema work and Nookbud local-first SQLite migrations. |
 | DOCX generation | 1 | Lesson Planner | Medium | Resume-relevant export workflow around generated lesson documents. |
 | docx | 1 | Lesson Planner | Medium | Used for Word document generation in Daily Lesson Log export. |
-| Swagger/OpenAPI | 3 | MyPetCare, MLhuillier Services, MLhuillier Shop | Medium | API documentation and generated TypeScript client workflow. |
+| Swagger/OpenAPI | 4 | MyPetCare, MLhuillier Services, MLhuillier Shop, Alignly | Medium | API documentation and generated TypeScript client workflow. |
 | Express | 1 | MLhuillier KP Platform | Medium | Legacy TypeScript backend service layer. |
-| PDF/CSV/XLSX export | 2 | MLhuillier KP Platform, MLhuillier Services | Medium | Operational reports, receipts, and export workflows. |
-| Jest | 3 | MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop | Medium | Test coverage in service and application workflows. |
-| React Hook Form | 2 | MLhuillier KP Platform, MLhuillier Shop | Medium | Complex form workflows in KYC and checkout. |
+| PDF/CSV/XLSX export | 5 | MLhuillier KP Platform, MLhuillier Services, Alignly, FCCD, Nookbud | Medium | Operational reports, receipts, documents, form previews, exports, and local product export workflows. |
+| Jest | 5 | MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop, Alignly, Nookbud | Medium | Test coverage in service, application, Firebase rules, and mobile/product workflows. |
+| React Hook Form | 4 | MLhuillier KP Platform, MLhuillier Shop, Nookbud, RoundSave | Medium | Complex form workflows in KYC, checkout, mobile/product forms, and savings workflows. |
 | Sentry | 3 | MLhuillier KP Platform, MLhuillier Services, MLhuillier Shop | Medium | Error monitoring context in MLhuillier apps/services. |
 | Firebase Hosting | 1 | Gussy | Medium | Hosted the GussyApp/collage surface. |
 | Firebase Cloud Functions | 1 | Gussy | Medium | Present in the platform; use direct-ownership wording only if confirmed. |
 | Firebase Realtime Database | 1 | Gussy | Medium | Project, commerce, and app data paths. |
-| Firestore | 1 | Gussy | Medium | Product/shop data. |
-| Firebase Storage | 1 | Gussy | Medium | Project/version thumbnails, files, and image assets. |
+| Firebase Storage | 4 | Gussy, Alignly, FCCD, RoundSave | Medium | Project assets, HR/form files, operations uploads, and savings-product dispute/KYC assets. |
 | Konva | 1 | Gussy | Medium | Canvas/collage builder. |
 | Contentful | 1 | Gussy | Medium | Public site content integration. |
 | Strapi Design System | 1 | Coaxis CMS | Medium | Used for custom Strapi admin tables, dialogs, filters, and actions. |
@@ -53,20 +53,30 @@ Counting rule: count a technology once per product/project, even if it appears i
 | Google App Engine | 1 | Coaxis CMS | Medium | CMS deployment target. |
 | Cloud SQL-compatible database config | 1 | Coaxis CMS | Medium | Production-oriented database configuration; avoid naming a specific managed DB unless confirmed. |
 | Google Artifact Registry | 1 | Coaxis CMS | Medium | Private package/auth workflow for installs and builds. |
-| Secret Manager | 3 | Coaxis CMS, MLhuillier KP Platform, MLhuillier Services | Medium | Managed deployment/runtime secrets context. |
+| Secret Manager | 5 | Coaxis CMS, MLhuillier KP Platform, MLhuillier Services, Alignly, FCCD | Medium | Managed deployment/runtime secrets context. |
 | Axios | 1 | Coaxis CMS | Medium | Service/client integration with Coaxis APIs. |
-| Firebase Admin | 1 | MyPetCare | Medium | Backend Firebase auth/admin integration. |
+| Firebase Admin | 5 | MyPetCare, Alignly, FCCD, Nookbud, RoundSave | Medium | Backend Firebase auth/admin integration across product and admin workflows. |
 | Passport | 1 | MyPetCare | Medium | JWT/Firebase JWT backend auth support. |
 | Pub/Sub | 1 | MLhuillier Services | Medium | Google Cloud Pub/Sub support in service workflows. |
-| Zod | 1 | MLhuillier Shop | Medium | Checkout/payment validation in the commerce app. |
+| Zod | 5 | MLhuillier Shop, Alignly, FCCD, Nookbud, RoundSave | Medium | Validation layer across checkout, HRIS/payroll, operations, mobile product, and savings workflows. |
+| React Native | 3 | MLhuillier Services, Nookbud, RoundSave | Medium | Mobile context in MLhuillier services plus direct personal product work in Nookbud and RoundSave. |
+| Playwright | 3 | Lesson Planner, Alignly, FCCD | Medium | E2E/smoke-test coverage in web products and AI-augmented client apps. |
+| Resend | 2 | Alignly, FCCD | Medium | Email handoff in HRIS/payroll and operations workflows. |
+| MMKV | 2 | Nookbud, RoundSave | Medium | Mobile local storage in personal React Native products. |
+| Recharts | 2 | FCCD, RoundSave | Medium | Dashboard/charting support in operations and savings-product surfaces. |
+| PWA/service workers | 1 | RoundSave | Medium | Installable web app and push notification support. |
+| MiniSearch | 1 | Alignly | Medium | Generated documentation search for the HRIS/payroll product. |
+| Stripe/SymphPay | 1 | Alignly | Medium | Billing/payment provider context in Alignly. |
+| Nango/Xero | 1 | Alignly | Medium | Accounting integration context in Alignly. |
+| PostHog | 1 | Alignly | Medium | Product analytics context in Alignly. |
+| ExcelJS | 1 | FCCD | Medium | Spreadsheet export/report workflow support. |
 | MCash | 1 | MLhuillier Shop | Medium | Payment method integration in checkout flows. |
 | file-saver | 1 | Lesson Planner | Low | Browser-side document download support. |
 | Headless UI | 1 | Lesson Planner | Low | Modal/dialog UI support. |
 | Heroicons | 1 | Lesson Planner | Low | Landing carousel and modal navigation icons. |
 | Google Cloud Datastore | 1 | Lesson Planner | Low | Product setup/session context; direct Med ownership needs confirmation. |
 | OpenAI / AI SDK | 1 | Lesson Planner | Low | Product context; direct Med ownership not confirmed in this evidence pass. |
-| Playwright | 1 | Lesson Planner | Low | E2E test app present; direct ownership is limited from source evidence. |
-| SQLite | 1 | Coaxis CMS | Low | Local development database. |
+| SQLite | 2 | Coaxis CMS, Nookbud | Low | Local development database in Coaxis and local-first mobile storage in Nookbud. |
 | Azure AD OAuth / SSO | 1 | Coaxis CMS | Low | Auth/SSO dependency present; ownership needs confirmation. |
 | Strapi seed scripts | 1 | Coaxis CMS | Low | Development/content setup support. |
 | HTML | 1 | Gussy | Low | Supporting frontend stack. |
@@ -331,6 +341,140 @@ Notes:
 
 - MLhuillier Shop should emphasize checkout, cart, catalog, branch pickup, payment, OTP, and generated API-client workflows.
 - This is the cleanest MLhuillier record for ecommerce, payment, and Next.js/NestJS roles.
+
+### Alignly
+
+Primary resume technologies:
+
+- TypeScript
+- Next.js
+- React
+- Firebase
+- Firestore
+- Firebase Auth/Admin/Storage
+- CASL
+- Google Cloud Platform
+
+Supporting technologies:
+
+- TanStack React Query
+- Zod
+- TailwindCSS
+- Jest
+- Playwright
+- Firebase emulator tests
+- Resend
+- Stripe/SymphPay
+- Nango/Xero
+- PostHog
+- MiniSearch
+- PDFKit
+- Google Cloud Build
+- Secret Manager
+
+Notes:
+
+- Alignly should emphasize project leadership, AI-augmented delivery, HRIS/payroll workflows, Firebase architecture, RBAC, tests, docs/search tooling, and release readiness.
+- Keep client/account/deployment details out of public records. Use anonymized wording if public naming is not approved.
+- The companion form workflow is strong supporting evidence for authenticated PDF previews and admin/patient workflows.
+
+### FCCD
+
+Primary resume technologies:
+
+- TypeScript
+- Next.js
+- React
+- Firebase
+- Firestore
+- Firebase Auth/Admin/Storage
+- Google Cloud Platform
+
+Supporting technologies:
+
+- Zod
+- Recharts
+- ExcelJS
+- jsPDF
+- html2canvas
+- Resend
+- Playwright
+- TailwindCSS
+- Google Cloud Build
+- Secret Manager
+
+Notes:
+
+- FCCD should emphasize project leadership, operations workflows, distributor reports, sales, purchase order/consignment flows, exports, and admin controls.
+- Use POC context only when a resume needs prototype-to-product delivery.
+- Avoid public customer details until naming is confirmed.
+
+### Nookbud
+
+Primary resume technologies:
+
+- React Native
+- TypeScript
+- Nx
+- Drizzle ORM
+- SQLite
+- Next.js
+- NestJS
+
+Supporting technologies:
+
+- React Query / TanStack Query
+- MMKV
+- Jotai
+- Zustand
+- React Hook Form
+- Zod
+- Firebase
+- Firebase Admin
+- Jest
+- Fastlane
+- design tokens
+- local-first architecture
+
+Notes:
+
+- Nookbud should emphasize founder-led AI-augmented product work, local-first mobile data, audit trails, versioned records, spaces, disputes, exports, and product/design artifacts.
+- Keep legal-domain wording careful. Say audit trails and sensitive records; do not promise legal outcomes.
+- Confirm launch/beta status before using stronger product-impact language.
+
+### RoundSave
+
+Primary resume technologies:
+
+- TypeScript
+- Next.js
+- React
+- Firebase
+- Firestore
+- Firebase Auth/Admin/Storage
+- React Native
+- Nx
+
+Supporting technologies:
+
+- React Query / TanStack Query
+- React Hook Form
+- Zod
+- Recharts
+- MMKV
+- PWA/service workers
+- push notifications
+- Firestore rules
+- trust scoring
+- KYC flows
+- wallet accounting
+- dispute workflows
+
+Notes:
+
+- RoundSave should emphasize founder-led AI-augmented product work, Firebase workflows, savings-circle domain logic, trust/dispute handling, and PWA/mobile foundations.
+- Use wallet accounting or transaction records unless real custody/payment integrations are confirmed.
+- Confirm launch/demo status before using stronger user or traction claims.
 
 ## Maintenance Rules
 
