@@ -11,7 +11,14 @@ const draftResume = {
   ],
   summary:
     "Full-stack engineer using AI-assisted workflows to ship reliable product systems, backend services, and operational tooling.",
-  education: [],
+  education: [
+    {
+      institution: "Western Mindanao State University",
+      degree: "Bachelor of Science - BS, Mass Communication/Media Studies",
+      dates: "2007 - 2010",
+      details: [],
+    },
+  ],
   experience: [
     {
       organization: "Symph",
