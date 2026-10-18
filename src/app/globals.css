@@ -560,3 +560,415 @@ h1 {
     display: none;
   }
 }
+
+/* Workspace (private tracker) */
+.workspace {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.workspace-sidebar {
+  background: var(--paper);
+  border-right: 1px solid var(--soft-line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px 16px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.workspace-brand {
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.workspace-sidebar ul {
+  display: grid;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.workspace-sidebar a {
+  align-items: center;
+  border-radius: 8px;
+  display: flex;
+  gap: 8px;
+  padding: 8px 10px;
+  text-decoration: none;
+}
+
+.workspace-sidebar a:hover {
+  background: var(--field);
+}
+
+.workspace-sidebar a[aria-current="page"] {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.workspace-public-link {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+.workspace-main {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+  min-width: 0;
+  padding: 32px 24px;
+}
+
+.workspace-panel {
+  background: var(--paper);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 16px;
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 24px;
+  width: 100%;
+}
+
+.workspace-panel h1,
+.workspace-panel h2,
+.workspace-panel p {
+  margin: 0;
+}
+
+.workspace-panel h1 {
+  font-size: 1.5rem;
+}
+
+.workspace-panel h2 {
+  font-size: 1.05rem;
+}
+
+.workspace-panel label {
+  color: var(--muted);
+  display: grid;
+  font-size: 0.85rem;
+  gap: 4px;
+}
+
+.workspace-panel input,
+.workspace-panel textarea,
+.workspace-panel select {
+  background: var(--field);
+  border: 1px solid var(--soft-line);
+  border-radius: 8px;
+  color: var(--ink);
+  padding: 8px 10px;
+  width: 100%;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.form-row {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.form-row > label {
+  flex: 1 1 180px;
+}
+
+.form-row > .grow {
+  flex: 3 1 260px;
+}
+
+.add-button {
+  width: auto;
+}
+
+.action-row,
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: var(--field);
+  border: 1px solid var(--soft-line);
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 0.8rem;
+  margin: 2px 4px 2px 0;
+  padding: 2px 10px;
+}
+
+.chip.good {
+  background: #e7f6ec;
+  border-color: #a7d7b5;
+}
+
+.chip.warn {
+  background: #fdf1e1;
+  border-color: #e9c48f;
+}
+
+.chip.filter {
+  cursor: pointer;
+}
+
+.chip.filter[aria-pressed="true"] {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.match-report {
+  background: var(--field);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.card-list,
+.plain-list {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.plain-list {
+  gap: 6px;
+}
+
+.card {
+  border: 1px solid var(--soft-line);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.card-head {
+  align-items: start;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.card-head select {
+  width: auto;
+}
+
+.card pre {
+  font-family: inherit;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+}
+
+.skill-columns {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.skill-row {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.skill-row select {
+  max-width: 120px;
+  padding: 4px 6px;
+}
+
+.skill-row .icon-button {
+  padding: 4px 6px;
+}
+
+@media (max-width: 860px) {
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: auto;
+    position: static;
+  }
+
+  .workspace-sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .workspace-public-link {
+    margin-top: 0;
+  }
+
+  .skill-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  .workspace {
+    display: block;
+  }
+
+  .workspace-main {
+    padding: 0;
+  }
+}
+
+/* Resume layout: follows the one-page example format (centered header, plain bold headings,
+   italic "Role at Company" lines with right-aligned dates). Placed last so it wins. */
+.resume-paper {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 10.5pt;
+  line-height: 1.5;
+  padding: 1in;
+}
+
+.resume-paper .resume-header {
+  line-height: 1.15;
+}
+
+.resume-paper .resume-header {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.resume-paper h1 {
+  font-size: 14pt;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.resume-paper .contact-line {
+  color: var(--text);
+  font-size: inherit;
+  font-weight: 400;
+}
+
+.resume-paper .contact-line span:not(:last-child)::after,
+.resume-paper .contact-line a:not(:last-child)::after {
+  content: " | ";
+}
+
+.resume-paper .contact-line a {
+  color: #1a55c7;
+}
+
+.resume-paper .location-line {
+  font-size: inherit;
+  margin: 0;
+}
+
+.resume-paper .resume-section {
+  padding: 22px 0 0;
+}
+
+.resume-paper .resume-section h2 {
+  display: block;
+  font-size: inherit;
+  font-weight: 700;
+  margin: 0 0 8px;
+  text-align: left;
+  text-transform: none;
+}
+
+.resume-paper .resume-section h2::before,
+.resume-paper .resume-section h2::after {
+  content: none;
+}
+
+.resume-paper .entry-title {
+  font-style: italic;
+}
+
+.resume-paper .entry-title p {
+  text-align: left;
+}
+
+.resume-paper .entry-summary {
+  color: var(--text);
+  font-size: inherit;
+  margin: 4px 0 0;
+}
+
+.resume-paper .entry ul,
+.resume-paper .education-list {
+  list-style: disc;
+  margin: 4px 0 0;
+  padding-left: 28px;
+}
+
+.resume-paper .entry li,
+.resume-paper .education-list li {
+  line-height: 1.5;
+  margin: 0;
+  padding-left: 14px;
+}
+
+.resume-paper .education-list li {
+  display: list-item;
+}
+
+.resume-paper .education-list li time {
+  float: right;
+}
+
+.resume-paper .nested-list {
+  border-left: 0;
+  margin: 12px 0 0;
+  padding-left: 0;
+}
+
+.resume-paper .skills dl div {
+  display: block;
+}
+
+.resume-paper .skills dt {
+  display: inline;
+  font-weight: 700;
+}
+
+.resume-paper .skills dt::after {
+  content: ": ";
+}
+
+.resume-paper .skills dd {
+  display: inline;
+  margin: 0;
+}
+
+.resume-paper .entry-stack {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .resume-paper {
+    padding: 28px 20px;
+  }
+}
+
+@media print {
+  .resume-paper {
+    padding: 0;
+  }
+}

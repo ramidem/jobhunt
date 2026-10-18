@@ -5,3 +5,6 @@ node_modules/
 out/
 coverage/
 *.tsbuildinfo
+
+# Local reference material
+/transcript

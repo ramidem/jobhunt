@@ -1,0 +1,1821 @@
+{
+  "source": "Google Sheets \"Qualification\" tab (gid 0), exported 2026-10-15",
+  "note": "Qualifications are based on the United States market; other countries may differ for the same job title.",
+  "jobs": [
+    {
+      "title": "Software Engineer Intern",
+      "qualifications": [
+        "Degree",
+        "One of the following Languages: Java, C++, Go, TypeScript, (Java Script, HTML), CSS, Python, C#",
+        "Language, SQL, APIs, Cloud, AI",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-08-10",
+      "last_updated_raw": "8/10/2026"
+    },
+    {
+      "title": "Embedded Software Engineer / Systems Engineer",
+      "qualifications": [
+        "Degree",
+        "C/C++, Linux, Python",
+        "TCP/IP, UART, SPI, I2C, Ethernet",
+        "Real Time Operating System (RTOS)",
+        "Embedded Systems Development Tools",
+        "Certs (ISO), Clearance, debug system",
+        "Type of Industry and what you are working on (i.e. Aerospace Engines)",
+        "Explain technical topics to non-technical people,",
+        "Nice to Have: Git, Agile, CI/CD"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "10/9"
+    },
+    {
+      "title": "Embedded Software / Systems Engineer",
+      "qualifications": [
+        "Python/C/C++, Linux, RTOS, Shell Scripting, Industry and Type of Product",
+        "Education",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-05-29",
+      "last_updated_raw": "5/29/2026"
+    },
+    {
+      "title": "Technical Product Manager",
+      "qualifications": [
+        "Degree, Scrum Master (CSM) or PMP",
+        "Agile, How you solved problems with People/Tools/Tech",
+        "Agile project management tools (e.g., Jira, Asana)",
+        "collaborating closely with technical teams and stakeholders and INFLUENCING THEM",
+        "Triaging, multitasking",
+        "Industry Keywords: DevOps, SDLC, etc"
+      ],
+      "last_updated": "2025-02-23",
+      "last_updated_raw": "2/23/2025"
+    },
+    {
+      "title": "Business Analyst",
+      "qualifications": [
+        "SQL, Industry",
+        "Microsoft 365, PowerPoint, Outlook, Excel (Advanced), Word, JIRA, SAP",
+        "requirements gathering and documentation",
+        "Influenced Cross-functional from IC to Stakeholders/managers and pro-actively solved business problems",
+        "explain complex topics to non-technical",
+        "Meet multiple deadlines concurrently",
+        "Agile, Scrum, Waterfall",
+        "Industry Tools: AI, Python, Tableau, Power BI, Cloud"
+      ],
+      "last_updated": "2025-05-22",
+      "last_updated_raw": "5/22/2025"
+    },
+    {
+      "title": "AI Engineer",
+      "qualifications": [
+        "Degree, Python (or other backend), ML, LLMs",
+        "Cloud (GCP, Azure, AWS), Built stuff in Production, Agentic Systems/Multi-Agent",
+        "Agentic Coding: Claude Code, Open AI Codex, Cursor",
+        "Frameworks: LangGraph, LangChain, Google ADK, Open AI Agent SDK",
+        "Communicate technical details to a non-technical audience",
+        "MLOps: AI Architectures, AI Orchestration",
+        "Rare: Industry, SQL, RAG, Git, NumPy (etc)"
+      ],
+      "last_updated": "2026-06-08",
+      "last_updated_raw": "6/8/2026"
+    },
+    {
+      "title": "C#/.NET Software Engineer",
+      "qualifications": [
+        "C#/.NET, SQL, .NET Core",
+        "Azure, Git, Agile, RESTful API",
+        "DevOps, CI/CD, Git",
+        "ASP.NET",
+        "Nice to Have: Full Stack (TypeScript, JavaScript, React, Angular), Microservices, Kubernetes"
+      ],
+      "last_updated": "2026-06-29",
+      "last_updated_raw": "6/29/2026"
+    },
+    {
+      "title": "AI Developer",
+      "qualifications": [
+        "LLM, AI/ML/NLP, PyTorch, Tensorflow",
+        "Cloud, Hugging Face, Python",
+        "Company Specific (Chat bot, Industry, UI/UX)"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Python SWE",
+      "qualifications": [
+        "Python, SQL (any),",
+        "Cloud, RESTful APIs or REST APIs",
+        "Git, CI/CD, Django, Flask, Docker",
+        "Agile, Fast API",
+        "AI (Agents, Langraph, LLM, ML, RAG, MCP)",
+        "OR",
+        "Full Stack (Typescript, Javascript, HTML, CSS, React)"
+      ],
+      "last_updated": "2026-08-14",
+      "last_updated_raw": "8/14/2026"
+    },
+    {
+      "title": "Python SWE (EU)",
+      "qualifications": [
+        "Python, SQL (any), Docker, Kubernetes, Django, Flask",
+        "Cloud and it’s words (AWS/GCP/Azure)",
+        "RESTful/FAST APIs",
+        "Git, CI/CD",
+        "Bonus: Full Stack, DevOps, MLOps, Object-Oriented Programming, MultiThreading"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Python Dev (India)",
+      "qualifications": [
+        "Python, (NumPy, pandas, Fast API)",
+        "MongoDB, AI/ML/LLM, SQL",
+        "Cloud, CI/CD, Git, REST API",
+        "Kubernetes, Docker, Django, Agile",
+        "Bonus: Full Stack"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Data Engineer",
+      "qualifications": [
+        "Degree, Industry",
+        "Cloud (Azure Preferred)",
+        "CI/CD, Python, SQL, Implementing ETL/ELT, Data Pipelines",
+        "Docker, Kubernetes",
+        "Data warehousing and/or Data Lakehouse",
+        "Communicate technical details to a non-tech people cross-functionally",
+        "Meet deadlines, Power BI or Tableau Dashboards",
+        "Extra Credit: Clearance, Snowflake (or Snow), AI, Agile, scalability, Apache Airflow"
+      ],
+      "last_updated": "2026-09-02",
+      "last_updated_raw": "9/2/2026"
+    },
+    {
+      "title": "Full Stack Software Engineer",
+      "qualifications": [
+        "Degree",
+        "TypeScript, React, JavaScript, HTML, CSS,",
+        "Python and/or Java, Angular, Node.js",
+        "RESTful API OR REST APIs,",
+        "SQL (any), AI (Coding Tools and/or Agents)",
+        "Cloud (AWS, Azure, GCP),",
+        "Docker, Kubernetes, CI/CD, Git",
+        "Building Products from 0→1 (start up only)",
+        "Nice to Have:Agile, communication with both technical and non-technical stakeholders",
+        "DevOps Technology,, Vue, Microservices"
+      ],
+      "last_updated": "2026-10-01",
+      "last_updated_raw": "10/1/2026"
+    },
+    {
+      "title": "Full Stack - Canada",
+      "qualifications": [
+        "TypeScript, Python, JavaScript, CSS, HTML, React, and Vue.js",
+        "Node, Angular, NextJS (MongoDB)",
+        "SQL, API, Rest, GraphQL",
+        "Cloud, Agile CI/CD, cross-functionally",
+        "Bonus Points: architecture, Extra language, Git, AI/LLM, DevOps, Django, Flask, Kubernetes"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "8/20"
+    },
+    {
+      "title": "EU - Full stack",
+      "qualifications": [
+        "TypeScript, JavaScript, CSS, HTML",
+        "Java, Spring Boot, Microservices",
+        "Python, Django, Docker",
+        "Node, Angular, Next.js",
+        "SQL, React, API, Rest, Git",
+        "Cloud, Agile CI/CD, cross-functionally",
+        "Bonus Points: architecture, Extra language, Git"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Front End Developer",
+      "qualifications": [
+        "Degree, Portfolio",
+        "HTML, CSS, JavaScript, TypeScript, Node.js, and React",
+        "UI/UX, GitHub",
+        "products from 0 to 1",
+        "CI/DC, Docker",
+        "multiple projects and meet deadlines",
+        "translating functional requirements into technical specifications",
+        "Nice to Have: Backend Language, Cloud, Vue/Angular, Figma, AI"
+      ],
+      "last_updated": "2026-09-30",
+      "last_updated_raw": "9/30/2026"
+    },
+    {
+      "title": "EU - Front End",
+      "qualifications": [
+        "React, JavaScript, AngularJS, HTML, CSS",
+        "SQL, Scrum/Agile, RESTful APIs",
+        "WordPress, Git,",
+        "Vue, Next",
+        "Bonus: Extra language, Cloud, UI/UX, TypeScript, DevOps"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Data Analyst",
+      "qualifications": [
+        "Degree, Industry",
+        "SQL, Python,",
+        "Excel (Vlookup, Pivot Tables) Office Suite (Word, PowerPoint, Outlook)",
+        "Data Visualization (Power BI or Tableau)",
+        "Influence Stakeholders, explaining technical concept to nontechnical stakeholders",
+        "How you solved a problem with Data not what the data is",
+        "AI-assisted development tools such as Claude Code",
+        "Multiple Projects, and deadlines",
+        "Nice to Have: R, ELT, ETL, Security Clearance,"
+      ],
+      "last_updated": "2026-08-12",
+      "last_updated_raw": "8/12/2026"
+    },
+    {
+      "title": "Data Scientist",
+      "qualifications": [
+        "Degree",
+        "Python, SQL",
+        "Pytorch, TensorFlow, Machine Learning (ML)",
+        "AI Tools, Industry",
+        "Communicate Technical details to a non-tech Stakeholders, Cross Functional",
+        "Influence Stakeholders",
+        "How you solved a problem with Data",
+        "Statistical Modeling, Datasets, data validation techniques",
+        "Nice to Have: R"
+      ],
+      "last_updated": "2026-10-09",
+      "last_updated_raw": "10/9/2026"
+    },
+    {
+      "title": "IT Support Specialist  / Helpdesk",
+      "qualifications": [
+        "MacOS/Linux, Android, Windows (7-11)",
+        "Education, Customer Service, Troubleshooting/problem solving,",
+        "Explain tech to non-tech audience",
+        "Networking: DNS, DHCP, TCP/IP, VPN",
+        "Multitask and meet deadlines",
+        "Industry (Azure, LAN/WAN, CRM)",
+        "Jira, Office/Microsoft 365, Active Directory, Slack. Zendesk",
+        "Bonus: CompTIA A+, Microsoft Certified Desktop Support, PowerShell"
+      ],
+      "last_updated": "2026-07-08",
+      "last_updated_raw": "7/8/2026"
+    },
+    {
+      "title": "iOS Devleoper",
+      "qualifications": [
+        "Sr. iOS Developer",
+        "Swift/Objective-C/SwiftUI",
+        "REST API, REST, React",
+        "mobile architectures",
+        "HTML5, CSS3, JavaScript, React, and TypeScript",
+        "Git, Agile, CI/CD",
+        "Cloud",
+        "MVVM, MVC"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Technical Account Manager",
+      "qualifications": [
+        "Customer, Client, stakeholders (IC to VP)",
+        "Travel, SDLC, Agile, SaaS, Cloud",
+        "MSP, MSSP, IT, CRM",
+        "Company/Tech Specific",
+        "How you succeed"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Network Engineer",
+      "qualifications": [
+        "Routing, switching, firewalls, VLANs, VPNs, WLAN, and core network protocols (TCP/IP, DNS, DHCP)",
+        "IPv4, IPv6, BGP/IPSec",
+        "Palo Alto Networks firewalls (PAN-OS, GlobalProtect, WildFire, etc.)",
+        "VMware Certified Professional - NSX (VCP-NV) / CCNP, CCDP Cert",
+        "WAN/LAN, Cisco",
+        "Routing/Switching Protocols: BGP, OSPF, and MPLS"
+      ],
+      "last_updated": "2026-03-02",
+      "last_updated_raw": "3/2/2026"
+    },
+    {
+      "title": "Office Manager",
+      "qualifications": [
+        "Degree, Microsoft Office (Excel, Word, PowerPoint)",
+        "Multi Task, Customer Service (Clients, customers, internal stakeholders)",
+        "Industry, how you documented and organized (Events, Schedules, normal day-to-day)"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Game Developer UK",
+      "qualifications": [
+        "Server Side: Cloud, Matchmaking, Server Orchestration, CI/CD, DevOps, API, SQL, Python, Docker, Kubernetes",
+        "Game Engine: 3D Math/Animation, Unreal, physics systems, debug and resolve complex",
+        "Both: C++/C#, Networking, Shipped Projects, Multitask on a Deadline, Cross-functional,"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Manufacturing Engineer",
+      "qualifications": [
+        "Degree, Industry",
+        "CAD (NX, Solid Edge), CNC",
+        "Manufacturing",
+        "MS Office Suite, Project management (influence, multitasking, etc)",
+        "continuous improvement environment (Lean, Six Sigma, process improvement, OPEX)",
+        "Manufacturing specific regulations (cGMP and Medical Device, ISO, etc)"
+      ],
+      "last_updated": "2026-03-27",
+      "last_updated_raw": "3/27/2026"
+    },
+    {
+      "title": "Graphic Designer",
+      "qualifications": [
+        "Degree, Portfolio",
+        "Adobe InDesign, Illustrator, Photoshop, Acrobat, Figma",
+        "Outlook, Microsoft Office, PowerPoint",
+        "Industry (Sports, Entertainment, Lifestyle)",
+        "Type of Design (Email, Print, etc)",
+        "meet tight deadlines while managing multiple projects, brand consistency",
+        "typography, layout, and visual hierarchy",
+        "cross-functional, Bonus: JS, HTML, CSS, UI/UX, Animation, Multimedia Design, Fine Art, Film Studies, or CGI and 3D Modelling"
+      ],
+      "last_updated": "2026-01-20",
+      "last_updated_raw": "1/20/2026"
+    },
+    {
+      "title": "SOC Analyst / Cyber Security Analyst",
+      "qualifications": [
+        "Degree, Certs",
+        "SIEM, network, systems",
+        "NIST, ISO, PCI-DSS, FERPA, GLBA, GDPR, HIPAA, FTC, and privacy laws",
+        "Security, Firewalls, Troubleshooting, DNS",
+        "MITRE ATT&CK",
+        "Communicate technical details to non-technical audience",
+        "threat hunting and threat detection",
+        "Nice to Have: Python, Bash, CI/CD, Cloud"
+      ],
+      "last_updated": "2026-08-10",
+      "last_updated_raw": "8/10/2026"
+    },
+    {
+      "title": "Product Design Engineer",
+      "qualifications": [
+        "Degree",
+        "BOM, FEA, CFD, Geometric Dimensioning & Tolerancing (GD&T), ISO",
+        "3D printing, CNC machining, injection molding, sheet metal",
+        "CAD (3D, Solidworks)",
+        "Microsoft Word, Excel, PowerPoint",
+        "stress/strain, thermal, fatigue",
+        "Cross-functional, Customers,"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Technical Artist",
+      "qualifications": [
+        "Shipped Product, VFX Pipelines, Unreal, Shader, Blueprint",
+        "Spine, Adobe Suite (Photoshop, After Effects, Illustrator), 3D software (Maya, Blender, Cinema 4D)",
+        "art asset optimization and how it affects gameplay performance",
+        "Perforce, Jira, Confluence, MS Teams, and Excel.",
+        "Python, C#, Java (Any Coding)",
+        "Bonus: HLSL, PyMel"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "7/23"
+    },
+    {
+      "title": "Customer Success Manager",
+      "qualifications": [
+        "Degree, Industry (Medical, Tech, etc)",
+        "Proven success and meeting goals",
+        "Retention, Customer engagement, and customer satisfaction, communicating to all, and explaining technical stuff to stakeholders, Negotiations",
+        "Solved problems and multitasked",
+        "CRM & CS tools (Hubspot), cross-sell and upsell. Salesforce",
+        "SaaS or B2B, global Clients"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "7/30"
+    },
+    {
+      "title": "Cybersecurity Analyst",
+      "qualifications": [
+        "Degree, Industry and Clearance(DoD, Military, ISO, HIPPA, etc)",
+        "Certifications: CompTIA Security+, CEH, CISSP. OSCP, GIAC",
+        "Security Regulations (NIST, ISO, HIPPA, etc)",
+        "Python, PowerShell,",
+        "SIEM tools, threat detection, and incident response, GRC, Archer",
+        "Can communicate security risks clearly to non-technical stakeholders (Reports, etc)",
+        "Jira or JIRA",
+        "MITRE ATT&CK, Cloud, AI"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "8/5/20206"
+    },
+    {
+      "title": "Sales/buisniuss Development Representative",
+      "qualifications": [
+        "Salesforce, Outreach, ZoomInfo, HubSpot (CRM)",
+        "Cold Calling, SDR, Customer",
+        "Industry (SaaS, Healthcare, etc)",
+        "Basic Computer Skills, B2B",
+        "Talk to everyone from low to high",
+        "Outreach through phone, email, text",
+        "Teamwork, Hunger"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "R&D Scientist / Research Scientist",
+      "qualifications": [
+        "Degree",
+        "Industry (BioMed, Aerospace, etc)",
+        "Knowledge of the topic (microbiology, immunology and biochemistry etc)",
+        "Basic Tool Use: Mass Spectrometry etc",
+        "Microsoft Office (Excel, Word, Outlook) and documentation skills",
+        "Cross Functional, Lab experience, testing"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Video Editor",
+      "qualifications": [
+        "Premiere Pro, After Effects, and Media Encoder, Figma, DaVinci",
+        "Mac/Windows Computer",
+        "manage multiple projects of varying complexities, meet deadlines, and work well under pressure",
+        "Type of Content (Sports, Politics, News)",
+        "multiple video formats, resolutions and codecs",
+        "Platform (YouTube, TikTok, Instagram, etc)"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Modifier - Lead",
+      "qualifications": [
+        "cross-functional, leading as an IC, work with Stakeholders"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Health Information Specialist",
+      "qualifications": [
+        "High school plus a little college",
+        "Health experience, Medical Record",
+        "MS Outlook, MS Excel, MS Word",
+        "Customer Service",
+        "Healthcare Knowledge (HIPPA, etc)"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "UI/UX Designer",
+      "qualifications": [
+        "UX/UI design for X (Web, Mobile, etc)",
+        "Figma, Sketch, Adobe XD, Illustrator, InVision, Adobe Creative Suite",
+        "User Research, Usability Testing,",
+        "JavaScript, HTML, CSS,",
+        "manage multiple projects and meet deadlines",
+        "Explain data to non-tech people (stakeholders) to improve user/customer experience",
+        "Bonus: AI"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Product Marketing Manager",
+      "qualifications": [
+        "Degree",
+        "B2B, SaaS/tech",
+        "Meet deadlines and hold teams to deadlines",
+        "Cross-functional/Matrixed, manage multiple projects",
+        "Tools: Salesforce, Hubspot, CRM, AI",
+        "How you succeeded and the impact of the success",
+        "From beginning to end",
+        "Used Data to succeed",
+        "Tech to understandable content for both technical and non-technical audiences"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "11/3"
+    },
+    {
+      "title": "Architectural Designer",
+      "qualifications": [
+        "Degree in Architecture or related field",
+        "Adobe Creative Suite (Photoshop, InDesign)",
+        "working on or planned path to architectural licensure",
+        "Microsoft Office Suite; experience with AutoCAD, Bluebeam, Revit",
+        "Multitask, speak to different people and communicate",
+        "BIM (Building Information Modeling) tools and processes, such as ACC and Procore.",
+        "Drivers License",
+        "Bonus: Rhino, Dynamo,"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "11/19"
+    },
+    {
+      "title": "Mechanical Design Engineer",
+      "qualifications": [
+        "Degree",
+        "Type of Field (i.e. Aerospace) and Type of product (i.e. Engines, thermal science, etc)",
+        "SolidWorks, AutoCAD, or Pro E; Finite Element Analysis (FEA), CFD",
+        "Describe the products you worked on in a simple manner",
+        "Common Tools for that section of the industry",
+        "Drivers License"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "11/26"
+    },
+    {
+      "title": "Data Analytics Intern",
+      "qualifications": [
+        "Degree",
+        "Basic knowledge of SQL, Python data tools (Pandas, NumPy, or similar), Excel (VBA, Macros, Pivot Tables)",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "11/28"
+    },
+    {
+      "title": "Electrical Design Engineer",
+      "qualifications": [
+        "Degree",
+        "Industry, Microsoft Office, AutoCAD/OrCAD",
+        "Wiring/Harness, electromechanical (Assembly)",
+        "Circuit, Schematic tools, FPGA, Microcontrollers",
+        "PCB, SI/PI, MATLAB",
+        "Siemens Xpedition, Cadence, KiCad",
+        "Bonus: SPI, I2C, UART/serial, JTAG, and PCIe"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "12/1"
+    },
+    {
+      "title": "Data Entry",
+      "qualifications": [
+        "Microsoft Office",
+        "No Grammatical Errors",
+        "scheduling and data organization",
+        "Data Entry Experience",
+        "Industry (Medical Software, CRM, etc)",
+        "Multitask while meeting multiple deadlines"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Systems Administrator",
+      "qualifications": [
+        "Linux/Mac/Windows, Cloud",
+        "DNS, DHCP, TCP/IP, VPN",
+        "managing system hardware/software and automating tasks, Active Directory",
+        "Infrastructure as Code (IaC), Office 365",
+        "troubleshooting, and multitasking",
+        "Python, API, CI/CD, Bash, Powershell",
+        "Ticketing System (Jira), ISO"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "12//8"
+    },
+    {
+      "title": "Project Manager",
+      "qualifications": [
+        "High School or College Degree, PMP/sigma",
+        "Industry (each industry has keywords)",
+        "Microsoft Office Suite (Word, Excel, Outlook), Agile or Scrum",
+        "Explain complex topics to stakeholders and stakeholder management",
+        "How you SOLVED problems with people",
+        "Project Details, Budget (sometimes), Number of people, goal, volume of projects",
+        "Manage multiple projects and meet deadlines",
+        "Cross Functional / Global"
+      ],
+      "last_updated": "2026-09-04",
+      "last_updated_raw": "9/4/2026"
+    },
+    {
+      "title": "Industry (SaaS, IT, Healthcare, APIs, etc) \nmanaging complex partner or vendor relationships, Contracts\nability to partner with, influence and drive collaboration amongst cross-function and cross-regional teams\nSLAs, and negotiation processes with vendors\nSalesforce, Jira, GSuite/Excel/Office, Slack, GitHub\nAgile, Scrum\nMulittask",
+      "qualifications": [
+        "Industry (SaaS, IT, Healthcare, APIs, etc)",
+        "managing complex partner or vendor relationships, Contracts",
+        "ability to partner with, influence and drive collaboration amongst cross-function and cross-regional teams",
+        "SLAs, and negotiation processes with vendors",
+        "Salesforce, Jira, GSuite/Excel/Office, Slack, GitHub",
+        "Agile, Scrum",
+        "Mulittask"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Product Manager",
+      "qualifications": [
+        "Degree",
+        "Industry, Presentation and communication",
+        "Multiple projects and deadlines",
+        "MS Office (Excel, Word, PowerPoint)",
+        "Work crossfunctionally with product",
+        "Shipping product 0 to 1",
+        "Communicate clearly on product goals and translate it into the product",
+        "Cross Functional/Matrixed",
+        "Stakeholder management"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "7/31"
+    },
+    {
+      "title": "Program Manager",
+      "qualifications": [
+        "Industry, PMP, Microsoft Project and Visio, Microsoft 365",
+        "MS Office (Word, Excel, PowerPoint/pivot tables)",
+        "cross functional highly matrixed organization, stakeholders, customers, clients, Agile",
+        "How you succeeded and managed multiple projects at the same time"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Backend Java Developer",
+      "qualifications": [
+        "Java, Spring Boot",
+        "SDLC, SQL, RESTful API or REST APIs, Microservices, CI/CD, SDLC",
+        "object-oriented programming (OOP),",
+        "Git or GitHub Actions, Linux/Unix, Agile/Scrum",
+        "Cloud, Architecting or Systems",
+        "Containerization (Docker, Kubernetes)",
+        "Hibernate, Kafka, AI",
+        "Rare but nice to have: DevOps, RabbitMQ, Maven"
+      ],
+      "last_updated": "2026-09-04",
+      "last_updated_raw": "9/4/2026"
+    },
+    {
+      "title": "Machine Learning (ML) Engineer",
+      "qualifications": [
+        "Degree, Machine Learning (ML)",
+        "Cloud, CI/CD, DataBricks, Git",
+        "SQL, Python (Java/C#/.NET)",
+        "Cross-functional and can communicate technical details to non-technical people.",
+        "ML Frameworks/Libraries: TensorFlow, PyTorch, scikit-learn, Pandas, NumPy",
+        "The scale of the systems you have built (non-technical)",
+        "training, tuning, and deploying models in production environments from 0 to 1"
+      ],
+      "last_updated": "2026-04-29",
+      "last_updated_raw": "4/29/2026"
+    },
+    {
+      "title": "ML Intern",
+      "qualifications": [
+        "Machine Learning (ML),",
+        "Python, C/C++, SQL,",
+        "Pytorch, Tensorflow, Cloud",
+        "LLM, AI, Generative AI, Chat GPT",
+        "Take direction and criticism, work well with others",
+        "Degree"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "DevOps Engineer",
+      "qualifications": [
+        "Degree, DevOps",
+        "Cloud (and it’s keywords), Linux, JIRA",
+        "CI/CD Pipelines, Kubernetes,",
+        "Infrastructure as Code (IaC): Terraform, Ansible",
+        "Communicate Technical Details to a Non-tech audience cross-functionally",
+        "Bash, PowerShell, and Python"
+      ],
+      "last_updated": "2026-09-18",
+      "last_updated_raw": "9/18/2026"
+    },
+    {
+      "title": "HR Generalist",
+      "qualifications": [
+        "HRIS platforms and Microsoft Office (MS Excel, Word and PowerPoint)",
+        "Number of employees your past companies have had (ballpark)",
+        "HR best practices and employment law",
+        "employee relations, staffing and payroll",
+        "Talent Acquisition, Industry, ATS",
+        "Bonus: HR certification (SHRM-CP, PHR, etc.),"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Buyer / Procurement",
+      "qualifications": [
+        "Industry, Supply chain",
+        "Supplier relationship, Organizing",
+        "Microsoft Office: Excel, Word, Outlook, Gmail",
+        "Timeline development, Meets deadlines."
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Content Marketing Manager",
+      "qualifications": [
+        "ndustry Specific, B2B, B2C, SEO",
+        "content strategies across multiple formats (blogs, whitepapers, case studies, email campaigns, video scripts, landing pages)",
+        "Cross Functional, WordPress,",
+        "How your marketing succeeded",
+        "Brand Voice, Canva, Figma",
+        "social media scheduling and analytics tools (e.g., Sprout Social, Hootsuite, HubSpot). Mailchimp, HubSpot, Marketo"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Ruby on Rails",
+      "qualifications": [
+        "Degree, Ruby on Rails",
+        "Git, APIs, Cloud, CI/CD",
+        "Agile, SQL, Docker, Kubernetes, Helm",
+        "Nice to Have: JavaScript, HTML, CSS, Java, React, TypeScript"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "9/18"
+    },
+    {
+      "title": "Project Coordinator",
+      "qualifications": [
+        "Degree or HS Diploma",
+        "Project Coordination Experience",
+        "Multitask while meeting deadlines",
+        "Pro-active problem solving",
+        "Industry, communicate to all levels of the company,",
+        "MS Office products, including Outlook, Excel, Word, and PowerPoint."
+      ],
+      "last_updated": null,
+      "last_updated_raw": "5/8"
+    },
+    {
+      "title": "Social Media Manager",
+      "qualifications": [
+        "Types of Media (TikTok, LinkedIn, etc)",
+        "Canva, Adobe Creative Suite, and PhotoShop, Asana and Sharepoint",
+        "social media monitoring and analytics reporting",
+        "Proven Success, content calendar",
+        "MultiTask, Deadlines",
+        "B2B, B2C, Analytics, writing and editing"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Random Software Engineer",
+      "qualifications": [
+        "Full Stack",
+        "Backend (Python)",
+        "Backend (Java)",
+        "Backend (C#/.NET)",
+        "Frontend",
+        "Recruiters Choice"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Cloud Engineer\n(Canada)",
+      "qualifications": [
+        "Cloud and it’s stuff (EC2)",
+        "IAM, Infrastructure-as-Code (e.g. Pulumi, Terraform",
+        "Python, Bash, shell scripting",
+        "CI/CD",
+        "VPCs, DNS, security groups, routing, gateways, Firewalls",
+        "Kubernetes, OpenShift, Docker, Terraform, Datadog",
+        "DevOps, Cloud Engineer"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "ServiceNow Developer",
+      "qualifications": [
+        "B.A./HighSchool/GED",
+        "JavaScript, HTML, CSS, XML",
+        "SQL, REST/SOAP APIs",
+        "ITIL, ServiceNow Developer or (CSA)",
+        "Certs:CSA, Implementation",
+        "CMDB, HAM, SAM etc.",
+        "Industry, ITIL",
+        "Extra Credit: ETL, GRC/IRM, Cloud",
+        "Agile/Scrum"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Site Relability Engineer",
+      "qualifications": [
+        "Degree",
+        "Cloud (and it’s stuff EC2), Collaborated with stakeholders (Internal/External)",
+        "DataDog",
+        "Infrastructure as Code (IaC), Terraform, Helm",
+        "CI/CD, GitHub, Python, Go, and Node.js, DevOps, Docker",
+        "Linux/Windows"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Admin/Executive Assistant",
+      "qualifications": [
+        "Education, Outlook, MS Office (Excel, Word, PDF, Powerpoint)",
+        "Zoom, Microsoft Teams, etc",
+        "Multitasking, Attention to Detail (no spelling errors)",
+        "Setting up Meetings, Editing",
+        "Calendar Management, Travel Arrangement (Executive)"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Director Level",
+      "qualifications": [
+        "Education",
+        "Influence at all levels (Stakeholders, Customers, clients)",
+        "Industry Knowledge, Data Driven",
+        "Changed the company",
+        "How you solved problems and why you did that using other people",
+        "Multi site or Global Teams or Matrixed, details of what you are in charge of",
+        "Cross-functional",
+        "Microsoft Office, including Excel, Word, and PowerPoint"
+      ],
+      "last_updated": "2025-03-25",
+      "last_updated_raw": "3/25/2025"
+    },
+    {
+      "title": "Scrum Master",
+      "qualifications": [
+        "Education, Scrum Master (Cert)",
+        "Jira, Handled Multiple Projects,",
+        "MS Office, Agile,",
+        "How you guided teams and the result",
+        "Details of the projects",
+        "MS Office suite: Outlook, Teams, Sharepoint, PowerPoint",
+        "Industry"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Retail Manager",
+      "qualifications": [
+        "GED/DEGREE Customer Service, Sales",
+        "Multitask under deadlines/pressure, how you led others to success/solving disputes",
+        "POS systems and retail management software",
+        "MS Office, Teams, Skype, Zoom Shopify"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Controls Engineer (PLC?)",
+      "qualifications": [
+        "Degree",
+        "PLC (Allen Bradley, Siemens), Robot (ABB)",
+        "Coding knowledge (C#, Python, SQL, etc)",
+        "assembling, operating, and troubleshooting robotics and electro-mechanical systems",
+        "EPICS, I/O",
+        "HMI/SCADA systems (FactoryTalk View, Ignition, Wonderware, etc)",
+        "CAD software (e.g., Solidworks, OnShape",
+        "FAT/SAT",
+        "Specific Certs (ISO, etc)"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Mechatronics Intern",
+      "qualifications": [
+        "Degree, C++ and Python, ROS2",
+        "3D printers, power tools, and hand tools",
+        "mechanical design, drawings (SolidWorks), GD&T, Robotics, PLC, CAD",
+        "mechanical, electrical, and software design",
+        "Microsoft Office, specifically Microsoft Excel",
+        "Work well with others, quick to change direction when you realize you’ve made a mistake"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "Need to be better"
+    },
+    {
+      "title": "Financial Analyst",
+      "qualifications": [
+        "Degree, Industry",
+        "Excel, Office (Word, Outlook, PowerPoint) SQL, Python",
+        "Financial Modeling, Statistical Analytics and Data Mining (with Excel if possible)",
+        "Explain technical details to non-technical people",
+        "Multitask and meet deadlines, Influence and/or manage stakeholders"
+      ],
+      "last_updated": "2026-05-27",
+      "last_updated_raw": "5/27/2026"
+    },
+    {
+      "title": "Product Designer",
+      "qualifications": [
+        "Portfolio, SaaS, B2B, UX Design",
+        "End to end product design from user research through implementation (0 to 1)",
+        "Figma, Cross functional communication",
+        "Translating insights into product decisions",
+        "Typography, layout, balance, proportion",
+        "Stakeholder and customer communication and management",
+        "AI tools",
+        "Multitask multiple projects and meet all deadlines"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "8/3"
+    },
+    {
+      "title": "Andriod Developer / Andriod Engineer",
+      "qualifications": [
+        "Degree",
+        "Android, Kotlin, Android SDK",
+        "MVVM/MVI, Git, UI",
+        "Jetpack Compose, RESTful APIs, Cross-Functional",
+        "(Hilt, Dagger), scale of product",
+        "Architecture",
+        "Some of these, but not all: Flutter, BackEnd Language (Java), AI, CI/CD, Restful API"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "3/27"
+    },
+    {
+      "title": "Data Science Intern",
+      "qualifications": [
+        "Degree",
+        "Basic knowledge of SQL, Python, Machine Learning (ML), Pandas, NumPy, Scikit-learn, TensorFlow, PyTorch. Power BI dashboards",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "8/5"
+    },
+    {
+      "title": "Business Intelligence Analyst",
+      "qualifications": [
+        "Degree",
+        "SQL, ETL (Data Warehouse)",
+        "Tableau, Power BI, Data Visualization, QlikView, MS Office, Excel",
+        "Ability to talk with customers/stakeholders and explain complex topics to them",
+        "Industry Specific (Education, Healthcare, etc)",
+        "Bonus: Python, R, AI/NLP"
+      ],
+      "last_updated": "2025-08-04",
+      "last_updated_raw": "8/4/2025"
+    },
+    {
+      "title": "Canada - Business Intelligence Analyst",
+      "qualifications": [
+        "Degree",
+        "SQL, AI",
+        "Tableau, Power BI, Data Visualization, MS Office, Excel (Pivot Tables/VLookup)",
+        "Ability to talk with customers/stakeholders and explain complex topics to them",
+        "Industry Specific (Education, Healthcare, etc),",
+        "Bonus: Python, R, SAP, French/English"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Growth Marketing Manager",
+      "qualifications": [
+        "A/B testing, KPIs",
+        "SEO, SQL, Anything with ADs",
+        "Data Analytics Platforms (Tableau, Google Analytics, Power BI, Excel)",
+        "Platforms (TikTok, YouTube, Print, Email)",
+        "Industry, Salesforce, Hubspot",
+        "B2B, B2C, SaaS, CAC, LTV",
+        "Cross functional and influence stakeholders/teams"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Product Owner",
+      "qualifications": [
+        "Agile, JIRA",
+        "Spark, Databricks, React, Python, SPAs, microservices, and API integrations",
+        "Industry, Confluence",
+        "product delivery, project ownership, or technical product",
+        "Cross Functional, influence internal/external stakeholders",
+        "Multitask"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Mobile Software Developer",
+      "qualifications": [
+        "React or React Native",
+        "iOS (Swift, SwiftUI) Android (Java, Kotlin)",
+        "MVVM, Flutter",
+        "JavaScript, TypeScript",
+        "RESTful APIs, Jetpack",
+        "Working in a collaborative environment and ownership of product",
+        "CI/CD, DevOps (Nice to Have)",
+        "If C# (MAUI or Xamarin)",
+        "Published on App Store/Google",
+        "Bonus: Android SDKs, Mobile security (encryption, cert validation), network optimization (weak network), monitoring"
+      ],
+      "last_updated": "2026-08-17",
+      "last_updated_raw": "8/17/2026"
+    },
+    {
+      "title": "Business Intelligence Engineer",
+      "qualifications": [
+        "Degree,",
+        "Data Visualization Tools (Looker, Power BI",
+        "SQL, DBT, Python, R, Shell scripting",
+        "dimensional models",
+        "Explained complex topics to non-tech folk (WHAT you used the data for NOT how you got it)",
+        "Microsoft Excel for data validation",
+        "Cross Functional, Agile/Scrum/Kanban etc",
+        "Nice to Have: DAX, ETL"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "Mechanical Engineering Intern",
+      "qualifications": [
+        "Degree",
+        "Microsoft Office programs (including Word, Excel, and Outlook), CAD/AutoCad, SolidWorks",
+        "Industry and what you worked on (Automobile Enginers etc)",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-09-14",
+      "last_updated_raw": "9/14/2026"
+    },
+    {
+      "title": "Go/Node.JS",
+      "qualifications": [
+        "Degree, Agile",
+        "Go/Golang, Fiber Node.JS, Nest.js, SQL, MongoDB, Redis",
+        "Cloud, CICD, Git, Kafka, RabbitMQ",
+        "Docker, Kubernetes",
+        "Extra Language: C#, C++, Java, etc",
+        "OOP"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "10/29"
+    },
+    {
+      "title": "Supply Chain Analyst",
+      "qualifications": [
+        "Degree (or Highschool)",
+        "Supply Chain",
+        "MS Office Suite (Word, Outlook) Microsoft Excel (V-lookup, pivot tables),, SQL",
+        "Multitask and meet deadlines",
+        "Industry",
+        "Explain supply chain topics to non-technical people across all levels of the org",
+        "Bonus: ERP, SAP, Power BI"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "8/'5/2026"
+    },
+    {
+      "title": "GRC Analyst",
+      "qualifications": [
+        "GRC/Security/Compliance",
+        "SOC or ISO or HIPPA",
+        "Cloud and it’s cert",
+        "AI governance, Cross Functional",
+        "NIST, CIS, Audit",
+        "Microsoft tools (Excel, SharePoint, Word",
+        "Navigating Documentation",
+        "Speaking to non-technical teams/stakeholders"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "11/21"
+    },
+    {
+      "title": "Mechanical Engineering",
+      "qualifications": [
+        "Degree",
+        "MS Office (Excel, Word, PowerPoint, Outlook)",
+        "SolidWorks, CAD/AutoCAD",
+        "Industry (Aerospace, BioMedical, etc)",
+        "Type of Product (HVAC, Engines, Electrical Circuits)",
+        "Basic Tools of the Industry/Product"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "11/28"
+    },
+    {
+      "title": "Penetration Tester",
+      "qualifications": [
+        "Cybersecurity or Penetration Tester (sysadmin, infrastructure, net-engineering, software development, and security-engineer experience)",
+        "Blue Team, write exploits from scratch",
+        "BloodHound, Mimikatz, Metasploit, Cobalt Strike",
+        "Windows and Linux internals, DNS, SMB, LDAP, and Kerberos",
+        "Kali, Linux, Burp Suite, Metasploit, Nessus",
+        "Python, PowerShell, Bash",
+        "Bonus: OSCP, CEH, or GPEN"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "12/1"
+    },
+    {
+      "title": "M&A/Merger Acquisation Analyst",
+      "qualifications": [
+        "Degree in Money",
+        "Corporate Development or Financial Analysis",
+        "Microsoft Office: Excel (Macros/Pivot tables) PowerPoint",
+        "financial modeling",
+        "multi-task, and produce quality work within tight deadlines",
+        "Interact with stakeholders"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "12/3"
+    },
+    {
+      "title": "Quantitative Developer",
+      "qualifications": [
+        "Degree",
+        "C++, Python, Linux",
+        "Finance Industry Experience",
+        "Financial Markets and Options",
+        "Infrastructure, ML (NumPy, Pandas, etc)",
+        "Communicate complex topics to non-technical people"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "10/12"
+    },
+    {
+      "title": "Assistant General Manager",
+      "qualifications": [
+        "Education",
+        "Leadership experience, how you solved problems with people, coaching/training",
+        "Industry",
+        "Microsoft Office Word, Excel, PowerPoint, and Outlook",
+        "scheduling, inventory management, and financial oversight, multitasking",
+        "ability to influence people at all levels of the organization"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "12/222/2025"
+    },
+    {
+      "title": "Analytics Engineer",
+      "qualifications": [
+        "Degree",
+        "SQL, Databricks, PySpark, Data Engineering",
+        "SDLC, building, testing, coding, Python",
+        "Cloud, BI Tools/Data Visualization tools (Tableau, Looker, Power BI)",
+        "AI, CI/CD, Large Data Sets, Cloud, Database Managment Systems (MongoDB, Microsoft SQL)",
+        "ability to collaborate with both technical and non-technical stakeholders.",
+        "Extra Credit: ETL, ELT, R, data governance"
+      ],
+      "last_updated": null,
+      "last_updated_raw": ""
+    },
+    {
+      "title": "HR Data Analyst",
+      "qualifications": [
+        "Degree, Industry (HRIS, UKG Ready, ADP, Workday, Paycom)",
+        "SQL, data visualization (Tableau, Power BI, Looker)",
+        "Stakeholders, explaining technical concept to nontechnical stakeholders",
+        "Policies and Law",
+        "MS Excel (macros, pivot tables, VLOOKUP), Word",
+        "Multiple Projects and deadlines"
+      ],
+      "last_updated": "2025-12-29",
+      "last_updated_raw": "12/29/2025"
+    },
+    {
+      "title": "Cloud Architect (Azure)",
+      "qualifications": [
+        "Degree",
+        "DevOps, CI/CD, GitHub Actions, Microsoft 365",
+        "Azure (Landing Zones, Core, Arc, Migrate, etc)",
+        "Communicated complex ideas to non-technical stakeholders/customers",
+        "Microsoft certifications",
+        "PowerShell, Infrastructure as Code (IaC)",
+        "Bonus: Bicep/ARM/Terraform"
+      ],
+      "last_updated": "2026-01-07",
+      "last_updated_raw": "1/7/2026"
+    },
+    {
+      "title": "Cashier",
+      "qualifications": [
+        "Basic Computing Skills (MS Office)",
+        "Retail Experience, customer service (phone/in-person)",
+        "Flexible Schedule",
+        "POS (if you have it)",
+        "Cash-handling, Basic Math",
+        "Multiask"
+      ],
+      "last_updated": "2026-01-07",
+      "last_updated_raw": "1/7/2026"
+    },
+    {
+      "title": "Communications Specialist",
+      "qualifications": [
+        "Public Relations or Corporate Communications, Industry",
+        "Explain complex topics to non-technical people, stakeholders, and customers",
+        "Technical material into written naratives",
+        "Meet deadlines while multitasking",
+        "Microsoft Office 365 (Word, Excel, Outlook, SharePoint.",
+        "Adobe, Photoshop, InDesign",
+        "NO SPELLING OR GRAMMATICAL ERRORS"
+      ],
+      "last_updated": "2026-01-12",
+      "last_updated_raw": "1/12/2026"
+    },
+    {
+      "title": "DevOps Intern",
+      "qualifications": [
+        "Degree",
+        "Basic knowledge of DevOps (Git, CI/CD, Cloud, Linux/Unix, SDLC, Infrastructure as Code (IaC), Terraform, Docker, Backend Language).",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-01-14",
+      "last_updated_raw": "1/14/2026"
+    },
+    {
+      "title": "Electrical Engineer",
+      "qualifications": [
+        "Degree",
+        "AutoCAD, MATLAB",
+        "SCADA, BMS, Product (Engines, Wheels)",
+        "DFM/DFT Principles",
+        "Microsoft Project, Excel, Word, Outlook",
+        "Schematic and layout analog circuit design (amplifiers, filters, power supplies, noise issues)",
+        "PLC (possibly)"
+      ],
+      "last_updated": "2026-01-16",
+      "last_updated_raw": "1/16/2026"
+    },
+    {
+      "title": "Operations Manager",
+      "qualifications": [
+        "Industry, Warehouse, Degree",
+        "Microsoft Office products. Examples include Word, Excel, Outlook, etc.",
+        "staffing, selection, training, development, coaching, mentoring",
+        "Leading non-stakeholders (conflict management, issues, ect) and stakeholder management/buy-in",
+        "Meet Deadlines and be on schedule",
+        "Nice to Have: KPI, SOP, cross-functional, Lean, Six Sigma"
+      ],
+      "last_updated": "2026-01-21",
+      "last_updated_raw": "1/21/2026"
+    },
+    {
+      "title": "HR Director",
+      "qualifications": [
+        "Degree, Industry (Healthcare, Start Ups, etc)",
+        "Talent Attraction (Recruitment, Scaling, Teams, Hiring)",
+        "Retention and Systems (Equity compensation, Retention Strategies, X market knowledge)",
+        "Influence Stakeholders, Numbers of employees and volume",
+        "Multitask while meeting deadlines across cross-functional stakeholders. Speak to the lowest to the highest in the company",
+        "HR laws, regulations, Policy",
+        "Tech (HRIS, MS Office, etc)"
+      ],
+      "last_updated": "2026-01-23",
+      "last_updated_raw": "1/23/2026"
+    },
+    {
+      "title": "Cloud Engineer",
+      "qualifications": [
+        "Degree and certs",
+        "Azure or AWS and it’s keywords",
+        "Cloud Infrastructure",
+        "CI/CD, Agile",
+        "Ansible, IaC (Terraform), Python, Bash, PowerShell",
+        "Monitoring platforms: Prometheus, Grafana,",
+        "Nice to Have: Clearance, DevOps"
+      ],
+      "last_updated": "2026-10-14",
+      "last_updated_raw": "10/14/2026"
+    },
+    {
+      "title": "Recruiter / Talent Acquisition Specialist",
+      "qualifications": [
+        "Degree (sometimes)",
+        "Industries (Tech vs Non-Tech), High Volume",
+        "fill niche and complex openings",
+        "ATS (Type), LinkedIn/Indeed, Boolean, Sourcing",
+        "MS Office, negotiation, Compensation structures, full life cycle recruiting",
+        "Customer Service with candidates, hiring managers, peers, and HR team",
+        "influence stakeholders (HMs, HR, etc)",
+        "Multitask"
+      ],
+      "last_updated": "2026-01-26",
+      "last_updated_raw": "1/26/2026"
+    },
+    {
+      "title": "Battery Engineer",
+      "qualifications": [
+        "Masters/PhD",
+        "Batteries, Type of Batteries",
+        "CAD, SolidWorks, AutoCad, MATLAB",
+        "Microsoft Office",
+        "Industry of Batteries (Aerospace or EV)",
+        "battery safety standards (e.g., UN 38.3, UL 1642/1973)",
+        "Leadership",
+        "Make it understandable to someone who did not graduate highschool"
+      ],
+      "last_updated": "2026-01-28",
+      "last_updated_raw": "1/28/2026"
+    },
+    {
+      "title": "Vendor Manager",
+      "qualifications": [
+        "Vendor Managment, Contracts, Due Diligence",
+        "Stakeholder Management, Influence Stakeholder",
+        "Industry",
+        "Microsoft Office (Excel, Pivot Tables, Complex Formula)"
+      ],
+      "last_updated": "2026-02-02",
+      "last_updated_raw": "2/2/2026"
+    },
+    {
+      "title": "Research Scientist",
+      "qualifications": [
+        "Degree (Ph.D/Masters)",
+        "An understanding of Industry processes",
+        "Basic Industry Tools (i.e. assays)",
+        "Microsoft Office Suite",
+        "Work Cross Functionally",
+        "trouble shooting",
+        "Read documents, schedules, and manuals"
+      ],
+      "last_updated": "2026-02-02",
+      "last_updated_raw": "2/2/2026"
+    },
+    {
+      "title": "Automation Engineer",
+      "qualifications": [
+        "Degree, PLC (Studio 5000, RSLogix, etc) Human Machine Interface (HMI, Studio 500, RSLogix)",
+        "Automation-Allen Bradley & Siemens",
+        "Multitask, servo-driven systems",
+        "AutoCAD, Microsoft SQL",
+        "Programming (C++, Visual Basic, Java, Python, etc.)"
+      ],
+      "last_updated": "2025-02-11",
+      "last_updated_raw": "2/11/2025"
+    },
+    {
+      "title": "Manufacturing Supervisor / Production Supervisor",
+      "qualifications": [
+        "Degree/Highschool",
+        "Manufacturing (type of product),",
+        "Supervisory/leadership (#reports, how you supervised, how you solved issues with people, how you solved conflicts)",
+        "Communicate with all levels in the organization (From Janitor to CEO)",
+        "Microsoft Office (Word, Excel, Outlook, PowerPoint), basic math",
+        "ISO 9001 or IATF 16949",
+        "SAP, ERP",
+        "Bonus: Nightshift or 24/7 coverage"
+      ],
+      "last_updated": "2026-02-20",
+      "last_updated_raw": "2/20/2026"
+    },
+    {
+      "title": "Data Analyst Intern",
+      "qualifications": [
+        "Degree",
+        "SQL, Python, Power BI, Tableau, Excel, MS Office,",
+        "PowerPoint, AI Tools, R, industry if you have it.",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": null,
+      "last_updated_raw": "8/14"
+    },
+    {
+      "title": "Business Analyst Intern",
+      "qualifications": [
+        "Degree",
+        "Basic knowledge of (SQL, Snowflake, Python, Tableau, Power BI, communicate and influence, Microsoft Windows and Office, including Word, PowerPoint, Advanced Excel, and Outlook), Deadlines, and organizational skills.",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-03-11",
+      "last_updated_raw": "3/11/2026"
+    },
+    {
+      "title": "SDET (Software Test Engineer)",
+      "qualifications": [
+        "Degree",
+        "testing methodologies (functional, usability, end-to-end, regression, backend testing)",
+        "Database testing/SQL",
+        "Agile/Scrum, CI/CD, Git, Jenkins,",
+        "Communicate bugs to developers and other stakeholders",
+        "WHAT ARE YOU TESTING AND IT’s KEYWORDS such as the following",
+        "Coding Language, , TestRail, Azure DevOps, Jama).",
+        "frameworks/tools such as: UI: Playwright / Cypress / Selenium and API: pytest + requests, Postman/Newman"
+      ],
+      "last_updated": "2026-03-11",
+      "last_updated_raw": "3/11/2026"
+    },
+    {
+      "title": "Patient Access Coordinator",
+      "qualifications": [
+        "High school or Prior Experience",
+        "Medical billing, scheduling",
+        "Medical office, Computer Skills (Office)",
+        "One of: Admin, Receptionist, Front Office",
+        "Customer Service",
+        "Organizational detail, ability to meet deadlines, Multitask",
+        "Drivers License"
+      ],
+      "last_updated": "2026-03-13",
+      "last_updated_raw": "3/13/2026"
+    },
+    {
+      "title": "Staff Accountant",
+      "qualifications": [
+        "Degree, CPA (Very nice to have)",
+        "Microsoft Office (Excel, Outlook, etc.)",
+        "Manage multiple active projects and deadlines",
+        "GAAP",
+        "Attention to detail",
+        "Good communication (Verbal/Written)",
+        "Nice to Have: General Ledger system such as Oracle Fusion"
+      ],
+      "last_updated": "2026-03-18",
+      "last_updated_raw": "3/18/2026"
+    },
+    {
+      "title": "Intern (Quality Engineer/SDET)",
+      "qualifications": [
+        "Degree",
+        "Basic knowledge of the Industry: SPC, FMEA, control charts, (Microsoft Office Excel, Word, PowerPoint), ISO, what you worked on and it’s industry (i.e. Airplane Engineers), Manufacturing, ERP or SAP.",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-03-18",
+      "last_updated_raw": "3/18/2026"
+    },
+    {
+      "title": "Cybersecurity Intern",
+      "qualifications": [
+        "Degree",
+        "Basic knowledge of Cybersecurity/IT Support: MS Office, Networking, Cybersecurity Principles, Phishing, Malware, Windows, presentations",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-05-01",
+      "last_updated_raw": "5/1/2026"
+    },
+    {
+      "title": "Technical Program Manager",
+      "qualifications": [
+        "Degree",
+        "Managing Projects, # of projects, people, you led. 0 to 1 (project lifecycle)",
+        "How you influenced stakeholders and the business reason you did so",
+        "Can manager and speak to technical and non-technical people",
+        "Tech knowledge: AI/ML, etc",
+        "tools (e.g. Jira, Confluence, Smartsheet, MS Project, or similar)\\",
+        "Agile, Cross Functional, Certs"
+      ],
+      "last_updated": "2026-05-01",
+      "last_updated_raw": "5/1/2026"
+    },
+    {
+      "title": "Product Manager Intern",
+      "qualifications": [
+        "Degree",
+        "Work Cross Functionally, explain complex technical topics to non-technical people, product tech (Cloud, AI, etc), Industry, Fast moving environment, leadership",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-05-06",
+      "last_updated_raw": "5/6/2026"
+    },
+    {
+      "title": "Cyber Security Engineer",
+      "qualifications": [
+        "Degree, Certifications, Clearance",
+        "Cloud (AWS, Azure, GCP),",
+        "Identity and Access Management (IAM)",
+        "NIST, RMF, CJIS, IKSO, SOC, SOX,",
+        "SIEM, PowerShell, Bash, or Python",
+        "Security risk, vulnerability, contingency planning, threat detection & monitoring",
+        "Communicate technical details to non-tech audience (Stakeholder/Customer)",
+        "Nice to Have: Security Clearance"
+      ],
+      "last_updated": "2026-09-25",
+      "last_updated_raw": "9/25/2026"
+    },
+    {
+      "title": "FPGA Engineer",
+      "qualifications": [
+        "Degree",
+        "FPGA (SystemVerilog or VHDL)",
+        "DSP",
+        "Agile/Iterative Development Life Cycle",
+        "Cross Functional",
+        "Explain complex technical issues to non-technical people",
+        "Industry/Application (I can’t name them all)"
+      ],
+      "last_updated": "2026-05-18",
+      "last_updated_raw": "5/18/2026"
+    },
+    {
+      "title": "AI Engineer Intern",
+      "qualifications": [
+        "Degree",
+        "Basic SWE: Python or Java, TypeScript, JavaScript, React, SQL, Git, Cloud, APIs",
+        "Basic AI: AI, ML, RAG, GenAI, Agentic AI, AI/ML, AI Tools (ChatGPT, Claude, or GitHub Copilot), LangGraph or LangChain",
+        "Explain technical concepts to non-technical people.",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-08-31",
+      "last_updated_raw": "8/31/2026"
+    },
+    {
+      "title": "Investment Banking Analyst",
+      "qualifications": [
+        "Degree",
+        "MS Office (Excel, PowerPoint, Word)",
+        "Manage multiple workstreams and meet tight deadlines",
+        "Banking OR Finance OR FP&A",
+        "financial modeling, valuation, and accounting",
+        "Communicate technical details to non-technical people (any communication)"
+      ],
+      "last_updated": "2026-05-29",
+      "last_updated_raw": "5/29/2026"
+    },
+    {
+      "title": "Product (UI/UX) Design Intern",
+      "qualifications": [
+        "Degree, Portfolio",
+        "Ability to work with others",
+        "Takes direction and criticism",
+        "Figma, Adobe Creative Suite, Google Workspace, A/B Testing, Wireframing (or Research), AI, UI/UX"
+      ],
+      "last_updated": "2026-05-29",
+      "last_updated_raw": "5/29/2026"
+    },
+    {
+      "title": "Desktop Engineer",
+      "qualifications": [
+        "Windows (10/11), Microsoft/MS 365 stack (Entra ID, Intune, Exchange)",
+        "Word, Excel, Outlook, Troubleshooting",
+        "DNS, DHCP, TCP/IP, and VPN",
+        "Multitask while meeting all deadlines, customer service",
+        "produce clear technical documentation and ticket notes that another engineer can act on",
+        "Explain complex technical details for non-technical people"
+      ],
+      "last_updated": "2026-06-01",
+      "last_updated_raw": "6/1/2026"
+    },
+    {
+      "title": "Director of Customer Operations",
+      "qualifications": [
+        "Degree",
+        "Scaling/growing the company/processes",
+        "Distill complex, cross‑functional problems into clear, concise narratives and recommendations for stakeholders",
+        "Size of company and budget",
+        "Influence stakeholders and the company",
+        "Leadership: Volume of people, budget, how you solved problems pro-actively with people",
+        "Industry and tools (such as AI)"
+      ],
+      "last_updated": "2026-06-01",
+      "last_updated_raw": "6/1/2026"
+    },
+    {
+      "title": "Actuarial Analyst",
+      "qualifications": [
+        "Degree",
+        "Actuarial Exams completed",
+        "Actuarial Modeling, Data Analysis, Analyzing Large Datasets",
+        "Solve problems with Data",
+        "SQL, Power BI, Excel, MS Office",
+        "Explain complex technical data to non-technical stakeholders",
+        "Work together as a team",
+        "Industry (Healthcare, Insurance, etc)"
+      ],
+      "last_updated": "2026-06-12",
+      "last_updated_raw": "6/12/2026"
+    },
+    {
+      "title": "Quantitative Researcher",
+      "qualifications": [
+        "BS with 2+ years or MS or PHD",
+        "Python (Pandas, NumPy), C++, R, SQL,",
+        "Algorithmic trading research, Data Analysis",
+        "Quantitative finance concepts and methodologies",
+        "Communicate technical details to a non-tech audience",
+        "Pro-actively solve problems with Math",
+        "Machine Learning (ML)",
+        "Extra Credit: market microstructure, forecasting"
+      ],
+      "last_updated": "2026-07-01",
+      "last_updated_raw": "7/1/2026"
+    },
+    {
+      "title": "Research Assistant",
+      "qualifications": [
+        "Degree in Progress and/or HS",
+        "Report Writing,",
+        "Industry",
+        "Present Findings to non-technical people from lowest to highest",
+        "Meet Deadlines and attention to detail",
+        "Microsoft Office Tools (Outlook, Excel, Word, Powerpoint)"
+      ],
+      "last_updated": "2026-07-01",
+      "last_updated_raw": "7/1/2026"
+    },
+    {
+      "title": "Salesforce Developer",
+      "qualifications": [
+        "Degree, Certs",
+        "Salesforce, Industry",
+        "APEX, Triggers, Lightning Web Components (LWC), Flow, SOQL/SOSL",
+        "Reports/Dashboards, JavaScript",
+        "Cloud, Agile, Jira",
+        "Salesforce architecture, RESTful APIs OR Rest APIs, and integrations",
+        "Explain complex tech to non-tech audience",
+        "Microsoft 365 Applications/Suite",
+        "MuleSoft, DevOps, CI/CD"
+      ],
+      "last_updated": "2026-07-10",
+      "last_updated_raw": "7/10/2026"
+    },
+    {
+      "title": "Procurement Manager (IC)",
+      "qualifications": [
+        "Degree/HS Diploma, Certs",
+        "Sourcing, Procurement, Supply chain, or Category Management",
+        "Vendor, Supplier, Contract Management",
+        "Influence Stakeholders and stakeholder management",
+        "MS Office, Excel",
+        "Power BI, Tableau,",
+        "negotiate effectively and manage supplier relationships",
+        "Cross Functional, Supply Chain",
+        "Industry (Categories)"
+      ],
+      "last_updated": "2026-07-22",
+      "last_updated_raw": "7/22/2026"
+    },
+    {
+      "title": "Lab Manager",
+      "qualifications": [
+        "Degree",
+        "ISO, FDA, Industry",
+        "Laboratory, Manufacturing, or technical facilities management role",
+        "Common lab equipment (LC/MS, Centrifuges, Fume hoods, etc)",
+        "Troubleshooting, maintenance,",
+        "Communicate tech to non-tech people, proactively solve problems",
+        "Multi task and meet deadlines, MS Excel",
+        "Managing vendors, service providers, operating budget"
+      ],
+      "last_updated": "2026-07-24",
+      "last_updated_raw": "7/24/2026"
+    },
+    {
+      "title": "Application Security Engineer",
+      "qualifications": [
+        "Degree, Certs",
+        "DevSecOps, SDLC, Threat Modeling",
+        "Security Testing, OWASP Top 10",
+        "Secure Code Review, CI/CD (Security)",
+        "SAST/DAST, vulnerability scanning solutions, security tooling, API Security",
+        "Communicate to non-technical people",
+        "Nice to Have: Cloud, AI, Language (Python, Java, etc)"
+      ],
+      "last_updated": "2026-08-12",
+      "last_updated_raw": "8/12/2026"
+    },
+    {
+      "title": "Data Engineer Intern",
+      "qualifications": [
+        "Degree",
+        "Python (or Java), SQL, Cloud and Its words (AWS and S3)",
+        "CI/CD, Git, Data Modeling, Data Warehouse (Snowflake), ETL/ELT, Data Structures",
+        "Ability to work with others",
+        "Takes direction and criticism",
+        "Extra Credit: MATLAB, AI, Pipelines"
+      ],
+      "last_updated": "2026-09-09",
+      "last_updated_raw": "9/9/2026"
+    },
+    {
+      "title": "Product Support Specialist",
+      "qualifications": [
+        "Associates/Degree/Highschool",
+        "Product/Industry",
+        "Communicate technical details to non-technical people while performing customer service to all levels of clients",
+        "Sales, Troubleshooting for clients while maintaining a positive attitude (Empathy)",
+        "MS Office, Excel, PowerPoint, Cross Functional",
+        "Travel"
+      ],
+      "last_updated": "2026-08-28",
+      "last_updated_raw": "8/28/2026"
+    },
+    {
+      "title": "Quantitative Developer Intern",
+      "qualifications": [
+        "Degree (CS, Math, etc)",
+        "Python, C++, C#",
+        "Linux, Finance theory, Finance Theory, Quantitative. Systematic Trading",
+        "financial markets and trading industry",
+        "Communicate Technical Details, to a non-technical audience",
+        "Ability to work with others",
+        "Takes direction and criticism"
+      ],
+      "last_updated": "2026-09-04",
+      "last_updated_raw": "9/4/2026"
+    },
+    {
+      "title": "Investment Analyst",
+      "qualifications": [
+        "Degree",
+        "CFA (even if it is in progress)",
+        "Industry (Investment Banking, etc)",
+        "Investment XXX",
+        "Microsoft Excel (Pivot tables, lookup, Financial Modeling), MS Office (PowerPoint)",
+        "Python OR SQL OR VBA",
+        "Manage Multiple Projects and deadlines",
+        "Communicate technical details to a non-technical audience (Customers and stakeholders)",
+        "PowerPoint, Financial Industry"
+      ],
+      "last_updated": "2026-09-17",
+      "last_updated_raw": "9/17/2026"
+    },
+    {
+      "title": "Product Management Intern",
+      "qualifications": [
+        "Degree",
+        "MS Office including Excel, PowerPoint, Word, and Outlook",
+        "Communicate to technical and non-technical people (Stakeholders and Customers)",
+        "Influenced People with data to solve problems",
+        "Take Direction and Criticism, and Work Together with others",
+        "Nice to Have: Cross Functional, AI"
+      ],
+      "last_updated": "2026-09-18",
+      "last_updated_raw": "9/18/2026"
+    },
+    {
+      "title": "Retail Associate",
+      "qualifications": [
+        "Highschool education",
+        "Retail Experience",
+        "Communicate to customers, Basic Math Skills, point-of-sale, (POS)",
+        "multitask in a fast paced environment while performing customer service",
+        "Bonus: Basic Computer Skills (MS Office)"
+      ],
+      "last_updated": "2026-09-30",
+      "last_updated_raw": "9/30/26"
+    },
+    {
+      "title": "Recruitment",
+      "qualifications": [
+        "Degree",
+        "Full Cycle Recruiting: Sourcing, Screening, interviewing, and offers",
+        "Hiring for X industry (tech, startups, etc)",
+        "Influencing Stakeholders cross functionally and building trust with HM and Candidates",
+        "Using ATS (and it’s type), job boards, and professional networks to build and maintain talent pipelines.",
+        "Multitask and meet deadlines with searches",
+        "Closing industry experts and hard to fill roles with quality candidates"
+      ],
+      "last_updated": "2026-10-01",
+      "last_updated_raw": "10/1/26"
+    },
+    {
+      "title": "Sales Development Representative",
+      "qualifications": [
+        "Industry, Sales",
+        "Sourcing prospects and closing sales independently",
+        "Communicate in English (verbal and written)",
+        "Sold or built trust through Phone, Email, In-person",
+        "Basic computer skills (CRM / MS Office), B2B",
+        "Closed deals and success of sales",
+        "Multitask and meet deadline, The GRIND"
+      ],
+      "last_updated": "2026-10-07",
+      "last_updated_raw": "10/7/26"
+    }
+  ]
+}

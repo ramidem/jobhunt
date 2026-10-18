@@ -12,53 +12,48 @@ import type { Resume } from "@/lib/resume-schema";
 
 const styles = StyleSheet.create({
   page: {
-    padding: 46,
+    padding: 72,
     color: "#101417",
     fontFamily: "Helvetica",
-    fontSize: 9.5,
-    lineHeight: 1.35,
+    fontSize: 10.5,
+    lineHeight: 1.5,
   },
   header: {
-    borderBottom: "1 solid #101417",
-    marginBottom: 18,
-    paddingBottom: 8,
+    lineHeight: 1.15,
+    marginBottom: 6,
     textAlign: "center",
   },
   name: {
-    fontSize: 15,
+    fontSize: 16,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 0,
   },
-  headline: {
-    marginTop: 5,
-    fontFamily: "Helvetica-Bold",
-    fontSize: 9.5,
-  },
   contact: {
     justifyContent: "center",
-    marginTop: 8,
+    marginTop: 4,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 5,
-    color: "#2f3a40",
+  },
+  link: {
+    color: "#1a55c7",
   },
   section: {
-    marginTop: 13,
+    marginTop: 14,
   },
   sectionTitle: {
     fontFamily: "Helvetica-Bold",
     fontSize: 11,
-    marginBottom: 7,
-    textAlign: "center",
+    marginBottom: 5,
   },
   row: {
     marginBottom: 7,
   },
   nestedRow: {
-    borderLeft: "1 solid #d9dde1",
-    marginLeft: 7,
-    marginTop: 5,
-    paddingLeft: 7,
+    marginTop: 6,
+  },
+  italic: {
+    fontFamily: "Helvetica-Oblique",
   },
   roleLine: {
     flexDirection: "row",
@@ -76,7 +71,8 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   bulletMark: {
-    width: 9,
+    width: 14,
+    marginLeft: 10,
   },
   bulletText: {
     flex: 1,
@@ -104,7 +100,7 @@ function Bullet({ children }: { children: string }) {
 }
 
 function formatDates(start: string, end: string) {
-  return start === end ? start : `${start} - ${end}`;
+  return start === end ? start : `${start} to ${end}`;
 }
 
 type ExperienceItem = Resume["experience"][number];
@@ -113,13 +109,14 @@ function ExperienceBlock({ item, nested = false }: { item: ExperienceItem; neste
   return (
     <View style={nested ? styles.nestedRow : styles.row}>
       <View style={styles.roleLine}>
-        <Text>
-          <Text style={styles.bold}>{item.organization}</Text>
-          <Text> — {item.role}</Text>
+        <Text style={styles.italic}>
+          {item.role} at {item.organization}
+          {item.location && !nested ? `, ${item.location}` : ""}
         </Text>
-        <Text style={styles.muted}>{formatDates(item.start, item.end)}</Text>
+        <Text style={styles.italic}>{formatDates(item.start, item.end)}</Text>
       </View>
-      {item.summary ? <Text style={styles.muted}>{item.summary}</Text> : null}
+      {item.location && nested ? <Text style={styles.muted}>{item.location}</Text> : null}
+      {item.summary ? <Text>{item.summary}</Text> : null}
       {item.bullets.map((bullet) => (
         <Bullet key={bullet}>{bullet}</Bullet>
       ))}
@@ -140,35 +137,29 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
       <Page size="LETTER" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{resume.name}</Text>
-          <Text style={styles.headline}>{resume.headline}</Text>
           <View style={styles.contact}>
-            <Text>{resume.location}</Text>
-            <Text>•</Text>
-            <Link src={`mailto:${resume.email}`}>{resume.email}</Link>
-            {resume.phone ? (
-              <>
-                <Text>•</Text>
-                <Text>{resume.phone}</Text>
-              </>
-            ) : null}
+            {resume.phone ? <Text>{resume.phone} |</Text> : null}
+            <Link src={`mailto:${resume.email}`} style={styles.link}>
+              {resume.email}
+            </Link>
             {resume.links.map((link) => (
-              <Link key={link.href} src={link.href}>
-                • {link.label}
+              <Link key={link.href} src={link.href} style={styles.link}>
+                | {link.label}
               </Link>
             ))}
           </View>
+          <Text>{resume.location}</Text>
         </View>
 
         {resume.education.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
+            <Text style={styles.sectionTitle}>Education & Certificates</Text>
             {resume.education.map((item) => (
               <View key={`${item.institution}-${item.degree}`} style={styles.row}>
                 <View style={styles.roleLine}>
-                  <Text style={styles.bold}>{item.institution}</Text>
-                  <Text style={styles.muted}>{item.dates}</Text>
+                  <Bullet>{`${item.degree} from ${item.institution}`}</Bullet>
+                  <Text>{item.dates}</Text>
                 </View>
-                <Text>{item.degree}</Text>
                 {item.details.map((detail) => (
                   <Bullet key={detail}>{detail}</Bullet>
                 ))}
@@ -179,7 +170,7 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
 
         {resume.experience.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Experience</Text>
+            <Text style={styles.sectionTitle}>Work History</Text>
             {resume.experience.map((item) => (
               <ExperienceBlock item={item} key={`${item.organization}-${item.role}`} />
             ))}
@@ -197,22 +188,6 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
             ))}
           </View>
         ) : null}
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills & Interests</Text>
-          {resume.skills.map((skill) => (
-            <View key={skill.label} style={styles.skillRow}>
-              <Text style={styles.skillLabel}>{skill.label}</Text>
-              <Text style={styles.skillItems}>{skill.items.join(", ")}</Text>
-            </View>
-          ))}
-          {resume.interests.length > 0 ? (
-            <View style={styles.skillRow}>
-              <Text style={styles.skillLabel}>Interests</Text>
-              <Text style={styles.skillItems}>{resume.interests.join(", ")}</Text>
-            </View>
-          ) : null}
-        </View>
       </Page>
     </Document>
   );

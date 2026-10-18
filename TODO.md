@@ -1,0 +1,52 @@
+# TODO
+
+MVP shipped: sidebar workspace with `/resume` (paste a job description, get a keyword-ranked resume), `/applications`, `/qualifications`, `/skills`.
+
+## Before deploying
+
+- [ ] Protect the workspace routes (auth or a deploy-time flag). They are `noindex` and disallowed in `robots.ts`, but publicly reachable, and `data/qualifications.json` is bundled into the page.
+- [ ] Decide whether `data/guide.md` stays out of the repo (it says "reference only; not published").
+
+## Tailoring (`/resume`)
+
+- [ ] Replace keyword matching with an LLM pass (AI Gateway) for role-title detection, seniority, and soft requirements; keep the "no invented claims" rule.
+- [ ] Grow the term list in `src/lib/tailor.ts` from `data/qualifications.json` instead of a hand-written map.
+- [ ] Cap bullets per entry for a one-page fit; show page-length estimate.
+- [ ] Generate a tailored summary/headline, with approval before use.
+- [ ] Export tailored PDF via `@react-pdf/renderer` (currently browser print), and verify ATS text extraction.
+- [ ] Use confirmed `projects/*-resume.md` bullets as the source pool, not just `src/data/resume.ts`.
+- [ ] Use the NDA-safe public names only; add a check that private names never appear.
+- [ ] Persist the tailored resume per application and let `/applications` re-open it.
+
+## Resume format (from transcript/01.md, a recruiter's review rules)
+
+- [ ] Bullet linter: 3 to 6 keywords per bullet, 3 to 6 bullets per role (about 3 under 3 years, 4 to 5 over 4 years), no duplicate keyword within a bullet, flag numbers, slashes, "learned", and unexplained jargon.
+- [ ] Soft skills are inferred for a senior engineer, except daily standups (confirmed by Med). Review: partnering with stakeholders (Alignly), setting priorities and explaining choices to non-technical teams (FCCD), mentoring and code review (MLhuillier), guiding developers (Coaxis), responding to review feedback (MyPetCare). Also confirm: HTML and CSS (FCCD), REST APIs (MLhuillier), CI/CD with Cloud Build (Coaxis).
+- [ ] Earlier: confirm claims that were written to match the format: HTML and CSS (dropped from the resume when bullets were sorted by date; add back to a bullet only if confirmed), "AI-augmented" lead wording, Lesson Planner "Word documents" wording, education "Status - Graduated".
+- [ ] Per-role keyword templates (full stack, backend, Python, etc.) in the tailor, with the stack and cloud in the first bullet.
+- [ ] Visa or work-authorization line for the target country; never write "open to relocation".
+- [ ] Application timing: apply within the first 100 applicants; track posting age in `/applications`.
+
+## Applications
+
+- [ ] Sync storage (Firestore is already a dependency) so data isn't tied to one browser.
+- [ ] Kanban view, follow-up reminders, interview notes, contacts, salary.
+- [ ] Import/export (CSV/JSON).
+
+## Qualifications
+
+- [ ] Group by category, sort/filter by fit against your skills.
+- [ ] Show which qualifications you already cover per role (join with `/skills`).
+- [ ] Refresh script to re-export the Google Sheet into `data/qualifications.json`.
+- [ ] Clean up messy titles in the source data (e.g. a role title containing a full paragraph).
+
+## Skills
+
+- [ ] Count how many roles' qualifications mention each skill to prioritise learning.
+- [ ] Learning resources, target dates, and proficiency level.
+- [ ] Seed `/resume` match hints even before `/skills` is first visited.
+
+## Quality
+
+- [ ] Tests for `tailor.ts` (term extraction, ranking, case-sensitive terms like "Go").
+- [ ] Mobile pass on the workspace layout.
