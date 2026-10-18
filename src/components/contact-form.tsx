@@ -2,6 +2,8 @@
 
 import { FormEvent, useState } from "react";
 import { Send } from "lucide-react";
+import { messageSchema } from "@/lib/resume-schema";
+import { saveResumeMessage } from "@/lib/firebase";
 
 type FormState = "idle" | "sending" | "sent" | "error";
 
@@ -22,18 +24,18 @@ export function ContactForm() {
       page: window.location.href,
     };
 
-    const response = await fetch("/api/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    }).catch(() => null);
+    const form = event.currentTarget;
+    const parsed = messageSchema.safeParse(payload);
+    const result = parsed.success
+      ? await saveResumeMessage(parsed.data).catch(() => null)
+      : null;
 
-    if (!response?.ok) {
+    if (!result) {
       setState("error");
       return;
     }
 
-    event.currentTarget.reset();
+    form.reset();
     setState("sent");
   }
 
