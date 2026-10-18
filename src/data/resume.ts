@@ -3,7 +3,7 @@ import { resumeSchema, type Resume } from "@/lib/resume-schema";
 const draftResume = {
   name: "Med Aduh",
   headline: "Software Engineer | Backend-leaning full-stack systems and product delivery",
-  location: "Davao City, Philippines / Remote",
+  location: "Davao City, Philippines (Remote)",
   email: "im.ramidem@gmail.com",
   links: [
     { label: "GitHub", href: "https://github.com/ramidem" },
@@ -15,7 +15,8 @@ const draftResume = {
     {
       institution: "Western Mindanao State University",
       degree: "Bachelor of Science - BS, Mass Communication/Media Studies",
-      dates: "2007 - 2010",
+      // Shown as the status line in the one-line education format.
+      dates: "Status - Graduated",
       details: [],
     },
   ],
@@ -26,60 +27,18 @@ const draftResume = {
       role: "Software Engineer",
       start: "Nov 2020",
       end: "Present",
-      summary:
-        "Client and product engineering across NDA platforms, using full-stack and AI-assisted workflows to ship operational software.",
+      // Order: Alignly, FCCD, MLhuillier, Coaxis, MyPetCare, Lesson Planner (set by Med).
+      // Written against the Full Stack, AI Engineer, and Cloud qualifications in data/qualifications.json,
+      // with soft skills (leading, collaboration, feedback). Personal projects (RoundSave, Nookbud) are excluded.
       bullets: [
-        "Shipped production work across React, TypeScript, Next.js, NestJS, Firebase, Strapi, MySQL/PostgreSQL, and Google Cloud.",
+        "Led AI-augmented development of an HR and payroll platform using TypeScript, React, Next.js, and Firebase on Google Cloud, running daily Agile standups and partnering with client stakeholders to turn their requests into features, so companies could manage employees, time off, and payroll in one system.",
+        "Led AI-augmented development of an internal operations platform using JavaScript, TypeScript, HTML, CSS, React, and Playwright tests, setting priorities with the team and explaining technical choices to non-technical client teams, so sales staff could track accounts, visits, and distributor reports in one place.",
+        "Maintained a financial services platform for nearly five years using React, Node.js, NestJS, REST APIs, SQL, and Jest, mentoring teammates, reviewing their code, and acting on feedback, so branch staff could complete customer verification, money transfers, and daily reports more smoothly.",
+        "Led a content management platform project using Strapi, TypeScript, React, Google Cloud, and CI/CD with Cloud Build, guiding fellow developers and coordinating with the client's team, so their staff could review and manage marketplace content from one admin screen.",
+        "Implemented role-based access control with NestJS, Next.js, TypeScript, and PostgreSQL for a veterinary clinic platform, taking direction on priorities and responding to review feedback, so clinic owners, vets, staff, and pet owners each see only the information meant for them.",
+        "Improved the lesson document export and web pages of an AI-assisted lesson planning platform using Next.js, React, and TypeScript, as part of a team, so teachers could download their lesson plans as Word documents.",
       ],
-      highlights: [
-        {
-          organization: "Financial Services Operations Platform",
-          location: "React / TypeScript / MySQL",
-          role: "Software Engineer",
-          start: "Jan 2021",
-          end: "Nov 2025",
-          bullets: [
-            "Maintained KYC, remittance, ShopSafe, vault, reporting, receipt, and checkout workflows across React, Node/NestJS, MySQL, and stored procedures.",
-            "Delivered bank/vault reports, fund-request receipts, OTP controls, branch pickup, and payment workflow fixes.",
-          ],
-          links: [],
-        },
-        {
-          organization: "CMS / Marketplace Admin Platform",
-          location: "Strapi / TypeScript / GCP",
-          role: "Project Lead / Software Engineer",
-          start: "Jan 2025",
-          end: "May 2025",
-          bullets: [
-            "Led Strapi 5 CMS work for content, marketplace pages, opportunity settings, custom admin plugins, and verification workflows.",
-            "Integrated platform APIs through TypeScript services, React admin hooks, JWT review tokens, and status endpoints.",
-          ],
-          links: [],
-        },
-        {
-          organization: "Veterinary Clinic Platform",
-          location: "NestJS / Next.js / CASL",
-          role: "Software Engineer",
-          start: "Jan 2026",
-          end: "Jan 2026",
-          bullets: [
-            "Implemented CASL-based RBAC across NestJS and Next.js for platform admins, clinic owners, vets, staff, and pet owners.",
-            "Migrated role/clinic-membership checks with PostgreSQL/Drizzle schema changes, service-layer guards, and API client updates.",
-          ],
-          links: [],
-        },
-        {
-          organization: "Interior Design Commerce Platform",
-          location: "Firebase / React / Konva",
-          role: "Contributing Software Engineer",
-          start: "Nov 2020",
-          end: "Mar 2021",
-          bullets: [
-            "Improved React/Firebase design, client review, upload, questionnaire, access-control, shop, checkout, voucher, and admin export workflows.",
-          ],
-          links: [],
-        },
-      ],
+      highlights: [],
       links: [],
     },
   ],
