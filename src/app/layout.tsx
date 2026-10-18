@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@/components/analytics";
 import "./globals.css";
 
@@ -9,6 +9,18 @@ export const metadata: Metadata = {
   title: "Med Aduh | Resume",
   description:
     "Public resume for Med Aduh, software engineer. Mobile-friendly, ATS-readable, and downloadable as PDF.",
+  appleWebApp: {
+    capable: true,
+    title: "Job Hunt",
+    statusBarStyle: "default",
+  },
+  other: {
+    "apple-mobile-web-app-capable": "yes",
+  },
+  icons: {
+    icon: [{ url: "/icon-192.png", sizes: "192x192", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
   alternates: {
     canonical: "/",
   },
@@ -20,6 +32,13 @@ export const metadata: Metadata = {
     siteName: "Med Aduh Resume",
     type: "profile",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#11161a",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
