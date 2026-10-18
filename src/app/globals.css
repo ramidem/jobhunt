@@ -781,6 +781,10 @@ h1 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.skill-columns .card {
+  align-content: start;
+}
+
 .skill-row {
   align-items: center;
   display: flex;
