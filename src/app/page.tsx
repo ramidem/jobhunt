@@ -5,10 +5,25 @@ import { DatedSection } from "@/components/resume-section";
 import { StructuredData } from "@/components/structured-data";
 import { resume } from "@/data/resume";
 
+const sections = [
+  { id: "education", label: "Education", show: resume.education.length > 0 },
+  { id: "experience", label: "Experience", show: resume.experience.length > 0 },
+  { id: "work", label: "Work", show: resume.projects.length > 0 },
+  { id: "leadership", label: "Leadership", show: resume.leadership.length > 0 },
+  { id: "skills", label: "Skills", show: true },
+].filter((section) => section.show);
+
 export default function Home() {
   return (
     <main className="page-shell">
       <StructuredData resume={resume} />
+      <nav className="section-nav no-print" aria-label="Resume sections">
+        {sections.map((section) => (
+          <a href={`#${section.id}`} key={section.id}>
+            {section.label}
+          </a>
+        ))}
+      </nav>
       <div className="resume-toolbar no-print" aria-label="Resume actions">
         <details className="toolbar-contact">
           <summary>
@@ -73,9 +88,9 @@ export default function Home() {
           </section>
         ) : null}
 
-        <DatedSection title="Experience" items={resume.experience} />
-        <DatedSection title="Work" items={resume.projects} />
-        <DatedSection title="Leadership & Activities" items={resume.leadership} />
+        <DatedSection id="experience" title="Experience" items={resume.experience} />
+        <DatedSection id="work" title="Work" items={resume.projects} />
+        <DatedSection id="leadership" title="Leadership & Activities" items={resume.leadership} />
 
         <section className="resume-section skills" aria-labelledby="skills">
           <h2 id="skills">Skills & Interests</h2>

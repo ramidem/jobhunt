@@ -39,9 +39,11 @@ function WorkItem({ item, nested = false }: { item: DatedItem; nested?: boolean 
 }
 
 export function DatedSection({
+  id,
   title,
   items,
 }: {
+  id: string;
   title: string;
   items: DatedItem[];
 }) {
@@ -50,8 +52,8 @@ export function DatedSection({
   }
 
   return (
-    <section className="resume-section" aria-labelledby={title.toLowerCase()}>
-      <h2 id={title.toLowerCase()}>{title}</h2>
+    <section className="resume-section" aria-labelledby={id}>
+      <h2 id={id}>{title}</h2>
       <div className="entry-list">
         {items.map((item) => (
           <WorkItem item={item} key={`${item.organization}-${item.role}`} />
