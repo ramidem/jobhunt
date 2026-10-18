@@ -2,11 +2,13 @@
 
 import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { skillSeeds } from "@/data/job-leads";
 import { resume } from "@/data/resume";
 import {
   SKILLS_KEY,
   SKILL_STATUSES,
   newId,
+  takeUnseeded,
   type Skill,
   type SkillStatus,
 } from "@/lib/tracker";
@@ -23,16 +25,25 @@ export default function SkillsPage() {
   const [name, setName] = useState("");
   const [status, setStatus] = useState<SkillStatus>("want");
 
-  // First visit: seed "I know" from the resume's skills.
+  // First visit: seed "I know" from the resume's skills, then add any new skill seeds.
   useEffect(() => {
-    if (!ready || window.localStorage.getItem(SKILLS_KEY) !== null) {
+    if (!ready) {
       return;
     }
-    setSkills(
-      resume.skills.flatMap((group) =>
-        group.items.map((item) => ({ id: newId(), name: item, status: "know" as const })),
-      ),
-    );
+    const firstVisit = window.localStorage.getItem(SKILLS_KEY) === null;
+    const fresh = takeUnseeded(skillSeeds);
+    if (!firstVisit && fresh.length === 0) {
+      return;
+    }
+    setSkills((previous) => {
+      const base = firstVisit
+        ? resume.skills.flatMap((group) =>
+            group.items.map((item) => ({ id: newId(), name: item, status: "know" as const })),
+          )
+        : previous;
+      const names = new Set(base.map((skill) => skill.name.toLowerCase()));
+      return [...base, ...fresh.filter((seed) => !names.has(seed.name.toLowerCase()))];
+    });
   }, [ready, setSkills]);
 
   function add(event: React.FormEvent) {
@@ -77,7 +88,9 @@ export default function SkillsPage() {
 
       <div className="skill-columns">
         {SKILL_STATUSES.map((column) => {
-          const items = skills.filter((skill) => skill.status === column);
+          const items = skills
+            .filter((skill) => skill.status === column)
+            .sort((a, b) => (b.demand ?? 0) - (a.demand ?? 0));
           return (
             <section className="card" key={column}>
               <h2>
@@ -86,7 +99,12 @@ export default function SkillsPage() {
               <ul className="plain-list">
                 {items.map((skill) => (
                   <li className="skill-row" key={skill.id}>
-                    <span>{skill.name}</span>
+                    <span>
+                      {skill.name}
+                      {skill.demand ? (
+                        <small className="muted"> · in {skill.demand} saved roles</small>
+                      ) : null}
+                    </span>
                     <select
                       aria-label={`Status for ${skill.name}`}
                       onChange={(event) =>

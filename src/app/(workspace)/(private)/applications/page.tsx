@@ -1,11 +1,13 @@
 "use client";
 
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { jobLeads } from "@/data/job-leads";
 import {
   APPLICATIONS_KEY,
   APPLICATION_STATUSES,
   newId,
+  takeUnseeded,
   type Application,
   type ApplicationStatus,
 } from "@/lib/tracker";
@@ -20,6 +22,20 @@ export default function ApplicationsPage() {
   const [role, setRole] = useState("");
   const [url, setUrl] = useState("");
   const [filter, setFilter] = useState<ApplicationStatus | "All">("All");
+
+  // Add saved job leads this browser hasn't seen yet.
+  useEffect(() => {
+    if (!ready) {
+      return;
+    }
+    const fresh = takeUnseeded(jobLeads);
+    if (fresh.length > 0) {
+      setApplications((previous) => [
+        ...previous,
+        ...fresh.filter((lead) => !previous.some((item) => item.id === lead.id)),
+      ]);
+    }
+  }, [ready, setApplications]);
 
   function add(event: React.FormEvent) {
     event.preventDefault();
