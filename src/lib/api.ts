@@ -102,6 +102,7 @@ export type Dashboard = {
   }[];
   topGaps: { name: string; demand: number }[];
   recent: LogEntry[];
+  activeRoles: { id: number; title: string }[];
 };
 
 export type NewLogEntry = {
@@ -119,6 +120,7 @@ export type Role = {
   id: number;
   title: string;
   updated: string | null;
+  active: boolean;
   degree: string[];
   skills: { name: string; optional: boolean; known: boolean }[];
   soft: string[];

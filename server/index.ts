@@ -123,8 +123,8 @@ function listRoles() {
     }[]).map(({ key, value }) => [key.replace("qualifications.", ""), value]),
   );
   const roles = db
-    .prepare("SELECT id, title, updated FROM qualification_roles ORDER BY id")
-    .all() as { id: number; title: string; updated: string | null }[];
+    .prepare("SELECT id, title, updated, active FROM qualification_roles ORDER BY id")
+    .all() as { id: number; title: string; updated: string | null; active: number }[];
   const lines = db
     .prepare(
       `SELECT rq.role_id AS roleId, l.text
@@ -144,6 +144,7 @@ function listRoles() {
       const view = classifyLines(lines.filter((line) => line.roleId === role.id).map((line) => line.text));
       return {
         ...role,
+        active: role.active === 1,
         ...view,
         skills: view.skills.map((skill) => ({ ...skill, known: known.has(skill.name.toLowerCase()) })),
       };
@@ -255,6 +256,9 @@ function dashboard() {
       )
       .all(),
     recent: listContactLog(8),
+    activeRoles: db
+      .prepare("SELECT id, title FROM qualification_roles WHERE active = 1 ORDER BY title")
+      .all(),
   };
 }
 
@@ -545,8 +549,19 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     return true;
   }
 
-  if (resource === "roles" && method === "GET" && id === undefined) {
-    send(res, 200, listRoles());
+  if (resource === "roles") {
+    if (method === "GET" && id === undefined) {
+      send(res, 200, listRoles());
+    } else if (method === "PATCH" && id !== undefined) {
+      const body = await readJson(req);
+      if (typeof body.active !== "boolean") {
+        throw new HttpError(400, "active must be a boolean");
+      }
+      update("qualification_roles", id, { active: body.active ? 1 : 0 });
+      send(res, 200, listRoles());
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
     return true;
   }
 

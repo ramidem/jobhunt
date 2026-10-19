@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { useResource, type Dashboard } from "@/lib/api";
@@ -48,6 +49,21 @@ export default function DashboardPage() {
 
       {data ? (
         <>
+          <div className="flex flex-wrap items-center gap-1.5 text-sm">
+            <span className="text-muted-foreground">Targeting:</span>
+            {data.activeRoles.length === 0 ? (
+              <Link className="underline underline-offset-4" href="/roles">
+                No active roles yet. Pick some on Roles.
+              </Link>
+            ) : (
+              data.activeRoles.map((role) => (
+                <Link href="/roles" key={role.id}>
+                  <Badge>{role.title}</Badge>
+                </Link>
+              ))
+            )}
+          </div>
+
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             <Stat href="/applications" label="Postings saved" value={data.totals.jobs} />
             <Stat href="/companies" label="Companies" value={data.totals.companies} />

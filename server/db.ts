@@ -123,6 +123,13 @@ const migrations: [string, string][] = [
     CREATE INDEX contact_log_company ON contact_log(company_id, happened_on);
     `,
   ],
+  [
+    "002-active-roles",
+    `
+    -- Roles I'm actively job hunting for; job searches should target these.
+    ALTER TABLE qualification_roles ADD COLUMN active INTEGER NOT NULL DEFAULT 0;
+    `,
+  ],
 ];
 
 function migrate(db: DatabaseSync) {

@@ -1,25 +1,29 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Check, Search } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { useResource, type Roles } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 export function RolesList() {
-  const { data, error } = useResource<Roles>("roles");
+  const { data, error, mutate } = useResource<Roles>("roles");
   const [query, setQuery] = useState("");
+  const [activeOnly, setActiveOnly] = useState(false);
   const roles = data?.roles ?? [];
+  const activeCount = roles.filter((role) => role.active).length;
   const needle = query.trim().toLowerCase();
   const visible = roles.filter(
     (role) =>
-      !needle ||
+      (!activeOnly || role.active) &&
+      (!needle ||
       [role.title, ...role.degree, ...role.soft, ...role.skills.map((skill) => skill.name)].some((text) =>
         text.toLowerCase().includes(needle),
-      ),
+      )),
   );
 
   return (
@@ -45,18 +49,48 @@ export function RolesList() {
             value={query}
           />
         </div>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm text-muted-foreground">
+            {visible.length} of {roles.length} roles · filled pills are skills you know, dashed ones are a bonus
+          </p>
+          <Button
+            aria-pressed={activeOnly}
+            className="rounded-full"
+            onClick={() => setActiveOnly(!activeOnly)}
+            size="sm"
+            type="button"
+            variant={activeOnly ? "default" : "outline"}
+          >
+            Active only
+            <span className={activeOnly ? "opacity-70" : "text-muted-foreground"}>{activeCount}</span>
+          </Button>
+        </div>
         <p className="text-sm text-muted-foreground">
-          {visible.length} of {roles.length} roles · filled pills are skills you know, dashed ones are a bonus
+          Mark the roles you&apos;re applying for as Active. Job searches only look for those.
         </p>
       </div>
 
       <ul className="grid grid-cols-1 gap-4">
         {visible.map((role) => (
           <li key={role.id}>
-            <Card>
+            <Card className={role.active ? "ring-2 ring-primary/70" : undefined}>
               <CardHeader>
                 <CardTitle className="leading-snug">{role.title}</CardTitle>
                 {role.updated ? <CardDescription>Updated {role.updated}</CardDescription> : null}
+                <CardAction>
+                  <Button
+                    aria-label={role.active ? `${role.title} is active; stop targeting it` : `Target ${role.title}`}
+                    aria-pressed={role.active}
+                    className="rounded-full"
+                    onClick={() => void mutate(`roles/${role.id}`, "PATCH", { active: !role.active })}
+                    size="sm"
+                    type="button"
+                    variant={role.active ? "default" : "outline"}
+                  >
+                    {role.active ? <Check aria-hidden="true" /> : null}
+                    Active
+                  </Button>
+                </CardAction>
               </CardHeader>
               <CardContent className="grid grid-cols-1 gap-3 text-sm">
                 {role.degree.length > 0 ? (
