@@ -67,7 +67,7 @@ export default function ApplicationsPage() {
   const visible = applications.filter(
     (item) =>
       (filter === "All" || item.status === filter) &&
-      (!needle || `${item.role} ${item.company} ${item.location} ${item.source}`.toLowerCase().includes(needle)),
+      (!needle || `${item.code} ${item.role} ${item.company} ${item.location} ${item.source}`.toLowerCase().includes(needle)),
   );
 
   return (
@@ -130,7 +130,7 @@ export default function ApplicationsPage() {
             setQuery(event.target.value);
             setLimit(30);
           }}
-          placeholder="Search role, company, location or source"
+          placeholder="Search code, role, company, location or source"
           type="search"
           value={query}
         />
@@ -174,7 +174,12 @@ export default function ApplicationsPage() {
           <li key={item.id}>
             <Card>
               <CardHeader>
-                <CardTitle className="leading-snug">{item.role}</CardTitle>
+                <CardTitle className="leading-snug">
+                  <span className="mr-2 inline-block rounded-md border px-1.5 py-0.5 align-middle font-mono text-xs tracking-wider text-muted-foreground">
+                    {item.code}
+                  </span>
+                  {item.role}
+                </CardTitle>
                 <CardDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span>{item.company}</span>
                   {[item.location, item.workType, item.employmentType].filter(Boolean).length > 0 ? (

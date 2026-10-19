@@ -98,7 +98,8 @@ export default function CompaniesPage() {
     (company) =>
       !needle ||
       company.name.toLowerCase().includes(needle) ||
-      company.contacts.some((contact) => contact.name.toLowerCase().includes(needle)),
+      company.contacts.some((contact) => contact.name.toLowerCase().includes(needle)) ||
+      company.jobs.some((job) => `${job.code} ${job.title}`.toLowerCase().includes(needle)),
   );
 
   return (
@@ -118,7 +119,7 @@ export default function CompaniesPage() {
           aria-label="Search companies or contacts"
           className="bg-background pl-9"
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Search companies or contacts"
+          placeholder="Search companies, contacts or job codes"
           type="search"
           value={query}
         />
@@ -228,8 +229,9 @@ export default function CompaniesPage() {
                     <ul className="grid grid-cols-1 gap-1 text-sm">
                       {company.jobs.map((job) => (
                         <li className="flex items-center justify-between gap-2" key={job.id}>
+                          <span className="shrink-0 font-mono text-xs tracking-wider text-muted-foreground">{job.code}</span>
                           {job.url ? (
-                            <a className="min-w-0 truncate hover:underline" href={job.url} rel="noreferrer" target="_blank">
+                            <a className="min-w-0 flex-1 truncate hover:underline" href={job.url} rel="noreferrer" target="_blank">
                               {job.title}
                             </a>
                           ) : (

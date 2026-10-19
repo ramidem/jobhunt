@@ -3,7 +3,7 @@
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
-import { linkJobSkills, openDb, upsertCompany } from "./db.ts";
+import { assignJobCodes, linkJobSkills, openDb, upsertCompany } from "./db.ts";
 import { studyLinks } from "./learn-links.ts";
 import { classifyLines } from "./role-lines.ts";
 import { detectSkills } from "./skill-detect.ts";
@@ -68,7 +68,7 @@ function oneOf(value: string | undefined, allowed: string[], key: string) {
 function listApplications() {
   const rows = db
     .prepare(
-      `SELECT a.id, a.job_id AS jobId, j.title AS role, c.id AS companyId, c.name AS company,
+      `SELECT a.id, a.job_id AS jobId, j.code, j.title AS role, c.id AS companyId, c.name AS company,
               c.linkedin_url AS companyLinkedin, j.url, j.source, j.details, j.location,
               j.work_type AS workType, j.employment_type AS employmentType, j.salary,
               j.posted_on AS postedOn, j.applicants, j.description AS jobDescription,
@@ -174,7 +174,7 @@ function listCompanies() {
     .all() as { companyId: number }[];
   const jobs = db
     .prepare(
-      `SELECT j.id, j.company_id AS companyId, j.title, j.url, a.id AS applicationId, a.status
+      `SELECT j.id, j.code, j.company_id AS companyId, j.title, j.url, a.id AS applicationId, a.status
          FROM jobs j LEFT JOIN applications a ON a.job_id = j.id ORDER BY j.created_at DESC`,
     )
     .all() as { companyId: number }[];
@@ -455,6 +455,13 @@ function importJob(body: Record<string, unknown>) {
     db.prepare("INSERT INTO applications (job_id) VALUES (?)").run(jobId);
   }
   linkJobSkills(db, jobId, detectSkills(`${text(body, "title", true)}\n${description}`));
+  // Keep a code the source file already assigned (so chat and app match) if it's free.
+  const code = text(body, "code");
+  if (code && /^[23456789A-HJ-NP-Z]{4}$/.test(code)) {
+    db.prepare(
+      "UPDATE jobs SET code = ? WHERE id = ? AND code IS NULL AND NOT EXISTS (SELECT 1 FROM jobs WHERE code = ?)",
+    ).run(code, jobId, code);
+  }
   return { jobId, companyId, contactId, created: !existing };
 }
 
@@ -502,6 +509,7 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
           ) as { id: number };
         linkJobSkills(db, jobId, skills);
         db.prepare("INSERT INTO applications (job_id) VALUES (?)").run(jobId);
+        assignJobCodes(db);
         db.exec("COMMIT");
       } catch (error) {
         db.exec("ROLLBACK");
@@ -726,6 +734,7 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     db.exec("BEGIN");
     try {
       const results = (body.jobs as Record<string, unknown>[]).map(importJob);
+      assignJobCodes(db);
       db.exec("COMMIT");
       send(res, 200, results);
     } catch (error) {

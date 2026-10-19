@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -174,7 +175,58 @@ const migrations: [string, string][] = [
     );
     `,
   ],
+  [
+    "004-job-codes",
+    `
+    -- Short human-friendly handle for referring to a posting ("K7QM"). Filled by assignJobCodes.
+    ALTER TABLE jobs ADD COLUMN code TEXT;
+    CREATE UNIQUE INDEX jobs_code ON jobs(code);
+    `,
+  ],
 ];
+
+// Codes are derived from a stable key so the same posting always gets the same code, matching
+// the codes in the job-hunt JSON files (tools/add_codes.py). No 0/O or 1/I look-alikes.
+const CODE_ALPHABET = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+
+export function makeJobCode(key: string, salt = 0) {
+  const n = createHash("sha256").update(`${key}#${salt}`).digest().readBigUInt64BE(0);
+  return Array.from({ length: 4 }, (_, i) => CODE_ALPHABET[Number((n >> BigInt(5 * i)) & BigInt(31))]).join("");
+}
+
+function stableJobKey(job: { external_id: string | null; source: string; company: string; title: string }) {
+  const id = job.external_id ?? "";
+  if (/^\d+$/.test(id)) return `linkedin:${id}`;
+  if (id.startsWith("indeed:")) return id;
+  return `x:${[job.source, "", job.company, job.title].map((part) => part.trim().toLowerCase()).join("|")}`;
+}
+
+// Gives every job without a code a unique 4-character code. Called on startup and after inserts,
+// so any insert path gets one automatically.
+export function assignJobCodes(db: DatabaseSync) {
+  const missing = db
+    .prepare(
+      `SELECT j.id, j.external_id, j.source, c.name AS company, j.title
+         FROM jobs j JOIN companies c ON c.id = j.company_id WHERE j.code IS NULL`,
+    )
+    .all() as { id: number; external_id: string | null; source: string; company: string; title: string }[];
+  const taken = new Set(
+    (db.prepare("SELECT code FROM jobs WHERE code IS NOT NULL").all() as { code: string }[]).map((row) => row.code),
+  );
+  const setCode = db.prepare("UPDATE jobs SET code = ? WHERE id = ?");
+  for (const job of missing) {
+    const key = stableJobKey(job);
+    let salt = 0;
+    let code = makeJobCode(key);
+    while (taken.has(code)) {
+      salt += 1;
+      code = makeJobCode(key, salt);
+    }
+    taken.add(code);
+    setCode.run(code, job.id);
+  }
+  return missing.length;
+}
 
 function migrate(db: DatabaseSync) {
   for (const [key, sql] of migrations) {
@@ -193,6 +245,7 @@ export function openDb() {
   try {
     migrate(db);
     seed(db);
+    assignJobCodes(db);
     db.exec("COMMIT");
   } catch (error) {
     db.exec("ROLLBACK");

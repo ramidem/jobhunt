@@ -8,6 +8,7 @@ export type JobSkill = { name: string; status: SkillStatus };
 export type Application = {
   id: number;
   jobId: number;
+  code: string;
   companyId: number;
   company: string;
   companyLinkedin: string;
@@ -78,7 +79,7 @@ export type Company = {
   sources: string[];
   lastContactedOn: string | null;
   contacts: Contact[];
-  jobs: { id: number; title: string; url: string; applicationId: number | null; status: ApplicationStatus | null }[];
+  jobs: { id: number; code: string; title: string; url: string; applicationId: number | null; status: ApplicationStatus | null }[];
   log: LogEntry[];
 };
 
