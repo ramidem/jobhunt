@@ -505,6 +505,22 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
   const [, resource, rawId] = match;
   const id = rawId ? Number(rawId) : undefined;
 
+  // Set the direct posting link for a job by its 4-character code (e.g. replacing a Gmail link).
+  if (resource === "job-links" && method === "PATCH" && id === undefined) {
+    const body = await readJson(req);
+    const code = text(body, "code", true)!.toUpperCase();
+    const url = text(body, "url", true)!;
+    if (!/^https?:\/\//.test(url) || /mail\.google\.com/.test(url)) {
+      throw new HttpError(400, "url must be a direct http(s) posting link, not a Gmail link");
+    }
+    const result = db.prepare("UPDATE jobs SET url = ? WHERE code = ?").run(url, code);
+    if (result.changes === 0) {
+      throw new HttpError(404, "No job with that code");
+    }
+    send(res, 200, { ok: true, code, url });
+    return true;
+  }
+
   if (resource === "applications") {
     if (method === "GET" && id === undefined) {
       send(res, 200, listApplications());
