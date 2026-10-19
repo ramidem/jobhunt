@@ -2,6 +2,7 @@
 
 import { ExternalLink, Mail, MessageSquarePlus, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { JobContactsSheet } from "@/components/workspace/job-contacts-sheet";
 import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { formatDay } from "@/lib/format";
@@ -225,47 +226,86 @@ export default function ApplicationsPage() {
                       </div>
                     ))}
                 </dl>
-                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/50 p-3 text-sm">
-                  <div className="min-w-0">
-                    {item.contactName ? (
-                      <p>
-                        {item.contactLinkedin ? (
-                          <a className="font-medium hover:underline" href={item.contactLinkedin} rel="noreferrer" target="_blank">
-                            {item.contactName}
-                          </a>
-                        ) : (
-                          <span className="font-medium">{item.contactName}</span>
-                        )}
-                        {item.contactTitle ? (
-                          <span className="text-muted-foreground"> · {item.contactTitle.split("|")[0].trim()}</span>
-                        ) : null}
-                      </p>
-                    ) : (
-                      <p className="text-muted-foreground">No hiring contact listed</p>
-                    )}
-                    {item.contactEmail ? (
-                      <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={`mailto:${item.contactEmail}`}>
-                        <Mail aria-hidden="true" className="size-3.5" />
-                        {item.contactEmail}
+                <div className="grid gap-2 rounded-lg bg-muted/50 p-3 text-sm">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span className="font-medium">{item.company}</span>
+                    {item.companyKind === "agency" ? <Badge variant="outline">Staffing agency</Badge> : null}
+                    {item.companyWebsite ? (
+                      <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={item.companyWebsite} rel="noreferrer" target="_blank">
+                        Website
+                        <ExternalLink aria-hidden="true" className="size-3" />
                       </a>
                     ) : null}
+                    {item.companyCareers ? (
+                      <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={item.companyCareers} rel="noreferrer" target="_blank">
+                        Careers
+                        <ExternalLink aria-hidden="true" className="size-3" />
+                      </a>
+                    ) : null}
+                    {item.companyLinkedin ? (
+                      <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={item.companyLinkedin} rel="noreferrer" target="_blank">
+                        LinkedIn
+                        <ExternalLink aria-hidden="true" className="size-3" />
+                      </a>
+                    ) : null}
+                  </div>
+                  {item.clientNote ? <p className="text-muted-foreground">Client: {item.clientNote}</p> : null}
+                  {item.contacts.length === 0 ? (
+                    <p className="text-muted-foreground">
+                      No hiring contact yet
+                      {item.companyContacts.length > 0 ? ` · ${item.companyContacts.length} known at the company` : ""}
+                    </p>
+                  ) : (
+                    <ul className="grid gap-1">
+                      {item.contacts.map((contact) => (
+                        <li key={contact.id}>
+                          {contact.linkedinUrl ? (
+                            <a className="font-medium hover:underline" href={contact.linkedinUrl} rel="noreferrer" target="_blank">
+                              {contact.name}
+                            </a>
+                          ) : (
+                            <span className="font-medium">{contact.name}</span>
+                          )}
+                          {contact.title ? (
+                            <span className="text-muted-foreground"> · {contact.title.split("|")[0].trim()}</span>
+                          ) : null}
+                          {contact.email ? (
+                            <a className="ml-2 inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={`mailto:${contact.email}`}>
+                              <Mail aria-hidden="true" className="size-3.5" />
+                              {contact.email}
+                            </a>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-xs text-muted-foreground">
                       {item.lastContactedOn ? `Last contact ${formatDay(item.lastContactedOn)}` : "Not contacted yet"}
                     </p>
+                    <div className="flex gap-2">
+                      <JobContactsSheet
+                        attached={item.contacts}
+                        company={{ id: item.companyId, name: item.company }}
+                        companyContacts={item.companyContacts}
+                        job={{ id: item.jobId, title: item.role, code: item.code }}
+                        onChanged={reload}
+                      />
+                      <LogContactSheet
+                        company={{ id: item.companyId, name: item.company }}
+                        contacts={item.contacts.map((contact) => ({ id: contact.id, name: contact.name }))}
+                        defaultContactId={item.contacts[0]?.id}
+                        defaultJobId={item.jobId}
+                        jobs={[{ id: item.jobId, title: item.role }]}
+                        onSaved={reload}
+                      >
+                        <Button size="sm" variant="outline">
+                          <MessageSquarePlus aria-hidden="true" />
+                          Log contact
+                        </Button>
+                      </LogContactSheet>
+                    </div>
                   </div>
-                  <LogContactSheet
-                    company={{ id: item.companyId, name: item.company }}
-                    contacts={item.contactId && item.contactName ? [{ id: item.contactId, name: item.contactName }] : []}
-                    defaultContactId={item.contactId}
-                    defaultJobId={item.jobId}
-                    jobs={[{ id: item.jobId, title: item.role }]}
-                    onSaved={reload}
-                  >
-                    <Button size="sm" variant="outline">
-                      <MessageSquarePlus aria-hidden="true" />
-                      Log contact
-                    </Button>
-                  </LogContactSheet>
                 </div>
                 {item.skills.some((skill) => skill.status !== "know") ? (
                   <div className="flex flex-wrap items-center gap-1.5 text-xs">
