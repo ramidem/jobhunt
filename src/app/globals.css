@@ -850,3 +850,19 @@
     @apply font-sans;
   }
 }
+/* Education: plain lines (degree, school) with the graduation date at the right. */
+.resume-paper .education-entry {
+  align-items: baseline;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.resume-paper .education-entry p {
+  margin: 0;
+}
+
+.resume-paper .education-entry time {
+  flex: none;
+  white-space: nowrap;
+}

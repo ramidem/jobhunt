@@ -33,9 +33,6 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     letterSpacing: 0,
   },
-  headline: {
-    marginTop: 2,
-  },
   contactItem: {
     flexDirection: "row",
     gap: 5,
@@ -158,7 +155,6 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
       <Page size="LETTER" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{resume.name}</Text>
-          <Text style={styles.headline}>{resume.headline}</Text>
           <View style={styles.contact}>
             {contactItems.map((item, index) => (
               <View key={item.text} style={styles.contactItem}>
@@ -178,14 +174,17 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
 
         {resume.education.length > 0 ? (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education & Certificates</Text>
+            <Text style={styles.sectionTitle}>Education</Text>
             {resume.education.map((item) => (
               <View key={`${item.institution}-${item.degree}`} style={styles.row}>
                 <View style={styles.roleLine}>
-                  <Text style={styles.educationText}>
-                    {item.degree}, {item.institution}
-                    {item.location ? `, ${item.location}` : ""}
-                  </Text>
+                  <View style={styles.educationText}>
+                    <Text>{item.degree}</Text>
+                    <Text>
+                      {item.institution}
+                      {item.location ? `, ${item.location}` : ""}
+                    </Text>
+                  </View>
                   {item.dates ? <Text>{item.dates}</Text> : null}
                 </View>
                 {item.details.map((detail) => (
