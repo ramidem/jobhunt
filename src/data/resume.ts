@@ -68,10 +68,6 @@ const draftResume = {
       ],
     },
     {
-      label: "Product tooling",
-      items: ["CASL", "Konva", "Contentful", "SendGrid"],
-    },
-    {
       label: "Practices",
       items: ["Git", "Microservices", "Full-stack architecture", "developer tooling", "testing", "automation"],
     },
