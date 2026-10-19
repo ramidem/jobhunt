@@ -55,6 +55,9 @@ const styles = StyleSheet.create({
   italic: {
     fontFamily: "Helvetica-Oblique",
   },
+  educationText: {
+    flex: 1,
+  },
   roleLine: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -157,7 +160,10 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
             {resume.education.map((item) => (
               <View key={`${item.institution}-${item.degree}`} style={styles.row}>
                 <View style={styles.roleLine}>
-                  <Bullet>{`${item.degree} from ${item.institution}`}</Bullet>
+                  <Text style={styles.educationText}>
+                    {item.degree}, {item.institution}
+                    {item.location ? `, ${item.location}` : ""}
+                  </Text>
                   <Text>{item.dates}</Text>
                 </View>
                 {item.details.map((detail) => (

@@ -25,7 +25,7 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
             {resume.education.map((item) => (
               <li key={`${item.institution}-${item.degree}`}>
                 <span>
-                  {item.degree} from {item.institution}
+                  {item.degree}, {item.institution}
                   {item.location ? `, ${item.location}` : ""}
                 </span>
                 <time>{item.dates}</time>
