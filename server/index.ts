@@ -340,7 +340,7 @@ function importJob(body: Record<string, unknown>) {
     ).id;
     db.prepare("INSERT INTO applications (job_id) VALUES (?)").run(jobId);
   }
-  linkJobSkills(db, jobId, detectSkills(description));
+  linkJobSkills(db, jobId, detectSkills(`${text(body, "title", true)}\n${description}`));
   return { jobId, companyId, contactId, created: !existing };
 }
 
