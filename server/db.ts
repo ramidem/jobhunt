@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { detectSkills } from "./skill-detect.ts";
 import { scripts } from "./learn-scripts.ts";
 import { parseMonthlyPhp } from "./pay.ts";
 import { seedCards } from "./learn-seed.ts";
@@ -334,6 +335,28 @@ const migrations: [string, string][] = [
     );
     `,
   ],
+  [
+    "012-skills-normalize",
+    `
+    -- One skill per name: split bundled skills, fold Firestore/Firebase Storage into Firebase,
+    -- and add skills that job postings ask for but the list did not track yet.
+    UPDATE skills SET name = 'C#' WHERE name = 'C# / .NET';
+    INSERT OR IGNORE INTO skills (name, status) SELECT '.NET', status FROM skills WHERE name = 'C#';
+    UPDATE skills SET name = 'Django' WHERE name = 'Django / FastAPI';
+    INSERT OR IGNORE INTO skills (name, status) SELECT 'FastAPI', status FROM skills WHERE name = 'Django';
+    UPDATE skills SET name = 'PHP' WHERE name = 'PHP / Laravel';
+    INSERT OR IGNORE INTO skills (name, status) SELECT 'Laravel', status FROM skills WHERE name = 'PHP';
+    UPDATE learn_cards SET topic = 'C#' WHERE topic = 'C# / .NET';
+    UPDATE learn_cards SET topic = 'Firebase' WHERE topic IN ('Firestore', 'Firebase Storage');
+    UPDATE learning_paths SET skill = 'C#' WHERE skill = 'C# / .NET';
+    DELETE FROM skills WHERE name IN ('Firestore', 'Firebase Storage')
+      AND id NOT IN (SELECT skill_id FROM job_skills);
+    INSERT OR IGNORE INTO skills (name, status) VALUES
+      ('Java', 'want'), ('Spring', 'want'), ('Snowflake', 'want'), ('SAP', 'want'),
+      ('Salesforce', 'want'), ('Swift', 'want'), ('Kotlin', 'want'), ('Power Platform', 'want'),
+      ('Linux', 'want'), ('Selenium', 'want');
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching
@@ -424,6 +447,21 @@ export function linkJobSkills(db: DatabaseSync, jobId: number, skills: string[])
   for (const name of skills) {
     link.run(jobId, upsertSkill(db, name));
   }
+}
+
+// Re-runs skill detection over every job's title and description and links what it finds.
+// Additive: manual links are kept. Returns how many links were added.
+export function recountSkills(db: DatabaseSync) {
+  const before = (db.prepare("SELECT COUNT(*) AS n FROM job_skills").get() as { n: number }).n;
+  const jobs = db.prepare("SELECT id, title, description FROM jobs").all() as {
+    id: number;
+    title: string;
+    description: string;
+  }[];
+  for (const job of jobs) {
+    linkJobSkills(db, job.id, detectSkills(`${job.title}\n${job.description}`));
+  }
+  return (db.prepare("SELECT COUNT(*) AS n FROM job_skills").get() as { n: number }).n - before;
 }
 
 // Fills estimated monthly pay for jobs whose pay text is set but not yet parsed.

@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
-import { assignJobCodes, backfillPay, linkJobSkills, openDb, upsertCompany } from "./db.ts";
+import { assignJobCodes, backfillPay, linkJobSkills, openDb, recountSkills, upsertCompany } from "./db.ts";
 import { studyLinks } from "./learn-links.ts";
 import { classifyLines } from "./role-lines.ts";
 import { detectSkills } from "./skill-detect.ts";
@@ -787,6 +787,31 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     return true;
   }
 
+  // Re-run skill detection over every job's title and description (after patterns or descriptions change).
+  if (resource === "skills-recount" && method === "POST" && id === undefined) {
+    const added = recountSkills(db);
+    send(res, 200, { added, skills: listSkills() });
+    return true;
+  }
+
+  // Set or replace a job's description by code and re-detect its skills: { code, description }.
+  if (resource === "job-description" && method === "PATCH" && id === undefined) {
+    const body = await readJson(req);
+    const code = text(body, "code", true)!;
+    const description = text(body, "description", true)!;
+    const job = db.prepare("SELECT id, title FROM jobs WHERE code = ?").get(code) as
+      | { id: number; title: string }
+      | undefined;
+    if (!job) {
+      throw new HttpError(404, "No job with that code");
+    }
+    db.prepare("UPDATE jobs SET description = ? WHERE id = ?").run(description, job.id);
+    const skills = detectSkills(`${job.title}\n${description}`);
+    linkJobSkills(db, job.id, skills);
+    send(res, 200, { ok: true, code, skills });
+    return true;
+  }
+
   if (resource === "applications") {
     if (method === "GET" && id === undefined) {
       send(res, 200, listApplications());
@@ -807,7 +832,9 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
             text(body, "url") ?? "",
             text(body, "jobDescription") ?? "",
           ) as { id: number };
-        linkJobSkills(db, jobId, skills);
+        linkJobSkills(db, jobId, [
+          ...new Set([...skills, ...detectSkills(`${text(body, "role", true)}\n${text(body, "jobDescription") ?? ""}`)]),
+        ]);
         db.prepare("INSERT INTO applications (job_id) VALUES (?)").run(jobId);
         assignJobCodes(db);
         db.exec("COMMIT");

@@ -63,7 +63,7 @@ const links: Record<string, StudyLinks> = {
   kubernetes: { roadmap: "https://roadmap.sh/kubernetes", docs: [{ label: "Kubernetes docs", url: "https://kubernetes.io/docs/home/" }] },
   terraform: { roadmap: "https://roadmap.sh/terraform", docs: [{ label: "Terraform docs", url: "https://developer.hashicorp.com/terraform/docs" }] },
   python: { roadmap: "https://roadmap.sh/python", docs: [{ label: "Python docs", url: "https://docs.python.org/3/" }] },
-  "django / fastapi": { roadmap: "https://roadmap.sh/python", docs: [{ label: "FastAPI docs", url: "https://fastapi.tiangolo.com/" }, { label: "Django docs", url: "https://docs.djangoproject.com/" }] },
+  django: { roadmap: "https://roadmap.sh/python", docs: [{ label: "FastAPI docs", url: "https://fastapi.tiangolo.com/" }, { label: "Django docs", url: "https://docs.djangoproject.com/" }] },
   graphql: { roadmap: "https://roadmap.sh/graphql", docs: [{ label: "GraphQL learn", url: "https://graphql.org/learn/" }] },
   redis: { roadmap: "https://roadmap.sh/redis", docs: [{ label: "Redis docs", url: "https://redis.io/docs/latest/" }] },
   mongodb: { roadmap: "https://roadmap.sh/mongodb", docs: [{ label: "MongoDB docs", url: "https://www.mongodb.com/docs/" }] },
