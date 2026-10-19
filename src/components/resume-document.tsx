@@ -6,7 +6,6 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
     <section className="resume-paper" aria-label="Resume">
       <header className="resume-header">
         <h1>{resume.name}</h1>
-        <p className="headline-line">{resume.headline}</p>
         <p className="contact-line">
           {resume.phone ? <span>{resume.phone}</span> : null}
           <a href={`mailto:${resume.email}`}>{resume.email}</a>
@@ -21,7 +20,7 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
 
       {resume.education.length > 0 ? (
         <section className="resume-section" aria-labelledby="education">
-          <h2 id="education">Education &amp; Certificates</h2>
+          <h2 id="education">Education</h2>
           <ul className="education-list">
             {resume.education.map((item) => (
               <li key={`${item.institution}-${item.degree}`}>

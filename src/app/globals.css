@@ -682,22 +682,27 @@
     margin: 4px 0 0;
   }
 
-  .resume-paper .entry ul,
-  .resume-paper .education-list {
+  .resume-paper .entry ul {
     list-style: disc;
     margin: 4px 0 0;
     padding-left: 28px;
   }
 
-  .resume-paper .entry li,
-  .resume-paper .education-list li {
+  .resume-paper .entry li {
     line-height: 1.5;
     margin: 0;
     padding-left: 14px;
   }
 
+  .resume-paper .education-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+  }
+
   .resume-paper .education-list li {
-    display: list-item;
+    line-height: 1.5;
+    margin: 0;
   }
 
   .resume-paper .skills-list {

@@ -10,9 +10,9 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Med Aduh | Resume",
+  title: "Medimar Aduh | Resume",
   description:
-    "Public resume for Med Aduh, software engineer. Mobile-friendly, ATS-readable, and downloadable as PDF.",
+    "Public resume for Medimar Aduh, software engineer. Mobile-friendly, ATS-readable, and downloadable as PDF.",
   appleWebApp: {
     capable: true,
     title: "Job Hunt",
@@ -29,11 +29,11 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   openGraph: {
-    title: "Med Aduh | Resume",
+    title: "Medimar Aduh | Resume",
     description:
-      "Public resume for Med Aduh, software engineer. Mobile-friendly, ATS-readable, and downloadable as PDF.",
+      "Public resume for Medimar Aduh, software engineer. Mobile-friendly, ATS-readable, and downloadable as PDF.",
     url: "/",
-    siteName: "Med Aduh Resume",
+    siteName: "Medimar Aduh Resume",
     type: "profile",
   },
 };

@@ -1,7 +1,7 @@
 import { resumeSchema, type Resume } from "@/lib/resume-schema";
 
 const draftResume = {
-  name: "Med Aduh",
+  name: "Medimar Aduh",
   headline: "Software Engineer | Backend-leaning full-stack systems and product delivery",
   location: "Davao City, Philippines (Remote)",
   phone: "+63 955 908 7053",
@@ -16,9 +16,8 @@ const draftResume = {
   education: [
     {
       institution: "Western Mindanao State University",
-      // Med did not graduate: never write "Graduated", a degree award or a status line.
-      // Add attended years as `dates` once Med confirms them.
-      degree: "Coursework in Mass Communication/Media Studies",
+      degree: "Bachelor of Science (BS), Mass Communication/Media Studies",
+      dates: "Graduated 2010",
       details: [],
     },
   ],
