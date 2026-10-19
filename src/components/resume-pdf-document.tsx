@@ -2,6 +2,7 @@
 
 import {
   Document,
+  Font,
   Link,
   Page,
   StyleSheet,
@@ -10,10 +11,13 @@ import {
 } from "@react-pdf/renderer";
 import type { Resume } from "@/lib/resume-schema";
 
+// Keep words whole so ATS keyword matching never sees "stake-/holders".
+Font.registerHyphenationCallback((word) => [word]);
+
 const styles = StyleSheet.create({
   page: {
     paddingVertical: 40,
-    paddingHorizontal: 72,
+    paddingHorizontal: 54,
     color: "#101417",
     fontFamily: "Helvetica",
     fontSize: 10.5,
@@ -28,6 +32,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Helvetica-Bold",
     letterSpacing: 0,
+  },
+  headline: {
+    marginTop: 2,
+  },
+  contactItem: {
+    flexDirection: "row",
+    gap: 5,
   },
   contact: {
     justifyContent: "center",
@@ -136,20 +147,30 @@ function ExperienceBlock({ item, nested = false }: { item: ExperienceItem; neste
 }
 
 export function ResumePdfDocument({ resume }: { resume: Resume }) {
+  const contactItems: { text: string; href?: string }[] = [
+    ...(resume.phone ? [{ text: resume.phone }] : []),
+    { text: resume.email, href: `mailto:${resume.email}` },
+    ...resume.links.map((link) => ({ text: link.label, href: link.href })),
+  ];
+
   return (
     <Document title={`${resume.name} Resume`} author={resume.name}>
       <Page size="LETTER" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.name}>{resume.name}</Text>
+          <Text style={styles.headline}>{resume.headline}</Text>
           <View style={styles.contact}>
-            {resume.phone ? <Text>{resume.phone} |</Text> : null}
-            <Link src={`mailto:${resume.email}`} style={styles.link}>
-              {resume.email}
-            </Link>
-            {resume.links.map((link) => (
-              <Link key={link.href} src={link.href} style={styles.link}>
-                | {link.label}
-              </Link>
+            {contactItems.map((item, index) => (
+              <View key={item.text} style={styles.contactItem}>
+                {index > 0 ? <Text>|</Text> : null}
+                {item.href ? (
+                  <Link src={item.href} style={styles.link}>
+                    {item.text}
+                  </Link>
+                ) : (
+                  <Text>{item.text}</Text>
+                )}
+              </View>
             ))}
           </View>
           <Text>{resume.location}</Text>

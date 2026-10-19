@@ -625,6 +625,11 @@
     margin-bottom: 4px;
   }
 
+  .resume-paper .headline-line {
+    margin: 0 0 2px;
+    text-align: center;
+  }
+
   .resume-paper .contact-line {
     color: var(--text);
     font-size: inherit;

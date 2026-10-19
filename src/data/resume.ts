@@ -4,10 +4,12 @@ const draftResume = {
   name: "Med Aduh",
   headline: "Software Engineer | Backend-leaning full-stack systems and product delivery",
   location: "Davao City, Philippines (Remote)",
+  phone: "+63 955 908 7053",
   email: "im.ramidem@gmail.com",
+  // Labels are the visible URLs so text-only ATS parsers capture them.
   links: [
-    { label: "GitHub", href: "https://github.com/ramidem" },
-    { label: "Resume", href: "https://github.com/ramidem/resume" },
+    { label: "linkedin.com/in/med-aduh", href: "https://www.linkedin.com/in/med-aduh" },
+    { label: "github.com/ramidem", href: "https://github.com/ramidem" },
   ],
   summary:
     "Full-stack engineer using AI-assisted workflows to ship reliable product systems, backend services, and operational tooling.",
