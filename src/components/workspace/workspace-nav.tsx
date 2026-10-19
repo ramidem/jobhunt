@@ -22,7 +22,7 @@ const links = [
   { href: "/companies", label: "Companies", short: "Companies", icon: Building2, tab: true },
   { href: "/skills", label: "Skills", short: "Skills", icon: BookOpenCheck, tab: true },
   { href: "/resume", label: "Tailor resume", short: "Tailor", icon: FileText, tab: false },
-  { href: "/qualifications", label: "Qualifications", short: "Quals", icon: ListChecks, tab: false },
+  { href: "/roles", label: "Roles", short: "Roles", icon: ListChecks, tab: false },
   { href: "/", label: "Public resume", short: "Resume", icon: Globe, tab: false },
 ];
 

@@ -4,6 +4,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { linkJobSkills, openDb, upsertCompany } from "./db.ts";
+import { classifyLines } from "./role-lines.ts";
 import { detectSkills } from "./skill-detect.ts";
 
 const host = process.env.HOST ?? "127.0.0.1";
@@ -113,7 +114,8 @@ function listSkills() {
     .all();
 }
 
-function listQualifications() {
+// Roles from the qualifications sheet, split into degree, tech skill pills and soft skills.
+function listRoles() {
   const meta = Object.fromEntries(
     (db.prepare("SELECT key, value FROM meta WHERE key LIKE 'qualifications.%'").all() as {
       key: string;
@@ -125,21 +127,27 @@ function listQualifications() {
     .all() as { id: number; title: string; updated: string | null }[];
   const lines = db
     .prepare(
-      `SELECT rq.role_id AS roleId, l.id, l.text, l.hidden
+      `SELECT rq.role_id AS roleId, l.text
          FROM role_qualifications rq JOIN qualification_lines l ON l.id = rq.line_id
         ORDER BY rq.role_id, rq.position`,
     )
-    .all() as { roleId: number; id: number; text: string; hidden: number }[];
-  const byRole = new Map<number, { id: number; text: string; hidden: boolean }[]>();
-  for (const line of lines) {
-    const list = byRole.get(line.roleId) ?? [];
-    list.push({ id: line.id, text: line.text, hidden: line.hidden === 1 });
-    byRole.set(line.roleId, list);
-  }
+    .all() as { roleId: number; text: string }[];
+  const known = new Set(
+    (db.prepare("SELECT name FROM skills WHERE status = 'know'").all() as { name: string }[]).map(
+      ({ name }) => name.toLowerCase(),
+    ),
+  );
   return {
     source: meta.source ?? "",
     note: meta.note ?? "",
-    roles: roles.map((role) => ({ ...role, lines: byRole.get(role.id) ?? [] })),
+    roles: roles.map((role) => {
+      const view = classifyLines(lines.filter((line) => line.roleId === role.id).map((line) => line.text));
+      return {
+        ...role,
+        ...view,
+        skills: view.skills.map((skill) => ({ ...skill, known: known.has(skill.name.toLowerCase()) })),
+      };
+    }),
   };
 }
 
@@ -537,18 +545,8 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     return true;
   }
 
-  if (resource === "qualifications" && method === "GET" && id === undefined) {
-    send(res, 200, listQualifications());
-    return true;
-  }
-
-  if (resource === "qualification-lines" && method === "PATCH" && id !== undefined) {
-    const body = await readJson(req);
-    if (typeof body.hidden !== "boolean") {
-      throw new HttpError(400, "hidden must be a boolean");
-    }
-    update("qualification_lines", id, { hidden: body.hidden ? 1 : 0 });
-    send(res, 200, listQualifications());
+  if (resource === "roles" && method === "GET" && id === undefined) {
+    send(res, 200, listRoles());
     return true;
   }
 

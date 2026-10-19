@@ -115,14 +115,15 @@ export type NewLogEntry = {
   followUpOn: string;
 };
 
-export type QualificationLine = { id: number; text: string; hidden: boolean };
-export type QualificationRole = {
+export type Role = {
   id: number;
   title: string;
   updated: string | null;
-  lines: QualificationLine[];
+  degree: string[];
+  skills: { name: string; optional: boolean; known: boolean }[];
+  soft: string[];
 };
-export type Qualifications = { source: string; note: string; roles: QualificationRole[] };
+export type Roles = { source: string; note: string; roles: Role[] };
 
 export async function api<T>(path: string, init?: { method: string; body?: unknown }): Promise<T> {
   const response = await fetch(`/api/${path}`, {
