@@ -1,7 +1,20 @@
 "use client";
 
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { PageBody, PageHeader } from "@/components/workspace/page-header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { skillSeeds } from "@/data/job-leads";
 import { resume } from "@/data/resume";
 import {
@@ -24,6 +37,7 @@ export default function SkillsPage() {
   const [skills, setSkills, ready] = useLocalStorage<Skill[]>(SKILLS_KEY, []);
   const [name, setName] = useState("");
   const [status, setStatus] = useState<SkillStatus>("want");
+  const [tab, setTab] = useState<SkillStatus>("want");
 
   // First visit: seed "I know" from the resume's skills, then add any new skill seeds.
   useEffect(() => {
@@ -54,93 +68,126 @@ export default function SkillsPage() {
     }
     setSkills((previous) => [...previous, { id: newId(), name: trimmed, status }]);
     setName("");
+    setTab(status);
+  }
+
+  function setSkillStatus(id: string, next: SkillStatus) {
+    setSkills((previous) =>
+      previous.map((entry) => (entry.id === id ? { ...entry, status: next } : entry)),
+    );
   }
 
   return (
-    <div className="workspace-panel">
-      <h1>Skills</h1>
-      <p className="muted">
-        Track what you know and what you need. Seeded from your resume; stored in this browser only.
-      </p>
+    <PageBody>
+      <PageHeader
+        title="Skills"
+        description="What you know and what roles keep asking for. Stored in this browser only."
+      />
 
-      <form className="form-row" onSubmit={add}>
-        <label className="grow">
-          Skill
-          <input onChange={(event) => setName(event.target.value)} required value={name} />
-        </label>
-        <label>
-          Status
-          <select
-            onChange={(event) => setStatus(event.target.value as SkillStatus)}
-            value={status}
-          >
-            {SKILL_STATUSES.map((value) => (
-              <option key={value} value={value}>
-                {LABELS[value]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <button className="icon-button primary add-button" type="submit">
-          Add
-        </button>
-      </form>
+      <Card>
+        <CardContent>
+          <form className="grid gap-3 sm:grid-cols-[1fr_11rem_auto] sm:items-end" onSubmit={add}>
+            <div className="grid gap-1.5">
+              <Label htmlFor="new-skill">Skill</Label>
+              <Input
+                id="new-skill"
+                onChange={(event) => setName(event.target.value)}
+                placeholder="e.g. Docker"
+                required
+                value={name}
+              />
+            </div>
+            <div className="grid gap-1.5">
+              <Label>Status</Label>
+              <Select onValueChange={(value) => setStatus(value as SkillStatus)} value={status}>
+                <SelectTrigger aria-label="Status for new skill" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SKILL_STATUSES.map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {LABELS[value]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit">
+              <Plus aria-hidden="true" />
+              Add
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
-      <div className="skill-columns">
+      <Tabs onValueChange={(value) => setTab(value as SkillStatus)} value={tab}>
+        <TabsList className="grid w-full grid-cols-3">
+          {SKILL_STATUSES.map((column) => (
+            <TabsTrigger key={column} value={column}>
+              {LABELS[column]}
+              <span className="text-muted-foreground tabular-nums">
+                {skills.filter((skill) => skill.status === column).length}
+              </span>
+            </TabsTrigger>
+          ))}
+        </TabsList>
+
         {SKILL_STATUSES.map((column) => {
           const items = skills
             .filter((skill) => skill.status === column)
             .sort((a, b) => (b.demand ?? 0) - (a.demand ?? 0));
           return (
-            <section className="card" key={column}>
-              <h2>
-                {LABELS[column]} ({items.length})
-              </h2>
-              <ul className="plain-list">
-                {items.map((skill) => (
-                  <li className="skill-row" key={skill.id}>
-                    <span>
-                      {skill.name}
-                      {skill.demand ? (
-                        <small className="muted"> · in {skill.demand} saved roles</small>
-                      ) : null}
-                    </span>
-                    <select
-                      aria-label={`Status for ${skill.name}`}
-                      onChange={(event) =>
-                        setSkills((previous) =>
-                          previous.map((entry) =>
-                            entry.id === skill.id
-                              ? { ...entry, status: event.target.value as SkillStatus }
-                              : entry,
-                          ),
-                        )
-                      }
-                      value={skill.status}
-                    >
-                      {SKILL_STATUSES.map((value) => (
-                        <option key={value} value={value}>
-                          {LABELS[value]}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      aria-label={`Remove ${skill.name}`}
-                      className="icon-button"
-                      onClick={() =>
-                        setSkills((previous) => previous.filter((entry) => entry.id !== skill.id))
-                      }
-                      type="button"
-                    >
-                      <Trash2 aria-hidden="true" size={14} />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            <TabsContent className="mt-3" key={column} value={column}>
+              <Card className="py-0">
+                {ready && items.length === 0 ? (
+                  <p className="p-6 text-center text-sm text-muted-foreground">Nothing here yet.</p>
+                ) : null}
+                <ul className="divide-y">
+                  {items.map((skill) => (
+                    <li className="flex items-center gap-3 px-4 py-3" key={skill.id}>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">{skill.name}</p>
+                        {skill.demand ? (
+                          <p className="text-xs text-muted-foreground">
+                            Asked for in {skill.demand} saved roles
+                          </p>
+                        ) : null}
+                      </div>
+                      <Select
+                        onValueChange={(value) => setSkillStatus(skill.id, value as SkillStatus)}
+                        value={skill.status}
+                      >
+                        <SelectTrigger aria-label={`Status for ${skill.name}`} className="w-34 shrink-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {SKILL_STATUSES.map((value) => (
+                            <SelectItem key={value} value={value}>
+                              {LABELS[value]}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Button
+                        aria-label={`Remove ${skill.name}`}
+                        className="shrink-0"
+                        onClick={() =>
+                          setSkills((previous) => previous.filter((entry) => entry.id !== skill.id))
+                        }
+                        size="icon"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <Trash2 aria-hidden="true" />
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </TabsContent>
           );
         })}
-      </div>
-    </div>
+      </Tabs>
+    </PageBody>
   );
 }

@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="page-shell">
       <StructuredData resume={resume} />
-      <div className="resume-toolbar no-print" aria-label="Resume actions">
+      <div className="resume-toolbar no-print flex-wrap" aria-label="Resume actions">
         <details className="toolbar-contact">
           <summary>
             <MessageSquare aria-hidden="true" size={18} />

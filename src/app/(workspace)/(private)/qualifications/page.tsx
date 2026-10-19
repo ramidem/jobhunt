@@ -1,4 +1,5 @@
 import { QualificationsList } from "@/components/qualifications-list";
+import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import data from "../../../../../data/qualifications.json";
 
 type Job = { title: string; qualifications: string[]; last_updated_raw: string | null };
@@ -11,12 +12,9 @@ export default function QualificationsPage() {
   }));
 
   return (
-    <div className="workspace-panel">
-      <h1>Qualifications</h1>
-      <p className="muted">
-        {data.note} Source: {data.source}.
-      </p>
+    <PageBody>
+      <PageHeader title="Qualifications" description={`${data.note} Source: ${data.source}.`} />
       <QualificationsList jobs={jobs} />
-    </div>
+    </PageBody>
   );
 }

@@ -3,6 +3,13 @@
 import { Printer, Save } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ResumeDocument } from "@/components/resume-document";
+import { PageBody, PageHeader } from "@/components/workspace/page-header";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { resume } from "@/data/resume";
 import { tailorResume } from "@/lib/tailor";
 import {
@@ -53,93 +60,110 @@ export default function ResumePage() {
 
   return (
     <>
-      <div className="workspace-panel no-print">
-        <h1>Resume</h1>
-        <p className="muted">
-          Paste a job description to reorder your resume toward it. Nothing is invented: bullets
-          and skills are only re-ranked from the source data.
-        </p>
-        <div className="form-row">
-          <label>
-            Company
-            <input value={company} onChange={(event) => setCompany(event.target.value)} />
-          </label>
-          <label>
-            Role
-            <input value={role} onChange={(event) => setRole(event.target.value)} />
-          </label>
-        </div>
-        <label>
-          Job description
-          <textarea
-            onChange={(event) => {
-              setJobDescription(event.target.value);
-              setSaved(false);
-            }}
-            placeholder="Paste the job description here"
-            rows={8}
-            value={jobDescription}
-          />
-        </label>
+      <PageBody>
+        <PageHeader
+          title="Tailor resume"
+          description="Paste a job description to reorder your resume toward it. Nothing is invented: bullets and skills are only re-ranked from the source data."
+        />
+        <Card>
+          <CardContent className="grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="grid gap-1.5">
+                <Label htmlFor="tailor-company">Company</Label>
+                <Input
+                  id="tailor-company"
+                  onChange={(event) => setCompany(event.target.value)}
+                  value={company}
+                />
+              </div>
+              <div className="grid gap-1.5">
+                <Label htmlFor="tailor-role">Role</Label>
+                <Input id="tailor-role" onChange={(event) => setRole(event.target.value)} value={role} />
+              </div>
+            </div>
+            <div className="grid gap-1.5">
+              <Label htmlFor="tailor-jd">Job description</Label>
+              <Textarea
+                className="min-h-40"
+                id="tailor-jd"
+                onChange={(event) => {
+                  setJobDescription(event.target.value);
+                  setSaved(false);
+                }}
+                placeholder="Paste the job description here"
+                value={jobDescription}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {result ? (
-          <div className="match-report">
-            <p>
-              <strong>
+          <Card>
+            <CardHeader>
+              <CardTitle>
                 {result.matchPercent === null
                   ? "No known technologies detected in this description."
                   : `${result.matchPercent}% of detected keywords are on your resume`}
-              </strong>
-            </p>
-            {result.matched.length > 0 ? (
-              <p>
-                <span className="muted">On resume: </span>
-                {result.matched.map((term) => (
-                  <span className="chip good" key={term}>
-                    {term}
-                  </span>
-                ))}
-              </p>
-            ) : null}
-            {result.missing.length > 0 ? (
-              <p>
-                <span className="muted">Missing: </span>
-                {result.missing.map((term) => {
-                  const key = term.toLowerCase();
-                  const hint = known.has(key)
-                    ? " (marked as known; consider adding)"
-                    : learning.has(key)
-                      ? " (on your learning list)"
-                      : "";
-                  return (
-                    <span className="chip warn" key={term}>
-                      {term}
-                      {hint}
-                    </span>
-                  );
-                })}
-              </p>
-            ) : null}
-            <div className="action-row">
-              <button className="icon-button" onClick={() => window.print()} type="button">
-                <Printer aria-hidden="true" size={16} />
-                Print / save PDF
-              </button>
-              <button
-                className="icon-button"
-                disabled={saved}
-                onClick={saveApplication}
-                type="button"
-              >
-                <Save aria-hidden="true" size={16} />
-                {saved ? "Saved to applications" : "Save as application"}
-              </button>
-            </div>
-          </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              {result.matched.length > 0 ? (
+                <div className="grid gap-2">
+                  <p className="text-sm text-muted-foreground">On resume</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {result.matched.map((term) => (
+                      <Badge
+                        className="bg-emerald-50 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200"
+                        key={term}
+                        variant="secondary"
+                      >
+                        {term}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {result.missing.length > 0 ? (
+                <div className="grid gap-2">
+                  <p className="text-sm text-muted-foreground">Missing</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {result.missing.map((term) => {
+                      const key = term.toLowerCase();
+                      const hint = known.has(key)
+                        ? " · marked known, consider adding"
+                        : learning.has(key)
+                          ? " · on your learning list"
+                          : "";
+                      return (
+                        <Badge
+                          className="h-auto bg-amber-50 whitespace-normal text-amber-900 dark:bg-amber-950 dark:text-amber-200"
+                          key={term}
+                          variant="secondary"
+                        >
+                          {term}
+                          {hint}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+              <div className="grid gap-2 sm:flex">
+                <Button onClick={() => window.print()} type="button" variant="outline">
+                  <Printer aria-hidden="true" />
+                  Print / save PDF
+                </Button>
+                <Button disabled={saved} onClick={saveApplication} type="button">
+                  <Save aria-hidden="true" />
+                  {saved ? "Saved to applications" : "Save as application"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         ) : null}
-      </div>
+      </PageBody>
 
-      <div className="resume-preview">
+      <div className="overflow-x-auto px-4 pb-10 md:px-8 print:overflow-visible print:p-0">
         <ResumeDocument resume={result?.resume ?? resume} />
       </div>
     </>
