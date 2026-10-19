@@ -4,7 +4,7 @@ export const dynamic = "force-static";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Med Aduh · Job Hunt",
+    name: "Medimar Aduh · Job Hunt",
     short_name: "Job Hunt",
     description: "Resume and job-hunt workspace.",
     start_url: "/dashboard/",

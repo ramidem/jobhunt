@@ -719,6 +719,9 @@
   .resume-paper .education-list li time {
     float: right;
   }
+  .resume-paper .education-list .education-school {
+    display: block;
+  }
 
   .resume-paper .nested-list {
     border-left: 0;

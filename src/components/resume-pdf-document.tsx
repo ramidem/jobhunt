@@ -178,12 +178,13 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
             {resume.education.map((item) => (
               <View key={`${item.institution}-${item.degree}`} style={styles.row}>
                 <View style={styles.roleLine}>
-                  <Text style={styles.educationText}>
-                    {item.degree}, {item.institution}
-                    {item.location ? `, ${item.location}` : ""}
-                  </Text>
+                  <Text style={styles.educationText}>{item.degree}</Text>
                   {item.dates ? <Text>{item.dates}</Text> : null}
                 </View>
+                <Text>
+                  {item.institution}
+                  {item.location ? `, ${item.location}` : ""}
+                </Text>
                 {item.details.map((detail) => (
                   <Bullet key={detail}>{detail}</Bullet>
                 ))}

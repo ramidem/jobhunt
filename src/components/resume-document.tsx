@@ -24,11 +24,12 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
           <ul className="education-list">
             {resume.education.map((item) => (
               <li key={`${item.institution}-${item.degree}`}>
-                <span>
-                  {item.degree}, {item.institution}
+                <span>{item.degree}</span>
+                {item.dates ? <time>{item.dates}</time> : null}
+                <span className="education-school">
+                  {item.institution}
                   {item.location ? `, ${item.location}` : ""}
                 </span>
-                {item.dates ? <time>{item.dates}</time> : null}
               </li>
             ))}
           </ul>
