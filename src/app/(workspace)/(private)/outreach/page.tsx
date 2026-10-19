@@ -297,7 +297,11 @@ export default function OutreachPage() {
 
   return (
     <PageBody>
-      <PageHeader title="Outreach" description="Drafts for recruiters and hiring managers. You copy and send them yourself; nothing is sent from here.">
+      <PageHeader
+        description="Drafts for recruiters and hiring managers. You copy and send them yourself; nothing is sent from here."
+        phase
+        title="Outreach"
+      >
         <NewDraftSheet onSaved={reload} />
       </PageHeader>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}

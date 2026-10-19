@@ -75,7 +75,11 @@ export default function ApplicationsPage() {
 
   return (
     <PageBody>
-      <PageHeader title="Applications" description="Saved on your Mac and shared across devices." />
+      <PageHeader
+        description="Saved on your Mac and shared across devices."
+        phase
+        title="Applications"
+      />
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 

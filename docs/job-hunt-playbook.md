@@ -63,3 +63,7 @@ The Dashboard funnel counts saved, applied, replied, interviewing and offers by 
 - Phase 4: Dashboard funnel and the Monday task `job-hunt-monday-summary`. Reply-rate insights wait for data.
 
 The TODO page in the app is the live list of what is left.
+
+## Pages
+
+One page per phase, switched with the phase dropdown at the top right of each: Phase 1 `/applications` (Jobs), Phase 2 `/outreach`, Phase 3 `/interviews`, Phase 4 `/results`. Companies, Roles, Skills, Learn and TODO support all phases.
