@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { api, useResource, type Company, type CompanyKind } from "@/lib/api";
@@ -44,6 +45,7 @@ function EditCompanySheet({ company, onSaved }: { company: Company; onSaved: () 
     linkedinUrl: company.linkedinUrl,
     kind: company.kind,
     notes: company.notes,
+    brief: company.brief,
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -109,6 +111,15 @@ function EditCompanySheet({ company, onSaved }: { company: Company; onSaved: () 
               </Select>
             </div>
             {text("notes", "Notes")}
+            <div className="grid gap-1.5">
+              <Label htmlFor={`co-${company.id}-brief`}>Company brief (what they build, stack, news, who runs engineering)</Label>
+              <Textarea
+                className="min-h-28"
+                id={`co-${company.id}-brief`}
+                onChange={(event) => setFields({ ...fields, brief: event.target.value })}
+                value={fields.brief}
+              />
+            </div>
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
           </div>
           <SheetFooter>
@@ -285,6 +296,9 @@ export default function CompaniesPage() {
                     </a>
                   ) : null}
                 </div>
+                {company.brief ? (
+                  <p className="line-clamp-4 pt-1 text-sm text-muted-foreground">{company.brief}</p>
+                ) : null}
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {company.kind !== "unknown" ? <Badge variant="outline">{KIND_LABEL[company.kind]}</Badge> : null}
                   <Badge variant="secondary">

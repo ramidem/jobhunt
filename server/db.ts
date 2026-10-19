@@ -235,6 +235,55 @@ const migrations: [string, string][] = [
     ALTER TABLE jobs ADD COLUMN priority INTEGER NOT NULL DEFAULT 0;
     `,
   ],
+  [
+    "008-phases-2-4",
+    `
+    -- Phase 2: a short brief on the company, and outreach drafts. Drafts are never sent by the app;
+    -- Med copies them and marks them sent.
+    ALTER TABLE companies ADD COLUMN brief TEXT NOT NULL DEFAULT '';
+
+    CREATE TABLE outreach (
+      id INTEGER PRIMARY KEY,
+      company_id INTEGER NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
+      job_id INTEGER REFERENCES jobs(id) ON DELETE SET NULL,
+      contact_id INTEGER REFERENCES contacts(id) ON DELETE SET NULL,
+      channel TEXT NOT NULL DEFAULT 'LinkedIn',
+      subject TEXT NOT NULL DEFAULT '',
+      body TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'sent', 'replied', 'dropped')),
+      created_on TEXT NOT NULL,
+      sent_on TEXT NOT NULL DEFAULT '',
+      follow_up_on TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT 'manual'
+    );
+    CREATE INDEX outreach_status ON outreach(status, company_id);
+
+    -- Phase 3: interview rounds and offers, tied to a job.
+    CREATE TABLE interviews (
+      id INTEGER PRIMARY KEY,
+      job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+      round TEXT NOT NULL DEFAULT 'Screen',
+      scheduled_on TEXT NOT NULL DEFAULT '',
+      with_whom TEXT NOT NULL DEFAULT '',
+      format TEXT NOT NULL DEFAULT 'Video',
+      prep TEXT NOT NULL DEFAULT '',
+      notes TEXT NOT NULL DEFAULT '',
+      outcome TEXT NOT NULL DEFAULT 'pending' CHECK (outcome IN ('pending', 'passed', 'rejected', 'withdrew'))
+    );
+
+    CREATE TABLE offers (
+      id INTEGER PRIMARY KEY,
+      job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+      pay TEXT NOT NULL DEFAULT '',
+      schedule TEXT NOT NULL DEFAULT '',
+      benefits TEXT NOT NULL DEFAULT '',
+      growth TEXT NOT NULL DEFAULT '',
+      notes TEXT NOT NULL DEFAULT '',
+      decision TEXT NOT NULL DEFAULT 'open' CHECK (decision IN ('open', 'accepted', 'declined')),
+      received_on TEXT NOT NULL DEFAULT ''
+    );
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching

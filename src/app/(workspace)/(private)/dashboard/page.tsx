@@ -104,6 +104,38 @@ export default function DashboardPage() {
 
             <Card>
               <CardHeader>
+                <CardTitle>Funnel</CardTitle>
+                <CardDescription>
+                  How far your saved jobs get. Replied means a company or person wrote back.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-4">
+                <Bars
+                  rows={[
+                    { label: "Saved", value: data.funnel.stages.saved },
+                    { label: "Applied", value: data.funnel.stages.applied },
+                    { label: "Replied", value: data.funnel.stages.replied },
+                    { label: "Interviewing", value: data.funnel.stages.interviewing },
+                    { label: "Offers", value: data.funnel.stages.offers },
+                  ]}
+                  unit="jobs"
+                />
+                <p className="text-sm text-muted-foreground">
+                  Direct outreach: {data.funnel.outreach.sent} sent, {data.funnel.outreach.replied} replied
+                  {data.draftsToSend > 0 ? (
+                    <>
+                      {" · "}
+                      <Link className="underline underline-offset-4" href="/outreach">
+                        {data.draftsToSend} {data.draftsToSend === 1 ? "draft" : "drafts"} waiting to send
+                      </Link>
+                    </>
+                  ) : null}
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
                 <CardTitle>Pipeline</CardTitle>
                 <CardDescription>Applications by status.</CardDescription>
               </CardHeader>
