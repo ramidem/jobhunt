@@ -478,6 +478,15 @@ function listPreferences() {
   return db.prepare("SELECT id, kind, text, source, created_at AS createdAt FROM preferences ORDER BY id").all();
 }
 
+function listLibrary() {
+  return db
+    .prepare(
+      `SELECT id, kind, title, body, file_name AS fileName, mime, size, created_at AS createdAt
+         FROM library_items ORDER BY id DESC`,
+    )
+    .all();
+}
+
 const OUTREACH_STATUSES = ["draft", "sent", "replied", "dropped"];
 const INTERVIEW_OUTCOMES = ["pending", "passed", "rejected", "withdrew"];
 const OFFER_DECISIONS = ["open", "accepted", "declined"];
@@ -1291,6 +1300,52 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       throw new HttpError(405, "Method not allowed");
     }
     send(res, method === "POST" ? 201 : 200, listPreferences());
+    return true;
+  }
+
+  if (resource === "library-file" && method === "GET" && id !== undefined) {
+    const row = db.prepare("SELECT file_name, mime, data FROM library_items WHERE id = ? AND kind = 'file'").get(id) as
+      | { file_name: string; mime: string; data: Uint8Array }
+      | undefined;
+    if (!row) throw new HttpError(404, "Not found");
+    res.writeHead(200, {
+      "Content-Type": row.mime || "application/octet-stream",
+      "Content-Disposition": `inline; filename="${row.file_name.replace(/[^\w.\- ]/g, "_")}"`,
+      "Cache-Control": "no-store",
+    });
+    res.end(Buffer.from(row.data));
+    return true;
+  }
+
+  if (resource === "library") {
+    const body = method === "POST" || method === "PATCH" ? await readJson(req) : {};
+    if (method === "POST" && id === undefined) {
+      const kind = text(body, "kind", true)!;
+      if (kind === "text") {
+        db.prepare("INSERT INTO library_items (kind, title, body) VALUES ('text', ?, ?)").run(
+          text(body, "title", true)!,
+          text(body, "body", true)!,
+        );
+      } else if (kind === "file") {
+        const data = Buffer.from(text(body, "dataBase64", true)!, "base64");
+        db.prepare("INSERT INTO library_items (kind, title, file_name, mime, size, data) VALUES ('file', ?, ?, ?, ?, ?)").run(
+          text(body, "title", true)!,
+          text(body, "fileName", true)!,
+          text(body, "mime") ?? "",
+          data.length,
+          data,
+        );
+      } else {
+        throw new HttpError(400, "kind must be text or file");
+      }
+    } else if (method === "PATCH" && id !== undefined) {
+      update("library_items", id, { title: text(body, "title"), body: text(body, "body") });
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM library_items WHERE id = ?").run(id);
+    } else if (method !== "GET" || id !== undefined) {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listLibrary());
     return true;
   }
 

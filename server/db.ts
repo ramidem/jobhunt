@@ -357,6 +357,23 @@ const migrations: [string, string][] = [
       ('Linux', 'want'), ('Selenium', 'want');
     `,
   ],
+  [
+    "012-library",
+    `
+    -- Ready-made texts to copy (cover emails, form answers) and files to download (resumes).
+    CREATE TABLE library_items (
+      id INTEGER PRIMARY KEY,
+      kind TEXT NOT NULL CHECK (kind IN ('text', 'file')),
+      title TEXT NOT NULL,
+      body TEXT NOT NULL DEFAULT '',
+      file_name TEXT NOT NULL DEFAULT '',
+      mime TEXT NOT NULL DEFAULT '',
+      size INTEGER NOT NULL DEFAULT 0,
+      data BLOB,
+      created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    );
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching

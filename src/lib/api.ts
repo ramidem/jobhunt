@@ -353,3 +353,14 @@ export type Preference = {
   source: string;
   createdAt: string;
 };
+
+export type LibraryItem = {
+  id: number;
+  kind: "text" | "file";
+  title: string;
+  body: string;
+  fileName: string;
+  mime: string;
+  size: number;
+  createdAt: string;
+};
