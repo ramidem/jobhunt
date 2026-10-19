@@ -23,12 +23,12 @@ export type Application = {
   postedOn: string;
   applicants: string;
   jobDescription: string;
-  contactId: number | null;
-  contactName: string | null;
-  contactTitle: string | null;
-  contactLinkedin: string | null;
-  contactEmail: string | null;
-  contactPhone: string | null;
+  companyKind: CompanyKind;
+  companyWebsite: string;
+  companyCareers: string;
+  clientNote: string;
+  contacts: (Contact & { role: string; jobId: number })[];
+  companyContacts: Contact[];
   lastContactedOn: string | null;
   createdAt: string;
   status: ApplicationStatus;
@@ -37,6 +37,8 @@ export type Application = {
   skills: JobSkill[];
   matchPercent: number | null;
 };
+
+export type CompanyKind = "employer" | "agency" | "confidential" | "unknown";
 
 export type Skill = { id: number; name: string; status: SkillStatus; demand: number };
 
@@ -69,6 +71,10 @@ export type LogEntry = {
 export type Company = {
   id: number;
   name: string;
+  legalName: string;
+  kind: CompanyKind;
+  careersUrl: string;
+  enrichedOn: string;
   linkedinUrl: string;
   website: string;
   industry: string;
@@ -79,7 +85,16 @@ export type Company = {
   sources: string[];
   lastContactedOn: string | null;
   contacts: Contact[];
-  jobs: { id: number; code: string; title: string; url: string; applicationId: number | null; status: ApplicationStatus | null }[];
+  jobs: {
+    id: number;
+    code: string;
+    title: string;
+    url: string;
+    clientNote: string;
+    contactIds: number[];
+    applicationId: number | null;
+    status: ApplicationStatus | null;
+  }[];
   log: LogEntry[];
 };
 

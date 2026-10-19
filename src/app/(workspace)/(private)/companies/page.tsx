@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Mail, MessageSquarePlus, Phone, Search, Trash2, UserPlus } from "lucide-react";
+import { ExternalLink, Globe, Mail, MessageSquarePlus, Pencil, Phone, Search, Trash2, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,109 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
-import { api, useResource, type Company } from "@/lib/api";
+import { api, useResource, type Company, type CompanyKind } from "@/lib/api";
 import { formatDay } from "@/lib/format";
+
+const KIND_LABEL: Record<CompanyKind, string> = {
+  employer: "Employer",
+  agency: "Staffing agency",
+  confidential: "Confidential employer",
+  unknown: "Not checked",
+};
+
+function EditCompanySheet({ company, onSaved }: { company: Company; onSaved: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [fields, setFields] = useState({
+    name: company.name,
+    website: company.website,
+    careersUrl: company.careersUrl,
+    linkedinUrl: company.linkedinUrl,
+    kind: company.kind,
+    notes: company.notes,
+  });
+  const [error, setError] = useState<string | null>(null);
+
+  async function save(event: React.FormEvent) {
+    event.preventDefault();
+    try {
+      await api(`companies/${company.id}`, { method: "PATCH", body: { ...fields, enriched: true } });
+      setError(null);
+      setOpen(false);
+      onSaved();
+    } catch (reason) {
+      setError((reason as Error).message);
+    }
+  }
+
+  const text = (key: "name" | "website" | "careersUrl" | "linkedinUrl" | "notes", label: string, type = "text") => (
+    <div className="grid gap-1.5">
+      <Label htmlFor={`co-${company.id}-${key}`}>{label}</Label>
+      <Input
+        id={`co-${company.id}-${key}`}
+        onChange={(event) => setFields({ ...fields, [key]: event.target.value })}
+        required={key === "name"}
+        type={type}
+        value={fields[key]}
+      />
+    </div>
+  );
+
+  return (
+    <Sheet onOpenChange={setOpen} open={open}>
+      <SheetTrigger asChild>
+        <Button aria-label={`Edit ${company.name}`} size="icon" variant="ghost">
+          <Pencil aria-hidden="true" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent
+        className="mx-auto max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-t-xl pb-[env(safe-area-inset-bottom)]"
+        side="bottom"
+      >
+        <form onSubmit={save}>
+          <SheetHeader>
+            <SheetTitle>Edit company</SheetTitle>
+            <SheetDescription>{company.legalName || company.name}</SheetDescription>
+          </SheetHeader>
+          <div className="grid gap-3 px-4">
+            {text("name", "Name")}
+            {text("website", "Website", "url")}
+            {text("careersUrl", "Careers or jobs page", "url")}
+            {text("linkedinUrl", "LinkedIn page", "url")}
+            <div className="grid gap-1.5">
+              <Label>Type</Label>
+              <Select onValueChange={(value) => setFields({ ...fields, kind: value as CompanyKind })} value={fields.kind}>
+                <SelectTrigger aria-label="Company type" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {(Object.keys(KIND_LABEL) as CompanyKind[]).map((value) => (
+                    <SelectItem key={value} value={value}>
+                      {KIND_LABEL[value]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {text("notes", "Notes")}
+            {error ? <p className="text-sm text-destructive">{error}</p> : null}
+          </div>
+          <SheetFooter>
+            <Button type="submit">Save</Button>
+          </SheetFooter>
+        </form>
+      </SheetContent>
+    </Sheet>
+  );
+}
 
 function AddContactSheet({ company, onSaved }: { company: Company; onSaved: () => void }) {
   const [open, setOpen] = useState(false);
@@ -132,22 +231,35 @@ export default function CompaniesPage() {
               <CardHeader>
                 <CardTitle className="flex flex-wrap items-center gap-2 leading-snug">
                   {company.name}
-                  {company.linkedinUrl ? (
-                    <a
-                      aria-label={`${company.name} on LinkedIn`}
-                      className="text-muted-foreground hover:text-foreground"
-                      href={company.linkedinUrl}
-                      rel="noreferrer"
-                      target="_blank"
-                    >
-                      <ExternalLink aria-hidden="true" className="size-4" />
-                    </a>
-                  ) : null}
+                  <EditCompanySheet company={company} key={`${company.id}-${company.website}-${company.careersUrl}-${company.kind}`} onSaved={reload} />
                 </CardTitle>
                 <CardDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   {[company.industry, company.size].filter(Boolean).join(" · ") || "No company details yet"}
                 </CardDescription>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-sm">
+                  {company.website ? (
+                    <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={company.website} rel="noreferrer" target="_blank">
+                      <Globe aria-hidden="true" className="size-3.5" />
+                      Website
+                    </a>
+                  ) : (
+                    <span className="text-muted-foreground">No website yet</span>
+                  )}
+                  {company.careersUrl ? (
+                    <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={company.careersUrl} rel="noreferrer" target="_blank">
+                      <ExternalLink aria-hidden="true" className="size-3.5" />
+                      Careers
+                    </a>
+                  ) : null}
+                  {company.linkedinUrl ? (
+                    <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={company.linkedinUrl} rel="noreferrer" target="_blank">
+                      <ExternalLink aria-hidden="true" className="size-3.5" />
+                      LinkedIn
+                    </a>
+                  ) : null}
+                </div>
                 <div className="flex flex-wrap gap-1.5 pt-1">
+                  {company.kind !== "unknown" ? <Badge variant="outline">{KIND_LABEL[company.kind]}</Badge> : null}
                   <Badge variant="secondary">
                     {company.jobCount} {company.jobCount === 1 ? "posting" : "postings"}
                   </Badge>
@@ -237,6 +349,11 @@ export default function CompaniesPage() {
                           ) : (
                             <span className="min-w-0 truncate">{job.title}</span>
                           )}
+                          {job.contactIds.length > 0 ? (
+                            <span className="shrink-0 text-xs text-muted-foreground">
+                              {job.contactIds.length} {job.contactIds.length === 1 ? "contact" : "contacts"}
+                            </span>
+                          ) : null}
                           {job.status ? <Badge variant="outline">{job.status}</Badge> : null}
                         </li>
                       ))}
