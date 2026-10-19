@@ -17,7 +17,7 @@ const draftResume = {
     {
       institution: "Western Mindanao State University",
       degree: "BS, Mass Communication/Media Studies",
-      dates: "Graduated 2010",
+      dates: "Graduated 2012",
       details: [],
     },
   ],
