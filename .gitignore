@@ -8,3 +8,6 @@ coverage/
 
 # Local reference material
 /transcript
+
+# Local tracker database
+/data/tracker.db*

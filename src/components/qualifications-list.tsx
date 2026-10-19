@@ -7,37 +7,38 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { HIDDEN_QUALIFICATIONS_KEY } from "@/lib/tracker";
-import { useLocalStorage } from "@/lib/use-local-storage";
+import { PageBody, PageHeader } from "@/components/workspace/page-header";
+import { useResource, type QualificationLine, type Qualifications } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
-type Job = { title: string; qualifications: string[]; updated: string | null };
-
-// Hiding works on the line's text, so hiding "Degree" hides it in every role.
-const normalize = (line: string) => line.trim().toLowerCase();
-
-export function QualificationsList({ jobs }: { jobs: Job[] }) {
+// Each line's text is stored once, so hiding "Degree" hides it in every role.
+export function QualificationsList() {
+  const { data, error, mutate } = useResource<Qualifications>("qualifications");
   const [query, setQuery] = useState("");
-  const [hidden, setHidden] = useLocalStorage<string[]>(HIDDEN_QUALIFICATIONS_KEY, []);
   const [showHidden, setShowHidden] = useState(false);
-  const hiddenSet = new Set(hidden);
+  const roles = data?.roles ?? [];
+  const hiddenCount = new Set(
+    roles.flatMap((role) => role.lines.filter((line) => line.hidden).map((line) => line.id)),
+  ).size;
   const needle = query.trim().toLowerCase();
-  const visible = jobs.filter(
-    (job) =>
+  const visible = roles.filter(
+    (role) =>
       !needle ||
-      job.title.toLowerCase().includes(needle) ||
-      job.qualifications.some((line) => line.toLowerCase().includes(needle)),
+      role.title.toLowerCase().includes(needle) ||
+      role.lines.some((line) => line.text.toLowerCase().includes(needle)),
   );
 
-  function toggle(line: string) {
-    const key = normalize(line);
-    setHidden((previous) =>
-      previous.includes(key) ? previous.filter((entry) => entry !== key) : [...previous, key],
-    );
+  function toggle(line: QualificationLine) {
+    void mutate(`qualification-lines/${line.id}`, "PATCH", { hidden: !line.hidden });
   }
 
   return (
-    <>
+    <PageBody>
+      <PageHeader
+        title="Qualifications"
+        description={data ? `${data.note} Source: ${data.source}.` : undefined}
+      />
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <div className="grid gap-3">
         <div className="relative">
           <Search
@@ -55,10 +56,10 @@ export function QualificationsList({ jobs }: { jobs: Job[] }) {
         </div>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm text-muted-foreground">
-            {visible.length} of {jobs.length} roles
-            {hidden.length > 0 ? ` · ${hidden.length} hidden ${hidden.length === 1 ? "line" : "lines"}` : ""}
+            {visible.length} of {roles.length} roles
+            {hiddenCount > 0 ? ` · ${hiddenCount} hidden ${hiddenCount === 1 ? "line" : "lines"}` : ""}
           </p>
-          {hidden.length > 0 ? (
+          {hiddenCount > 0 ? (
             <div className="flex items-center gap-2">
               <Switch checked={showHidden} id="show-hidden" onCheckedChange={setShowHidden} />
               <Label htmlFor="show-hidden">Show hidden</Label>
@@ -67,16 +68,14 @@ export function QualificationsList({ jobs }: { jobs: Job[] }) {
         </div>
       </div>
       <ul className="grid gap-4">
-        {visible.map((job, index) => {
-          const lines = job.qualifications.filter(
-            (line) => showHidden || !hiddenSet.has(normalize(line)),
-          );
+        {visible.map((role) => {
+          const lines = role.lines.filter((line) => showHidden || !line.hidden);
           return (
-            <li key={`${job.title}-${index}`}>
+            <li key={role.id}>
               <Card>
                 <CardHeader>
-                  <CardTitle className="leading-snug">{job.title}</CardTitle>
-                  {job.updated ? <CardDescription>Updated {job.updated}</CardDescription> : null}
+                  <CardTitle className="leading-snug">{role.title}</CardTitle>
+                  {role.updated ? <CardDescription>Updated {role.updated}</CardDescription> : null}
                 </CardHeader>
                 <CardContent>
                   {lines.length === 0 ? (
@@ -84,19 +83,19 @@ export function QualificationsList({ jobs }: { jobs: Job[] }) {
                   ) : null}
                   <ul className="-my-1 text-sm">
                     {lines.map((line) => {
-                      const isHidden = hiddenSet.has(normalize(line));
+                      const isHidden = line.hidden;
                       return (
-                        <li className="flex items-start gap-2" key={line}>
+                        <li className="flex items-start gap-2" key={line.id}>
                           <span
                             className={cn(
                               "flex-1 py-2 md:py-1.5",
                               isHidden && "text-muted-foreground line-through",
                             )}
                           >
-                            {line}
+                            {line.text}
                           </span>
                           <Button
-                            aria-label={isHidden ? `Show “${line}”` : `Hide “${line}”, I don't need it`}
+                            aria-label={isHidden ? `Show “${line.text}”` : `Hide “${line.text}”, I don't need it`}
                             aria-pressed={isHidden}
                             className="shrink-0 text-muted-foreground"
                             onClick={() => toggle(line)}
@@ -117,6 +116,6 @@ export function QualificationsList({ jobs }: { jobs: Job[] }) {
           );
         })}
       </ul>
-    </>
+    </PageBody>
   );
 }

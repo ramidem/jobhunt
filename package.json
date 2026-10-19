@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "serve": "node --no-warnings server/index.ts",
+    "start:local": "next build && node --no-warnings server/index.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.0",
@@ -36,5 +38,8 @@
   },
   "overrides": {
     "postcss": "8.5.16"
+  },
+  "engines": {
+    "node": ">=22.18"
   }
 }

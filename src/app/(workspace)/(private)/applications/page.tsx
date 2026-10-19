@@ -1,7 +1,7 @@
 "use client";
 
 import { ExternalLink, Plus, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,78 +16,56 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { jobLeads } from "@/data/job-leads";
 import { cn } from "@/lib/utils";
-import {
-  APPLICATIONS_KEY,
-  APPLICATION_STATUSES,
-  newId,
-  takeUnseeded,
-  type Application,
-  type ApplicationStatus,
-} from "@/lib/tracker";
-import { useLocalStorage } from "@/lib/use-local-storage";
+import { useResource, type Application } from "@/lib/api";
+import { APPLICATION_STATUSES, type ApplicationStatus } from "@/lib/tracker";
+
+// Saves on blur so typing doesn't send a request per keystroke.
+function NotesField({ id, value, onSave }: { id: string; value: string; onSave: (next: string) => void }) {
+  const [draft, setDraft] = useState(value);
+  return (
+    <Textarea
+      className="min-h-16"
+      id={id}
+      onBlur={() => draft !== value && onSave(draft)}
+      onChange={(event) => setDraft(event.target.value)}
+      rows={2}
+      value={draft}
+    />
+  );
+}
 
 export default function ApplicationsPage() {
-  const [applications, setApplications, ready] = useLocalStorage<Application[]>(
-    APPLICATIONS_KEY,
-    [],
-  );
+  const { data, error, mutate } = useResource<Application[]>("applications");
+  const applications = data ?? [];
+  const ready = data !== null;
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [url, setUrl] = useState("");
   const [filter, setFilter] = useState<ApplicationStatus | "All">("All");
-
-  // Add saved job leads this browser hasn't seen yet.
-  useEffect(() => {
-    if (!ready) {
-      return;
-    }
-    const fresh = takeUnseeded(jobLeads);
-    if (fresh.length > 0) {
-      setApplications((previous) => [
-        ...previous,
-        ...fresh.filter((lead) => !previous.some((item) => item.id === lead.id)),
-      ]);
-    }
-  }, [ready, setApplications]);
 
   function add(event: React.FormEvent) {
     event.preventDefault();
     if (!company.trim() || !role.trim()) {
       return;
     }
-    setApplications((previous) => [
-      {
-        id: newId(),
-        company: company.trim(),
-        role: role.trim(),
-        status: "Saved",
-        url: url.trim(),
-        appliedOn: "",
-        notes: "",
-        jobDescription: "",
-        matchPercent: null,
-        createdAt: new Date().toISOString(),
-      },
-      ...previous,
-    ]);
+    void mutate("applications", "POST", { company, role, url });
     setCompany("");
     setRole("");
     setUrl("");
   }
 
-  function patch(id: string, changes: Partial<Application>) {
-    setApplications((previous) =>
-      previous.map((item) => (item.id === id ? { ...item, ...changes } : item)),
-    );
+  function patch(id: number, changes: Partial<Pick<Application, "status" | "appliedOn" | "notes">>) {
+    void mutate(`applications/${id}`, "PATCH", changes);
   }
 
   const visible = applications.filter((item) => filter === "All" || item.status === filter);
 
   return (
     <PageBody>
-      <PageHeader title="Applications" description="Stored in this browser only." />
+      <PageHeader title="Applications" description="Saved on your Mac and shared across devices." />
+
+      {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
       <Card>
         <CardContent>
@@ -172,6 +150,7 @@ export default function ApplicationsPage() {
                 <CardTitle className="leading-snug">{item.role}</CardTitle>
                 <CardDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span>{item.company}</span>
+                  {item.details ? <span>{item.details}</span> : null}
                   {item.matchPercent !== null ? (
                     <Badge variant="secondary">{item.matchPercent}% match</Badge>
                   ) : null}
@@ -181,9 +160,7 @@ export default function ApplicationsPage() {
                     aria-label={`Delete ${item.role} at ${item.company}`}
                     onClick={() => {
                       if (window.confirm(`Delete ${item.role} at ${item.company}?`)) {
-                        setApplications((previous) =>
-                          previous.filter((entry) => entry.id !== item.id),
-                        );
+                        void mutate(`applications/${item.id}`, "DELETE");
                       }
                     }}
                     size="icon"
@@ -195,6 +172,22 @@ export default function ApplicationsPage() {
                 </CardAction>
               </CardHeader>
               <CardContent className="grid gap-3">
+                {item.skills.some((skill) => skill.status !== "know") ? (
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                    <span className="text-muted-foreground">Missing:</span>
+                    {item.skills
+                      .filter((skill) => skill.status !== "know")
+                      .map((skill) => (
+                        <Badge
+                          className="bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
+                          key={skill.name}
+                          variant="secondary"
+                        >
+                          {skill.name}
+                        </Badge>
+                      ))}
+                  </div>
+                ) : null}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-[10rem_11rem_1fr] sm:items-end">
                   <div className="grid gap-1.5">
                     <Label>Status</Label>
@@ -242,11 +235,9 @@ export default function ApplicationsPage() {
                 </div>
                 <div className="grid gap-1.5">
                   <Label htmlFor={`notes-${item.id}`}>Notes</Label>
-                  <Textarea
-                    className="min-h-16"
+                  <NotesField
                     id={`notes-${item.id}`}
-                    onChange={(event) => patch(item.id, { notes: event.target.value })}
-                    rows={2}
+                    onSave={(notes) => patch(item.id, { notes })}
                     value={item.notes}
                   />
                 </div>

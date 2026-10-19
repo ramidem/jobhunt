@@ -12,22 +12,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { resume } from "@/data/resume";
 import { tailorResume } from "@/lib/tailor";
-import {
-  APPLICATIONS_KEY,
-  SKILLS_KEY,
-  newId,
-  type Application,
-  type Skill,
-} from "@/lib/tracker";
-import { useLocalStorage } from "@/lib/use-local-storage";
+import { api, useResource, type Skill } from "@/lib/api";
 
 export default function ResumePage() {
   const [jobDescription, setJobDescription] = useState("");
   const [company, setCompany] = useState("");
   const [role, setRole] = useState("");
   const [saved, setSaved] = useState(false);
-  const [, setApplications] = useLocalStorage<Application[]>(APPLICATIONS_KEY, []);
-  const [skills] = useLocalStorage<Skill[]>(SKILLS_KEY, []);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const skills = useResource<Skill[]>("skills").data ?? [];
 
   const result = useMemo(
     () => (jobDescription.trim() ? tailorResume(resume, jobDescription) : null),
@@ -39,23 +32,22 @@ export default function ResumePage() {
     skills.filter((skill) => skill.status !== "know").map((s) => s.name.toLowerCase()),
   );
 
-  function saveApplication() {
-    setApplications((previous) => [
-      {
-        id: newId(),
-        company: company.trim() || "Unknown company",
-        role: role.trim() || "Unknown role",
-        status: "Saved",
-        url: "",
-        appliedOn: "",
-        notes: "",
-        jobDescription,
-        matchPercent: result?.matchPercent ?? null,
-        createdAt: new Date().toISOString(),
-      },
-      ...previous,
-    ]);
-    setSaved(true);
+  async function saveApplication() {
+    try {
+      await api("applications", {
+        method: "POST",
+        body: {
+          company: company.trim() || "Unknown company",
+          role: role.trim() || "Unknown role",
+          jobDescription,
+          skills: result ? [...result.matched, ...result.missing] : [],
+        },
+      });
+      setSaved(true);
+      setSaveError(null);
+    } catch (reason) {
+      setSaveError((reason as Error).message);
+    }
   }
 
   return (
@@ -148,12 +140,13 @@ export default function ResumePage() {
                   </div>
                 </div>
               ) : null}
+              {saveError ? <p className="text-sm text-destructive">{saveError}</p> : null}
               <div className="grid gap-2 sm:flex">
                 <Button onClick={() => window.print()} type="button" variant="outline">
                   <Printer aria-hidden="true" />
                   Print / save PDF
                 </Button>
-                <Button disabled={saved} onClick={saveApplication} type="button">
+                <Button disabled={saved} onClick={() => void saveApplication()} type="button">
                   <Save aria-hidden="true" />
                   {saved ? "Saved to applications" : "Save as application"}
                 </Button>
