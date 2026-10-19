@@ -322,7 +322,7 @@ export default function ApplicationsPage() {
                   {item.url ? (
                     <Button asChild className="col-span-2 sm:col-span-1 sm:justify-self-end" variant="outline">
                       <a href={item.url} rel="noreferrer" target="_blank">
-                        View posting
+                        {item.url.includes("mail.google.com") ? "Open source email" : "View posting"}
                         <ExternalLink aria-hidden="true" />
                       </a>
                     </Button>
