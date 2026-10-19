@@ -26,6 +26,7 @@ export type Application = {
   priority: boolean;
   companyPriority: boolean;
   companyKind: CompanyKind;
+  companyBrief: string;
   companyWebsite: string;
   companyCareers: string;
   clientNote: string;
@@ -75,6 +76,7 @@ export type Company = {
   name: string;
   priority: boolean;
   priorityNote: string;
+  brief: string;
   legalName: string;
   kind: CompanyKind;
   careersUrl: string;
@@ -124,6 +126,8 @@ export type Dashboard = {
   topGaps: { name: string; demand: number }[];
   recent: LogEntry[];
   activeRoles: { id: number; title: string }[];
+  funnel: Funnel;
+  draftsToSend: number;
 };
 
 export type NewLogEntry = {
@@ -240,4 +244,68 @@ export type Todo = {
   done: boolean;
   createdAt: string;
   doneAt: string;
+};
+
+export type OutreachStatus = "draft" | "sent" | "replied" | "dropped";
+
+export type Outreach = {
+  id: number;
+  companyId: number;
+  company: string;
+  jobId: number | null;
+  code: string | null;
+  jobTitle: string | null;
+  contactId: number | null;
+  contactName: string | null;
+  contactTitle: string | null;
+  contactLinkedin: string | null;
+  contactEmail: string | null;
+  channel: string;
+  subject: string;
+  body: string;
+  status: OutreachStatus;
+  createdOn: string;
+  sentOn: string;
+  followUpOn: string;
+  source: string;
+};
+
+export type Interview = {
+  id: number;
+  jobId: number;
+  code: string;
+  jobTitle: string;
+  url: string;
+  companyId: number;
+  company: string;
+  round: string;
+  scheduledOn: string;
+  withWhom: string;
+  format: string;
+  prep: string;
+  notes: string;
+  outcome: "pending" | "passed" | "rejected" | "withdrew";
+};
+
+export type Offer = {
+  id: number;
+  jobId: number;
+  code: string;
+  jobTitle: string;
+  company: string;
+  pay: string;
+  schedule: string;
+  benefits: string;
+  growth: string;
+  notes: string;
+  decision: "open" | "accepted" | "declined";
+  receivedOn: string;
+};
+
+export type InterviewsData = { interviews: Interview[]; offers: Offer[] };
+
+export type Funnel = {
+  stages: { saved: number; applied: number; replied: number; interviewing: number; offers: number };
+  bySource: { source: string; saved: number; applied: number; replied: number }[];
+  outreach: { sent: number; replied: number; drafts: number };
 };

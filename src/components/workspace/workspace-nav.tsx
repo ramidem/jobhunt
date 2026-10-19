@@ -3,7 +3,9 @@
 import {
   BookOpenCheck,
   Briefcase,
+  CalendarCheck,
   GraduationCap,
+  MessageSquareText,
   ListTodo,
   Building2,
   FileText,
@@ -23,6 +25,8 @@ const links = [
   { href: "/applications", label: "Applications", short: "Jobs", icon: Briefcase, tab: true },
   { href: "/companies", label: "Companies", short: "Companies", icon: Building2, tab: true },
   { href: "/skills", label: "Skills", short: "Skills", icon: BookOpenCheck, tab: true },
+  { href: "/outreach", label: "Outreach", short: "Outreach", icon: MessageSquareText, tab: false },
+  { href: "/interviews", label: "Interviews", short: "Interviews", icon: CalendarCheck, tab: false },
   { href: "/learn", label: "Learn", short: "Learn", icon: GraduationCap, tab: false },
   { href: "/todo", label: "TODO", short: "TODO", icon: ListTodo, tab: false },
   { href: "/resume", label: "Tailor resume", short: "Tailor", icon: FileText, tab: false },

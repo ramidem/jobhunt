@@ -75,7 +75,7 @@ function listApplications() {
               j.work_type AS workType, j.employment_type AS employmentType, j.salary,
               j.posted_on AS postedOn, j.applicants, j.description AS jobDescription,
               j.created_at AS createdAt, a.status, a.applied_on AS appliedOn, a.notes,
-              c.kind AS companyKind, c.website AS companyWebsite, c.careers_url AS companyCareers,
+              c.kind AS companyKind, c.website AS companyWebsite, c.careers_url AS companyCareers, c.brief AS companyBrief,
               (j.priority = 1 OR c.priority = 1) AS priority, c.priority AS companyPriority,
               j.client_note AS clientNote,
               (SELECT MAX(happened_on) FROM contact_log l WHERE l.company_id = c.id) AS lastContactedOn
@@ -177,7 +177,7 @@ function listCompanies() {
     .prepare(
       `SELECT c.id, c.name, c.legal_name AS legalName, c.kind, c.linkedin_url AS linkedinUrl, c.website,
               c.careers_url AS careersUrl, c.industry, c.size, c.notes, c.enriched_on AS enrichedOn,
-              c.priority, c.priority_note AS priorityNote,
+              c.priority, c.priority_note AS priorityNote, c.brief,
               (SELECT COUNT(*) FROM jobs j WHERE j.company_id = c.id) AS jobCount,
               (SELECT GROUP_CONCAT(DISTINCT j.source) FROM jobs j WHERE j.company_id = c.id) AS sources,
               (SELECT COUNT(*) FROM applications a JOIN jobs j ON j.id = a.job_id
@@ -290,6 +290,8 @@ function dashboard() {
       )
       .all(),
     recent: listContactLog(8),
+    funnel: funnel(),
+    draftsToSend: (db.prepare("SELECT COUNT(*) AS n FROM outreach WHERE status = 'draft'").get() as { n: number }).n,
     activeRoles: db
       .prepare("SELECT id, title FROM qualification_roles WHERE active = 1 ORDER BY title")
       .all(),
@@ -425,6 +427,116 @@ function listTodos() {
     )
     .all()
     .map((row) => ({ ...(row as Record<string, unknown>), done: (row as { done: number }).done === 1 }));
+}
+
+const OUTREACH_STATUSES = ["draft", "sent", "replied", "dropped"];
+const INTERVIEW_OUTCOMES = ["pending", "passed", "rejected", "withdrew"];
+const OFFER_DECISIONS = ["open", "accepted", "declined"];
+
+function listOutreach() {
+  return db
+    .prepare(
+      `SELECT o.id, o.company_id AS companyId, c.name AS company, o.job_id AS jobId, j.code, j.title AS jobTitle,
+              o.contact_id AS contactId, ct.name AS contactName, ct.title AS contactTitle,
+              ct.linkedin_url AS contactLinkedin, ct.email AS contactEmail,
+              o.channel, o.subject, o.body, o.status, o.created_on AS createdOn, o.sent_on AS sentOn,
+              o.follow_up_on AS followUpOn, o.source
+         FROM outreach o
+         JOIN companies c ON c.id = o.company_id
+         LEFT JOIN jobs j ON j.id = o.job_id
+         LEFT JOIN contacts ct ON ct.id = o.contact_id
+        ORDER BY CASE o.status WHEN 'draft' THEN 0 WHEN 'sent' THEN 1 WHEN 'replied' THEN 2 ELSE 3 END, o.id DESC`,
+    )
+    .all();
+}
+
+function listInterviews() {
+  const interviews = db
+    .prepare(
+      `SELECT i.id, i.job_id AS jobId, j.code, j.title AS jobTitle, j.url, c.id AS companyId, c.name AS company,
+              i.round, i.scheduled_on AS scheduledOn, i.with_whom AS withWhom, i.format, i.prep, i.notes, i.outcome
+         FROM interviews i JOIN jobs j ON j.id = i.job_id JOIN companies c ON c.id = j.company_id
+        ORDER BY i.scheduled_on = '', i.scheduled_on, i.id`,
+    )
+    .all();
+  const offers = db
+    .prepare(
+      `SELECT f.id, f.job_id AS jobId, j.code, j.title AS jobTitle, c.name AS company, f.pay, f.schedule,
+              f.benefits, f.growth, f.notes, f.decision, f.received_on AS receivedOn
+         FROM offers f JOIN jobs j ON j.id = f.job_id JOIN companies c ON c.id = j.company_id
+        ORDER BY f.decision != 'open', f.id DESC`,
+    )
+    .all();
+  return { interviews, offers };
+}
+
+// Funnel for the Dashboard and the Monday summary. "Replied" = a company wrote back (contact log
+// entry from them, or an outreach marked replied). "Direct" = Med reached out to a person, not
+// just applied on a board.
+function funnel() {
+  const count = (sql: string) => (db.prepare(sql).get() as { n: number }).n;
+  const stages = {
+    saved: count("SELECT COUNT(*) AS n FROM applications"),
+    applied: count("SELECT COUNT(*) AS n FROM applications WHERE status IN ('Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn') AND applied_on != ''"),
+    replied: count(
+      `SELECT COUNT(DISTINCT j.id) AS n FROM jobs j WHERE EXISTS (SELECT 1 FROM contact_log l WHERE l.direction = 'in' AND l.summary NOT LIKE '%confirmation%' AND l.summary NOT LIKE '%expired%' AND (l.job_id = j.id OR (l.job_id IS NULL AND l.company_id = j.company_id)))
+          OR EXISTS (SELECT 1 FROM outreach o WHERE o.job_id = j.id AND o.status = 'replied')`,
+    ),
+    interviewing: count("SELECT COUNT(DISTINCT job_id) AS n FROM interviews"),
+    offers: count("SELECT COUNT(*) AS n FROM offers"),
+  };
+  const bySource = db
+    .prepare(
+      `SELECT j.source, COUNT(*) AS saved,
+              SUM(a.status IN ('Applied', 'Interviewing', 'Offer', 'Rejected', 'Withdrawn')) AS applied,
+              SUM(EXISTS (SELECT 1 FROM contact_log l WHERE l.direction = 'in' AND l.summary NOT LIKE '%confirmation%' AND l.summary NOT LIKE '%expired%' AND l.company_id = j.company_id)) AS replied
+         FROM jobs j JOIN applications a ON a.job_id = j.id GROUP BY j.source ORDER BY saved DESC`,
+    )
+    .all();
+  const outreach = db
+    .prepare(
+      `SELECT SUM(status != 'draft' AND status != 'dropped') AS sent, SUM(status = 'replied') AS replied,
+              SUM(status = 'draft') AS drafts FROM outreach`,
+    )
+    .get() as { sent: number | null; replied: number | null; drafts: number | null };
+  return {
+    stages,
+    bySource,
+    outreach: { sent: outreach.sent ?? 0, replied: outreach.replied ?? 0, drafts: outreach.drafts ?? 0 },
+  };
+}
+
+// What to do this week: drafts waiting, follow-ups due, interviews coming up, new postings at
+// priority companies. Used by the Dashboard and the Monday summary task.
+function weekly() {
+  const today = localDay();
+  const weekAgo = localDay(-7);
+  const weekAhead = localDay(7);
+  return {
+    today,
+    draftsToSend: db
+      .prepare(
+        `SELECT o.id, c.name AS company, ct.name AS contactName, j.code, o.channel FROM outreach o
+           JOIN companies c ON c.id = o.company_id LEFT JOIN contacts ct ON ct.id = o.contact_id
+           LEFT JOIN jobs j ON j.id = o.job_id WHERE o.status = 'draft' ORDER BY o.id`,
+      )
+      .all(),
+    followUps: dashboard().followUps,
+    upcomingInterviews: db
+      .prepare(
+        `SELECT i.id, j.code, c.name AS company, j.title AS jobTitle, i.round, i.scheduled_on AS scheduledOn
+           FROM interviews i JOIN jobs j ON j.id = i.job_id JOIN companies c ON c.id = j.company_id
+          WHERE i.outcome = 'pending' AND i.scheduled_on != '' AND i.scheduled_on BETWEEN ? AND ? ORDER BY i.scheduled_on`,
+      )
+      .all(today, weekAhead),
+    newAtPriority: db
+      .prepare(
+        `SELECT j.code, c.name AS company, j.title, j.url FROM jobs j JOIN companies c ON c.id = j.company_id
+          WHERE (c.priority = 1 OR j.priority = 1) AND substr(j.created_at, 1, 10) >= ? ORDER BY j.created_at DESC`,
+      )
+      .all(weekAgo),
+    funnel: funnel(),
+  };
 }
 
 // Upserts a scraped posting: company, hiring contact, job fields and detected skills.
@@ -745,6 +857,7 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
         notes: text(body, "notes"),
         priority: typeof body.priority === "boolean" ? (body.priority ? 1 : 0) : undefined,
         priority_note: text(body, "priorityNote"),
+        brief: text(body, "brief"),
         enriched_on: body.enriched === true ? localDay() : undefined,
       });
       send(res, 200, listCompanies());
@@ -1021,6 +1134,163 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       throw new HttpError(405, "Method not allowed");
     }
     send(res, method === "POST" ? 201 : 200, listTodos());
+    return true;
+  }
+
+  if (resource === "outreach") {
+    if (method === "GET" && id === undefined) {
+      send(res, 200, listOutreach());
+      return true;
+    }
+    if (method === "POST" && id === undefined) {
+      const body = await readJson(req);
+      if (typeof body.companyId !== "number") {
+        throw new HttpError(400, "companyId must be a number");
+      }
+      const optional = (key: string) => (typeof body[key] === "number" ? (body[key] as number) : null);
+      db.prepare(
+        `INSERT INTO outreach (company_id, job_id, contact_id, channel, subject, body, created_on, source)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      ).run(
+        body.companyId,
+        optional("jobId"),
+        optional("contactId"),
+        text(body, "channel") || "LinkedIn",
+        text(body, "subject") ?? "",
+        text(body, "body", true)!,
+        localDay(),
+        text(body, "source") || "manual",
+      );
+    } else if (method === "PATCH" && id !== undefined) {
+      const body = await readJson(req);
+      const status = oneOf(text(body, "status"), OUTREACH_STATUSES, "status");
+      update("outreach", id, {
+        body: text(body, "body"),
+        subject: text(body, "subject"),
+        channel: text(body, "channel"),
+        status,
+        follow_up_on: text(body, "followUpOn"),
+        sent_on: status === "sent" ? localDay() : undefined,
+      });
+      if (status === "sent" || status === "replied") {
+        // Keep the contact history in step: marking sent or replied logs the touch once.
+        const row = db
+          .prepare("SELECT company_id AS companyId, job_id AS jobId, contact_id AS contactId, channel, subject FROM outreach WHERE id = ?")
+          .get(id) as { companyId: number; jobId: number | null; contactId: number | null; channel: string; subject: string };
+        const direction = status === "sent" ? "out" : "in";
+        const marker = `[outreach #${id} ${status}]`;
+        const exists = db.prepare("SELECT 1 FROM contact_log WHERE summary LIKE ?").get(`${marker}%`);
+        if (!exists) {
+          db.prepare(
+            `INSERT INTO contact_log (company_id, contact_id, job_id, channel, direction, happened_on, summary, follow_up_on)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          ).run(
+            row.companyId,
+            row.contactId,
+            row.jobId,
+            row.channel,
+            direction,
+            localDay(),
+            `${marker} ${status === "sent" ? "Message sent" : "They replied"}${row.subject ? `: ${row.subject}` : ""}`,
+            status === "sent" ? localDay(5) : "",
+          );
+          if (status === "sent") {
+            db.prepare("UPDATE outreach SET follow_up_on = COALESCE(NULLIF(follow_up_on, ''), ?) WHERE id = ?").run(localDay(5), id);
+          }
+        }
+      }
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM outreach WHERE id = ?").run(id);
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listOutreach());
+    return true;
+  }
+
+  if (resource === "interviews") {
+    if (method === "GET" && id === undefined) {
+      send(res, 200, listInterviews());
+      return true;
+    }
+    if (method === "POST" && id === undefined) {
+      const body = await readJson(req);
+      if (typeof body.jobId !== "number") {
+        throw new HttpError(400, "jobId must be a number");
+      }
+      db.prepare(
+        "INSERT INTO interviews (job_id, round, scheduled_on, with_whom, format, prep) VALUES (?, ?, ?, ?, ?, ?)",
+      ).run(
+        body.jobId,
+        text(body, "round") || "Screen",
+        text(body, "scheduledOn") ?? "",
+        text(body, "withWhom") ?? "",
+        text(body, "format") || "Video",
+        text(body, "prep") ?? "",
+      );
+      // A scheduled round means the application is at least in the interview stage.
+      db.prepare(
+        "UPDATE applications SET status = 'Interviewing' WHERE job_id = ? AND status IN ('Saved', 'Applied')",
+      ).run(body.jobId);
+    } else if (method === "PATCH" && id !== undefined) {
+      const body = await readJson(req);
+      update("interviews", id, {
+        round: text(body, "round"),
+        scheduled_on: text(body, "scheduledOn"),
+        with_whom: text(body, "withWhom"),
+        format: text(body, "format"),
+        prep: text(body, "prep"),
+        notes: text(body, "notes"),
+        outcome: oneOf(text(body, "outcome"), INTERVIEW_OUTCOMES, "outcome"),
+      });
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM interviews WHERE id = ?").run(id);
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listInterviews());
+    return true;
+  }
+
+  if (resource === "offers") {
+    if (method === "POST" && id === undefined) {
+      const body = await readJson(req);
+      if (typeof body.jobId !== "number") {
+        throw new HttpError(400, "jobId must be a number");
+      }
+      db.prepare(
+        "INSERT INTO offers (job_id, pay, schedule, benefits, growth, notes, received_on) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      ).run(
+        body.jobId,
+        text(body, "pay") ?? "",
+        text(body, "schedule") ?? "",
+        text(body, "benefits") ?? "",
+        text(body, "growth") ?? "",
+        text(body, "notes") ?? "",
+        localDay(),
+      );
+      db.prepare("UPDATE applications SET status = 'Offer' WHERE job_id = ? AND status != 'Offer'").run(body.jobId);
+    } else if (method === "PATCH" && id !== undefined) {
+      const body = await readJson(req);
+      update("offers", id, {
+        pay: text(body, "pay"),
+        schedule: text(body, "schedule"),
+        benefits: text(body, "benefits"),
+        growth: text(body, "growth"),
+        notes: text(body, "notes"),
+        decision: oneOf(text(body, "decision"), OFFER_DECISIONS, "decision"),
+      });
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM offers WHERE id = ?").run(id);
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listInterviews());
+    return true;
+  }
+
+  if (resource === "weekly" && method === "GET" && id === undefined) {
+    send(res, 200, weekly());
     return true;
   }
 

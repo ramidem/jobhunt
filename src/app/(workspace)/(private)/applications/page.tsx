@@ -281,6 +281,7 @@ export default function ApplicationsPage() {
                     ) : null}
                   </div>
                   {item.clientNote ? <p className="text-muted-foreground">Client: {item.clientNote}</p> : null}
+                  {item.companyBrief ? <p className="line-clamp-3 text-muted-foreground">{item.companyBrief}</p> : null}
                   {item.contacts.length === 0 ? (
                     <p className="text-muted-foreground">
                       No hiring contact yet
