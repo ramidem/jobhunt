@@ -13,6 +13,7 @@ const port = Number(process.env.PORT ?? 4173);
 const outDir = join(import.meta.dirname, "..", "out");
 const db = openDb();
 
+const COMPANY_KINDS = ["employer", "agency", "confidential", "unknown"];
 const STATUSES = ["Saved", "Applied", "Interviewing", "Offer", "Rejected", "Withdrawn"];
 const SKILL_STATUSES = ["know", "learning", "want"];
 
@@ -73,16 +74,28 @@ function listApplications() {
               j.work_type AS workType, j.employment_type AS employmentType, j.salary,
               j.posted_on AS postedOn, j.applicants, j.description AS jobDescription,
               j.created_at AS createdAt, a.status, a.applied_on AS appliedOn, a.notes,
-              ct.id AS contactId, ct.name AS contactName, ct.title AS contactTitle,
-              ct.linkedin_url AS contactLinkedin, ct.email AS contactEmail, ct.phone AS contactPhone,
+              c.kind AS companyKind, c.website AS companyWebsite, c.careers_url AS companyCareers,
+              j.client_note AS clientNote,
               (SELECT MAX(happened_on) FROM contact_log l WHERE l.company_id = c.id) AS lastContactedOn
          FROM applications a
          JOIN jobs j ON j.id = a.job_id
          JOIN companies c ON c.id = j.company_id
-         LEFT JOIN contacts ct ON ct.id = j.contact_id
         ORDER BY j.created_at DESC, a.id ASC`,
     )
     .all() as Record<string, unknown>[];
+  const contactRows = db
+    .prepare(
+      `SELECT jc.job_id AS jobId, jc.role, ct.id, ct.name, ct.title, ct.linkedin_url AS linkedinUrl,
+              ct.email, ct.phone
+         FROM job_contacts jc JOIN contacts ct ON ct.id = jc.contact_id ORDER BY ct.name`,
+    )
+    .all() as { jobId: number }[];
+  const companyContactRows = db
+    .prepare(
+      `SELECT id, company_id AS companyId, name, title, linkedin_url AS linkedinUrl, email, phone
+         FROM contacts WHERE company_id IS NOT NULL ORDER BY name`,
+    )
+    .all() as { companyId: number }[];
   const skillRows = db
     .prepare(
       `SELECT js.job_id AS jobId, s.name, s.status
@@ -98,6 +111,8 @@ function listApplications() {
     const known = skills.filter((skill) => skill.status === "know").length;
     return {
       ...row,
+      contacts: contactRows.filter((contact) => contact.jobId === row.jobId),
+      companyContacts: companyContactRows.filter((contact) => contact.companyId === row.companyId),
       skills,
       matchPercent: skills.length > 0 ? Math.round((known / skills.length) * 100) : null,
     };
@@ -156,7 +171,8 @@ function listRoles() {
 function listCompanies() {
   const companies = db
     .prepare(
-      `SELECT c.id, c.name, c.linkedin_url AS linkedinUrl, c.website, c.industry, c.size, c.notes,
+      `SELECT c.id, c.name, c.legal_name AS legalName, c.kind, c.linkedin_url AS linkedinUrl, c.website,
+              c.careers_url AS careersUrl, c.industry, c.size, c.notes, c.enriched_on AS enrichedOn,
               (SELECT COUNT(*) FROM jobs j WHERE j.company_id = c.id) AS jobCount,
               (SELECT GROUP_CONCAT(DISTINCT j.source) FROM jobs j WHERE j.company_id = c.id) AS sources,
               (SELECT COUNT(*) FROM applications a JOIN jobs j ON j.id = a.job_id
@@ -174,16 +190,26 @@ function listCompanies() {
     .all() as { companyId: number }[];
   const jobs = db
     .prepare(
-      `SELECT j.id, j.code, j.company_id AS companyId, j.title, j.url, a.id AS applicationId, a.status
+      `SELECT j.id, j.code, j.company_id AS companyId, j.title, j.url, j.client_note AS clientNote,
+              a.id AS applicationId, a.status
          FROM jobs j LEFT JOIN applications a ON a.job_id = j.id ORDER BY j.created_at DESC`,
     )
-    .all() as { companyId: number }[];
+    .all() as { id: number; companyId: number }[];
+  const jobContacts = db.prepare("SELECT job_id AS jobId, contact_id AS contactId FROM job_contacts").all() as {
+    jobId: number;
+    contactId: number;
+  }[];
   const log = listContactLog() as { companyId: number }[];
   return companies.map((company) => ({
     ...company,
     sources: company.sources ? String(company.sources).split(",") : [],
     contacts: contacts.filter((contact) => contact.companyId === company.id),
-    jobs: jobs.filter((job) => job.companyId === company.id),
+    jobs: jobs
+      .filter((job) => job.companyId === company.id)
+      .map((job) => ({
+        ...job,
+        contactIds: jobContacts.filter((link) => link.jobId === job.id).map((link) => link.contactId),
+      })),
     log: log.filter((entry) => entry.companyId === company.id),
   }));
 }
@@ -472,6 +498,9 @@ function importJob(body: Record<string, unknown>) {
     ).id;
     db.prepare("INSERT INTO applications (job_id) VALUES (?)").run(jobId);
   }
+  if (contactId !== null) {
+    db.prepare("INSERT OR IGNORE INTO job_contacts (job_id, contact_id) VALUES (?, ?)").run(jobId, contactId);
+  }
   linkJobSkills(db, jobId, detectSkills(`${text(body, "title", true)}\n${description}`));
   // Keep a code the source file already assigned (so chat and app match) if it's free.
   const code = text(body, "code");
@@ -599,16 +628,75 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     } else if (method === "PATCH" && id !== undefined) {
       const body = await readJson(req);
       update("companies", id, {
+        name: text(body, "name"),
+        legal_name: text(body, "legalName"),
+        kind: oneOf(text(body, "kind"), COMPANY_KINDS, "kind"),
         linkedin_url: text(body, "linkedinUrl"),
         website: text(body, "website"),
+        careers_url: text(body, "careersUrl"),
         industry: text(body, "industry"),
         size: text(body, "size"),
         notes: text(body, "notes"),
+        enriched_on: body.enriched === true ? localDay() : undefined,
       });
       send(res, 200, listCompanies());
     } else {
       throw new HttpError(405, "Method not allowed");
     }
+    return true;
+  }
+
+  // Merge duplicate companies into one: { intoId, fromIds: [...] }. Jobs, contacts and contact
+  // history move over; blank fields on the kept company are filled from the merged ones.
+  if (resource === "company-merges" && method === "POST" && id === undefined) {
+    const body = await readJson(req);
+    const intoId = body.intoId;
+    const fromIds = Array.isArray(body.fromIds) ? body.fromIds.filter((n): n is number => typeof n === "number") : [];
+    if (typeof intoId !== "number" || fromIds.length === 0 || fromIds.includes(intoId)) {
+      throw new HttpError(400, "intoId must be a number and fromIds a non-empty list that excludes it");
+    }
+    db.exec("BEGIN");
+    try {
+      for (const fromId of fromIds) {
+        db.prepare(
+          `UPDATE companies SET
+             linkedin_url = COALESCE(NULLIF(linkedin_url, ''), (SELECT linkedin_url FROM companies WHERE id = ?)),
+             website = COALESCE(NULLIF(website, ''), (SELECT website FROM companies WHERE id = ?)),
+             careers_url = COALESCE(NULLIF(careers_url, ''), (SELECT careers_url FROM companies WHERE id = ?)),
+             industry = COALESCE(NULLIF(industry, ''), (SELECT industry FROM companies WHERE id = ?)),
+             size = COALESCE(NULLIF(size, ''), (SELECT size FROM companies WHERE id = ?))
+           WHERE id = ?`,
+        ).run(fromId, fromId, fromId, fromId, fromId, intoId);
+        db.prepare("UPDATE jobs SET company_id = ? WHERE company_id = ?").run(intoId, fromId);
+        db.prepare("UPDATE contacts SET company_id = ? WHERE company_id = ?").run(intoId, fromId);
+        db.prepare("UPDATE contact_log SET company_id = ? WHERE company_id = ?").run(intoId, fromId);
+        db.prepare("DELETE FROM companies WHERE id = ?").run(fromId);
+      }
+      db.exec("COMMIT");
+    } catch (error) {
+      db.exec("ROLLBACK");
+      throw error;
+    }
+    send(res, 200, listCompanies());
+    return true;
+  }
+
+  // Attach or detach a hiring person on a job: POST/DELETE { jobId, contactId, role? }.
+  if (resource === "job-contacts" && (method === "POST" || method === "DELETE") && id === undefined) {
+    const body = await readJson(req);
+    if (typeof body.jobId !== "number" || typeof body.contactId !== "number") {
+      throw new HttpError(400, "jobId and contactId must be numbers");
+    }
+    if (method === "POST") {
+      db.prepare("INSERT OR REPLACE INTO job_contacts (job_id, contact_id, role) VALUES (?, ?, ?)").run(
+        body.jobId,
+        body.contactId,
+        text(body, "role") || "hiring",
+      );
+    } else {
+      db.prepare("DELETE FROM job_contacts WHERE job_id = ? AND contact_id = ?").run(body.jobId, body.contactId);
+    }
+    send(res, 200, listApplications());
     return true;
   }
 
@@ -626,10 +714,10 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       if (typeof body.companyId !== "number") {
         throw new HttpError(400, "companyId must be a number");
       }
-      db.prepare(
+      const created = db.prepare(
         `INSERT INTO contacts (company_id, name, title, linkedin_url, email, phone, notes)
-         VALUES (?, ?, ?, NULLIF(?, ''), ?, ?, ?)`,
-      ).run(
+         VALUES (?, ?, ?, NULLIF(?, ''), ?, ?, ?) RETURNING id`,
+      ).get(
         body.companyId,
         fields.name!,
         fields.title ?? "",
@@ -637,7 +725,10 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
         fields.email ?? "",
         fields.phone ?? "",
         fields.notes ?? "",
-      );
+      ) as { id: number };
+      if (typeof body.jobId === "number") {
+        db.prepare("INSERT OR IGNORE INTO job_contacts (job_id, contact_id) VALUES (?, ?)").run(body.jobId, created.id);
+      }
     } else if (method === "PATCH" && id !== undefined) {
       update("contacts", id, fields);
     } else if (method === "DELETE" && id !== undefined) {

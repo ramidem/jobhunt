@@ -201,6 +201,31 @@ const migrations: [string, string][] = [
     );
     `,
   ],
+  [
+    "006-normalize-companies-and-job-contacts",
+    `
+    -- name = clean display name; legal_name keeps the full registered name when it differs.
+    ALTER TABLE companies ADD COLUMN legal_name TEXT NOT NULL DEFAULT '';
+    -- employer = hires for itself; agency = staffing/BPO placing people at clients;
+    -- confidential = posting hides the employer; unknown = not checked yet.
+    ALTER TABLE companies ADD COLUMN kind TEXT NOT NULL DEFAULT 'unknown'
+      CHECK (kind IN ('employer', 'agency', 'confidential', 'unknown'));
+    ALTER TABLE companies ADD COLUMN careers_url TEXT NOT NULL DEFAULT '';
+    ALTER TABLE companies ADD COLUMN enriched_on TEXT NOT NULL DEFAULT '';
+    -- For agency postings: the end client, when the posting names one.
+    ALTER TABLE jobs ADD COLUMN client_note TEXT NOT NULL DEFAULT '';
+
+    -- A job can have several hiring people; a person can be tied to several jobs.
+    CREATE TABLE job_contacts (
+      job_id INTEGER NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+      contact_id INTEGER NOT NULL REFERENCES contacts(id) ON DELETE CASCADE,
+      role TEXT NOT NULL DEFAULT 'hiring',
+      PRIMARY KEY (job_id, contact_id)
+    );
+    INSERT OR IGNORE INTO job_contacts (job_id, contact_id)
+      SELECT id, contact_id FROM jobs WHERE contact_id IS NOT NULL;
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching
