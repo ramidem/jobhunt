@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Mail, MessageSquarePlus, Plus, Search, Trash2 } from "lucide-react";
+import { ExternalLink, Mail, MessageSquarePlus, Plus, Search, Star, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { JobContactsSheet } from "@/components/workspace/job-contacts-sheet";
 import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
@@ -48,6 +48,7 @@ export default function ApplicationsPage() {
   const [filter, setFilter] = useState<ApplicationStatus | "All">("All");
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(30);
+  const [priorityOnly, setPriorityOnly] = useState(false);
 
   function add(event: React.FormEvent) {
     event.preventDefault();
@@ -68,6 +69,7 @@ export default function ApplicationsPage() {
   const visible = applications.filter(
     (item) =>
       (filter === "All" || item.status === filter) &&
+      (!priorityOnly || item.priority) &&
       (!needle || `${item.code} ${item.role} ${item.company} ${item.location} ${item.source}`.toLowerCase().includes(needle)),
   );
 
@@ -142,6 +144,20 @@ export default function ApplicationsPage() {
         className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0"
         role="group"
       >
+        <Button
+          aria-pressed={priorityOnly}
+          className="shrink-0 rounded-full"
+          onClick={() => setPriorityOnly(!priorityOnly)}
+          size="sm"
+          type="button"
+          variant={priorityOnly ? "default" : "outline"}
+        >
+          <Star aria-hidden="true" />
+          Priority
+          <span className={priorityOnly ? "opacity-70" : "text-muted-foreground"}>
+            {applications.filter((item) => item.priority).length}
+          </span>
+        </Button>
         {(["All", ...APPLICATION_STATUSES] as const).map((status) => {
           const count =
             status === "All"
@@ -180,6 +196,9 @@ export default function ApplicationsPage() {
                     {item.code}
                   </span>
                   {item.role}
+                  {item.priority ? (
+                    <Star aria-label="Priority" className="ml-1.5 inline size-4 fill-amber-400 text-amber-500" />
+                  ) : null}
                 </CardTitle>
                 <CardDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span>{item.company}</span>
@@ -190,7 +209,19 @@ export default function ApplicationsPage() {
                     <Badge variant="secondary">{item.matchPercent}% match</Badge>
                   ) : null}
                 </CardDescription>
-                <CardAction>
+                <CardAction className="flex">
+                  <Button
+                    aria-label={item.priority ? `Remove ${item.role} from priority` : `Mark ${item.role} as priority`}
+                    aria-pressed={item.priority}
+                    onClick={() =>
+                      void mutate("job-priority", "PATCH", { code: item.code, priority: !item.priority })
+                    }
+                    size="icon"
+                    type="button"
+                    variant="ghost"
+                  >
+                    <Star aria-hidden="true" className={item.priority ? "fill-amber-400 text-amber-500" : ""} />
+                  </Button>
                   <Button
                     aria-label={`Delete ${item.role} at ${item.company}`}
                     onClick={() => {
