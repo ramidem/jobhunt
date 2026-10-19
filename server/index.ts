@@ -430,6 +430,23 @@ function listTodos() {
     .map((row) => ({ ...(row as Record<string, unknown>), done: (row as { done: number }).done === 1 }));
 }
 
+function listPaths() {
+  const paths = db
+    .prepare("SELECT id, title, goal, skill, created_at AS createdAt FROM learning_paths ORDER BY id")
+    .all() as Record<string, unknown>[];
+  const steps = db
+    .prepare(
+      `SELECT id, path_id AS pathId, title, notes, url, position, status, done_at AS doneAt
+         FROM learning_steps ORDER BY position, id`,
+    )
+    .all() as { pathId: number }[];
+  return paths.map((path) => ({ ...path, steps: steps.filter((step) => step.pathId === path.id) }));
+}
+
+function listPreferences() {
+  return db.prepare("SELECT id, kind, text, source, created_at AS createdAt FROM preferences ORDER BY id").all();
+}
+
 const OUTREACH_STATUSES = ["draft", "sent", "replied", "dropped"];
 const INTERVIEW_OUTCOMES = ["pending", "passed", "rejected", "withdrew"];
 const OFFER_DECISIONS = ["open", "accepted", "declined"];
@@ -1108,6 +1125,70 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       "INSERT INTO meta (key, value) VALUES ('learn.digest', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
     ).run(JSON.stringify({ text: text(body, "text", true), on: localDay() }));
     send(res, 200, { ok: true });
+    return true;
+  }
+
+  if (resource === "learning-paths") {
+    const body = method === "GET" || method === "DELETE" ? {} : await readJson(req);
+    if (method === "POST" && id === undefined) {
+      const info = db
+        .prepare("INSERT INTO learning_paths (title, goal, skill) VALUES (?, ?, ?)")
+        .run(text(body, "title", true)!, text(body, "goal") ?? "", text(body, "skill") ?? "");
+      const steps = Array.isArray(body.steps) ? (body.steps as Record<string, unknown>[]) : [];
+      const add = db.prepare("INSERT INTO learning_steps (path_id, title, notes, url, position) VALUES (?, ?, ?, ?, ?)");
+      steps.forEach((step, index) =>
+        add.run(Number(info.lastInsertRowid), text(step, "title", true)!, text(step, "notes") ?? "", text(step, "url") ?? "", index + 1),
+      );
+    } else if (method === "PATCH" && id !== undefined) {
+      update("learning_paths", id, { title: text(body, "title"), goal: text(body, "goal"), skill: text(body, "skill") });
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM learning_paths WHERE id = ?").run(id);
+    } else if (method !== "GET" || id !== undefined) {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listPaths());
+    return true;
+  }
+
+  if (resource === "learning-steps") {
+    const body = method === "DELETE" ? {} : await readJson(req);
+    if (method === "POST" && id === undefined) {
+      if (typeof body.pathId !== "number") throw new HttpError(400, "pathId must be a number");
+      db.prepare(
+        `INSERT INTO learning_steps (path_id, title, notes, url, position)
+         VALUES (?, ?, ?, ?, (SELECT COALESCE(MAX(position), 0) + 1 FROM learning_steps WHERE path_id = ?))`,
+      ).run(body.pathId, text(body, "title", true)!, text(body, "notes") ?? "", text(body, "url") ?? "", body.pathId);
+    } else if (method === "PATCH" && id !== undefined) {
+      const status = text(body, "status");
+      if (status !== undefined && !["todo", "doing", "done"].includes(status)) throw new HttpError(400, "Invalid status");
+      update("learning_steps", id, {
+        title: text(body, "title"),
+        notes: text(body, "notes"),
+        url: text(body, "url"),
+        status,
+        done_at: status === undefined ? undefined : status === "done" ? new Date().toISOString() : "",
+      });
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM learning_steps WHERE id = ?").run(id);
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listPaths());
+    return true;
+  }
+
+  if (resource === "preferences") {
+    const body = method === "POST" ? await readJson(req) : {};
+    if (method === "POST" && id === undefined) {
+      const kind = text(body, "kind") ?? "like";
+      if (!["like", "avoid", "rule"].includes(kind)) throw new HttpError(400, "Invalid kind");
+      db.prepare("INSERT INTO preferences (kind, text, source) VALUES (?, ?, ?)").run(kind, text(body, "text", true)!, text(body, "source") ?? "chat");
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM preferences WHERE id = ?").run(id);
+    } else if (method !== "GET" || id !== undefined) {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listPreferences());
     return true;
   }
 

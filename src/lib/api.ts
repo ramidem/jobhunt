@@ -314,3 +314,31 @@ export type Funnel = {
 };
 
 export type PayTargets = { min: number; ideal: number; currency: "PHP"; per: "month" };
+
+export type LearningStep = {
+  id: number;
+  pathId: number;
+  title: string;
+  notes: string;
+  url: string;
+  position: number;
+  status: "todo" | "doing" | "done";
+  doneAt: string;
+};
+
+export type LearningPath = {
+  id: number;
+  title: string;
+  goal: string;
+  skill: string;
+  createdAt: string;
+  steps: LearningStep[];
+};
+
+export type Preference = {
+  id: number;
+  kind: "like" | "avoid" | "rule";
+  text: string;
+  source: string;
+  createdAt: string;
+};

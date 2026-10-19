@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   ListChecks,
   Menu,
+  Route,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -30,6 +31,7 @@ const links = [
   { href: "/interviews", label: "Interviews", short: "Interviews", icon: CalendarCheck, tab: false },
   { href: "/results", label: "Results", short: "Results", icon: ChartNoAxesColumn, tab: false },
   { href: "/learn", label: "Learn", short: "Learn", icon: GraduationCap, tab: false },
+  { href: "/path", label: "Learning path", short: "Path", icon: Route, tab: false },
   { href: "/todo", label: "TODO", short: "TODO", icon: ListTodo, tab: false },
   { href: "/resume", label: "Tailor resume", short: "Tailor", icon: FileText, tab: false },
   { href: "/roles", label: "Roles", short: "Roles", icon: ListChecks, tab: false },

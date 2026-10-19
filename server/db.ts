@@ -301,6 +301,39 @@ const migrations: [string, string][] = [
     ALTER TABLE jobs ADD COLUMN pay_hourly INTEGER NOT NULL DEFAULT 0;
     `,
   ],
+  [
+    "011-learning-paths-and-preferences",
+    `
+    -- Ordered study plans for skill gaps (AI, automation, ...). status: todo | doing | done.
+    CREATE TABLE learning_paths (
+      id INTEGER PRIMARY KEY,
+      title TEXT NOT NULL,
+      goal TEXT NOT NULL DEFAULT '',
+      skill TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    );
+    CREATE TABLE learning_steps (
+      id INTEGER PRIMARY KEY,
+      path_id INTEGER NOT NULL REFERENCES learning_paths(id) ON DELETE CASCADE,
+      title TEXT NOT NULL,
+      notes TEXT NOT NULL DEFAULT '',
+      url TEXT NOT NULL DEFAULT '',
+      position INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'todo' CHECK (status IN ('todo', 'doing', 'done')),
+      done_at TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX learning_steps_path ON learning_steps(path_id, position);
+
+    -- Things I have learned about what the owner likes, avoids or wants, kept so later sessions can use them.
+    CREATE TABLE preferences (
+      id INTEGER PRIMARY KEY,
+      kind TEXT NOT NULL DEFAULT 'like' CHECK (kind IN ('like', 'avoid', 'rule')),
+      text TEXT NOT NULL,
+      source TEXT NOT NULL DEFAULT 'chat',
+      created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    );
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching
