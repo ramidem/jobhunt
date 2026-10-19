@@ -12,7 +12,8 @@ import type { Resume } from "@/lib/resume-schema";
 
 const styles = StyleSheet.create({
   page: {
-    padding: 72,
+    paddingVertical: 40,
+    paddingHorizontal: 72,
     color: "#101417",
     fontFamily: "Helvetica",
     fontSize: 10.5,
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   skillLabel: {
-    width: 78,
+    width: 96,
     fontFamily: "Helvetica-Bold",
   },
   skillItems: {
@@ -191,6 +192,18 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
                 item={{ ...item, highlights: [] }}
                 key={`${item.organization}-${item.role}`}
               />
+            ))}
+          </View>
+        ) : null}
+
+        {resume.skills.length > 0 ? (
+          <View style={styles.section} wrap={false}>
+            <Text style={styles.sectionTitle}>Skills</Text>
+            {resume.skills.map((group) => (
+              <View key={group.label} style={styles.skillRow}>
+                <Text style={styles.skillLabel}>{group.label}:</Text>
+                <Text style={styles.skillItems}>{group.items.join(", ")}</Text>
+              </View>
             ))}
           </View>
         ) : null}

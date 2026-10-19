@@ -695,6 +695,17 @@
     display: list-item;
   }
 
+  .resume-paper .skills-list {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+  }
+
+  .resume-paper .skills-list li {
+    line-height: 1.5;
+    margin: 0 0 3px;
+  }
+
   .resume-paper .education-list li time {
     float: right;
   }
