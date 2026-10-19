@@ -1,5 +1,6 @@
 // Local server for the job-hunt workspace: serves the static export in out/ and a small
 // SQLite-backed JSON API under /api. Run with `npm run serve` after `npm run build`.
+import { createHash } from "node:crypto";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
@@ -75,6 +76,7 @@ function listApplications() {
               j.posted_on AS postedOn, j.applicants, j.description AS jobDescription,
               j.created_at AS createdAt, a.status, a.applied_on AS appliedOn, a.notes,
               c.kind AS companyKind, c.website AS companyWebsite, c.careers_url AS companyCareers,
+              (j.priority = 1 OR c.priority = 1) AS priority, c.priority AS companyPriority,
               j.client_note AS clientNote,
               (SELECT MAX(happened_on) FROM contact_log l WHERE l.company_id = c.id) AS lastContactedOn
          FROM applications a
@@ -111,6 +113,8 @@ function listApplications() {
     const known = skills.filter((skill) => skill.status === "know").length;
     return {
       ...row,
+      priority: row.priority === 1,
+      companyPriority: row.companyPriority === 1,
       contacts: contactRows.filter((contact) => contact.jobId === row.jobId),
       companyContacts: companyContactRows.filter((contact) => contact.companyId === row.companyId),
       skills,
@@ -173,6 +177,7 @@ function listCompanies() {
     .prepare(
       `SELECT c.id, c.name, c.legal_name AS legalName, c.kind, c.linkedin_url AS linkedinUrl, c.website,
               c.careers_url AS careersUrl, c.industry, c.size, c.notes, c.enriched_on AS enrichedOn,
+              c.priority, c.priority_note AS priorityNote,
               (SELECT COUNT(*) FROM jobs j WHERE j.company_id = c.id) AS jobCount,
               (SELECT GROUP_CONCAT(DISTINCT j.source) FROM jobs j WHERE j.company_id = c.id) AS sources,
               (SELECT COUNT(*) FROM applications a JOIN jobs j ON j.id = a.job_id
@@ -190,7 +195,7 @@ function listCompanies() {
     .all() as { companyId: number }[];
   const jobs = db
     .prepare(
-      `SELECT j.id, j.code, j.company_id AS companyId, j.title, j.url, j.client_note AS clientNote,
+      `SELECT j.id, j.code, j.priority, j.company_id AS companyId, j.title, j.url, j.client_note AS clientNote,
               a.id AS applicationId, a.status
          FROM jobs j LEFT JOIN applications a ON a.job_id = j.id ORDER BY j.created_at DESC`,
     )
@@ -202,12 +207,14 @@ function listCompanies() {
   const log = listContactLog() as { companyId: number }[];
   return companies.map((company) => ({
     ...company,
+    priority: company.priority === 1,
     sources: company.sources ? String(company.sources).split(",") : [],
     contacts: contacts.filter((contact) => contact.companyId === company.id),
     jobs: jobs
       .filter((job) => job.companyId === company.id)
       .map((job) => ({
         ...job,
+        priority: (job as unknown as { priority: number }).priority === 1,
         contactIds: jobContacts.filter((link) => link.jobId === job.id).map((link) => link.contactId),
       })),
     log: log.filter((entry) => entry.companyId === company.id),
@@ -423,7 +430,14 @@ function listTodos() {
 // Upserts a scraped posting: company, hiring contact, job fields and detected skills.
 function importJob(body: Record<string, unknown>) {
   const source = text(body, "source", true)!;
-  const externalId = text(body, "externalId", true)!;
+  // Without an explicit id, derive a stable one from the posting URL, or from company + title.
+  const jobUrl = text(body, "url") ?? "";
+  const linkedinId = jobUrl.match(/linkedin\.com\/jobs\/view\/(\d+)/)?.[1];
+  const indeedKey = jobUrl.match(/[?&]jk=([0-9a-f]{16})/)?.[1];
+  const externalId =
+    text(body, "externalId") ||
+    linkedinId ||
+    (indeedKey ? `indeed:${indeedKey}` : `x:${createHash("sha1").update(`${source}|${text(body, "company", true)}|${text(body, "title", true)}`.toLowerCase()).digest("hex").slice(0, 16)}`);
   const companyId = upsertCompany(db, text(body, "company", true)!);
   db.prepare(
     `UPDATE companies SET
@@ -534,6 +548,98 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
   const [, resource, rawId] = match;
   const id = rawId ? Number(rawId) : undefined;
 
+  // Mark a job (by its 4-character code) as priority or not: PATCH { code, priority }.
+  if (resource === "job-priority" && method === "PATCH" && id === undefined) {
+    const body = await readJson(req);
+    if (typeof body.priority !== "boolean") {
+      throw new HttpError(400, "priority must be a boolean");
+    }
+    const result = db.prepare("UPDATE jobs SET priority = ? WHERE code = ?").run(
+      body.priority ? 1 : 0,
+      text(body, "code", true)!.toUpperCase(),
+    );
+    if (result.changes === 0) {
+      throw new HttpError(404, "No job with that code");
+    }
+    send(res, 200, listApplications());
+    return true;
+  }
+
+  // Bulk research results: { companies: [{ name, website?, careersUrl?, linkedinUrl?, industry?, size?,
+  // kind?, priority?, priorityNote?, contacts?: [{ name, title?, linkedinUrl?, email?, phone? }],
+  // jobs?: [import-job fields] }] }. Matches existing companies by name; never overwrites filled fields.
+  if (resource === "company-import" && method === "POST" && id === undefined) {
+    const body = await readJson(req);
+    if (!Array.isArray(body.companies)) {
+      throw new HttpError(400, "companies must be an array");
+    }
+    const key = (name: string) => name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const summary: Record<string, unknown>[] = [];
+    db.exec("BEGIN");
+    try {
+      for (const entry of body.companies as Record<string, unknown>[]) {
+        const name = text(entry, "name", true)!;
+        const existing = (db.prepare("SELECT id, name FROM companies").all() as { id: number; name: string }[]).find(
+          (row) => key(row.name) === key(name),
+        );
+        const companyId = existing?.id ?? upsertCompany(db, name);
+        db.prepare(
+          `UPDATE companies SET
+             website = COALESCE(NULLIF(website, ''), ?),
+             careers_url = COALESCE(NULLIF(careers_url, ''), ?),
+             linkedin_url = COALESCE(NULLIF(linkedin_url, ''), ?),
+             industry = COALESCE(NULLIF(industry, ''), ?),
+             size = COALESCE(NULLIF(size, ''), ?),
+             priority_note = COALESCE(NULLIF(?, ''), priority_note),
+             enriched_on = ?
+           WHERE id = ?`,
+        ).run(
+          text(entry, "website") ?? "",
+          text(entry, "careersUrl") ?? "",
+          text(entry, "linkedinUrl") ?? "",
+          text(entry, "industry") ?? "",
+          text(entry, "size") ?? "",
+          text(entry, "priorityNote") ?? "",
+          localDay(),
+          companyId,
+        );
+        const kind = oneOf(text(entry, "kind"), COMPANY_KINDS, "kind");
+        if (kind) db.prepare("UPDATE companies SET kind = ? WHERE id = ? AND kind = 'unknown'").run(kind, companyId);
+        if (entry.priority === true) db.prepare("UPDATE companies SET priority = 1 WHERE id = ?").run(companyId);
+
+        let contactsAdded = 0;
+        for (const person of Array.isArray(entry.contacts) ? (entry.contacts as Record<string, unknown>[]) : []) {
+          const personName = text(person, "name", true)!;
+          const url = text(person, "linkedinUrl") || null;
+          const dupe = url
+            ? db.prepare("SELECT id FROM contacts WHERE linkedin_url = ?").get(url)
+            : db.prepare("SELECT id FROM contacts WHERE company_id = ? AND lower(name) = lower(?)").get(companyId, personName);
+          if (!dupe) {
+            db.prepare(
+              "INSERT INTO contacts (company_id, name, title, linkedin_url, email, phone) VALUES (?, ?, ?, ?, ?, ?)",
+            ).run(companyId, personName, text(person, "title") ?? "", url, text(person, "email") ?? "", text(person, "phone") ?? "");
+            contactsAdded += 1;
+          }
+        }
+
+        const jobResults: unknown[] = [];
+        for (const job of Array.isArray(entry.jobs) ? (entry.jobs as Record<string, unknown>[]) : []) {
+          const result = importJob({ source: "research", ...job, company: existing?.name ?? name });
+          if (job.priority === true) db.prepare("UPDATE jobs SET priority = 1 WHERE id = ?").run(result.jobId);
+          jobResults.push(result);
+        }
+        summary.push({ companyId, name, created: !existing, contactsAdded, jobs: jobResults.length });
+      }
+      assignJobCodes(db);
+      db.exec("COMMIT");
+    } catch (error) {
+      db.exec("ROLLBACK");
+      throw error;
+    }
+    send(res, 200, summary);
+    return true;
+  }
+
   // Set the direct posting link for a job by its 4-character code (e.g. replacing a Gmail link).
   if (resource === "job-links" && method === "PATCH" && id === undefined) {
     const body = await readJson(req);
@@ -637,6 +743,8 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
         industry: text(body, "industry"),
         size: text(body, "size"),
         notes: text(body, "notes"),
+        priority: typeof body.priority === "boolean" ? (body.priority ? 1 : 0) : undefined,
+        priority_note: text(body, "priorityNote"),
         enriched_on: body.enriched === true ? localDay() : undefined,
       });
       send(res, 200, listCompanies());

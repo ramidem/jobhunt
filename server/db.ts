@@ -226,6 +226,15 @@ const migrations: [string, string][] = [
       SELECT id, contact_id FROM jobs WHERE contact_id IS NOT NULL;
     `,
   ],
+  [
+    "007-priority",
+    `
+    -- Priority = companies and postings Med wants to go after first.
+    ALTER TABLE companies ADD COLUMN priority INTEGER NOT NULL DEFAULT 0;
+    ALTER TABLE companies ADD COLUMN priority_note TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN priority INTEGER NOT NULL DEFAULT 0;
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching

@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Globe, Mail, MessageSquarePlus, Pencil, Phone, Search, Trash2, UserPlus } from "lucide-react";
+import { ExternalLink, Globe, Star, Mail, MessageSquarePlus, Pencil, Phone, Search, Trash2, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -191,15 +191,17 @@ export default function CompaniesPage() {
   const { data, error, mutate, reload } = useResource<Company[]>("companies");
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(30);
+  const [priorityOnly, setPriorityOnly] = useState(false);
   const companies = data ?? [];
   const needle = query.trim().toLowerCase();
   const visible = companies.filter(
     (company) =>
-      !needle ||
+      (!priorityOnly || company.priority) &&
+      (!needle ||
       company.name.toLowerCase().includes(needle) ||
       company.contacts.some((contact) => contact.name.toLowerCase().includes(needle)) ||
-      company.jobs.some((job) => `${job.code} ${job.title}`.toLowerCase().includes(needle)),
-  );
+      company.jobs.some((job) => `${job.code} ${job.title}`.toLowerCase().includes(needle))),
+  ).sort((a, b) => Number(b.priority) - Number(a.priority));
 
   return (
     <PageBody>
@@ -224,6 +226,22 @@ export default function CompaniesPage() {
         />
       </div>
 
+      <div className="flex items-center gap-2">
+        <Button
+          aria-pressed={priorityOnly}
+          className="rounded-full"
+          onClick={() => setPriorityOnly(!priorityOnly)}
+          size="sm"
+          variant={priorityOnly ? "default" : "outline"}
+        >
+          <Star aria-hidden="true" />
+          Priority
+          <span className={priorityOnly ? "opacity-70" : "text-muted-foreground"}>
+            {companies.filter((company) => company.priority).length}
+          </span>
+        </Button>
+      </div>
+
       <ul className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
         {visible.slice(0, limit).map((company) => (
           <li key={company.id}>
@@ -231,6 +249,15 @@ export default function CompaniesPage() {
               <CardHeader>
                 <CardTitle className="flex flex-wrap items-center gap-2 leading-snug">
                   {company.name}
+                  <Button
+                    aria-label={company.priority ? `Remove ${company.name} from priority` : `Mark ${company.name} as priority`}
+                    aria-pressed={company.priority}
+                    onClick={() => void mutate(`companies/${company.id}`, "PATCH", { priority: !company.priority })}
+                    size="icon"
+                    variant="ghost"
+                  >
+                    <Star aria-hidden="true" className={company.priority ? "fill-amber-400 text-amber-500" : ""} />
+                  </Button>
                   <EditCompanySheet company={company} key={`${company.id}-${company.website}-${company.careersUrl}-${company.kind}`} onSaved={reload} />
                 </CardTitle>
                 <CardDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">

@@ -23,6 +23,8 @@ export type Application = {
   postedOn: string;
   applicants: string;
   jobDescription: string;
+  priority: boolean;
+  companyPriority: boolean;
   companyKind: CompanyKind;
   companyWebsite: string;
   companyCareers: string;
@@ -71,6 +73,8 @@ export type LogEntry = {
 export type Company = {
   id: number;
   name: string;
+  priority: boolean;
+  priorityNote: string;
   legalName: string;
   kind: CompanyKind;
   careersUrl: string;
@@ -88,6 +92,7 @@ export type Company = {
   jobs: {
     id: number;
     code: string;
+    priority: boolean;
     title: string;
     url: string;
     clientNote: string;
