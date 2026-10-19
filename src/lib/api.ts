@@ -48,6 +48,17 @@ export type CompanyKind = "employer" | "agency" | "confidential" | "unknown";
 
 export type Skill = { id: number; name: string; status: SkillStatus; demand: number };
 
+export type SkillRecommendation = {
+  id: number;
+  name: string;
+  status: SkillStatus;
+  demand: number;
+  pathId: number | null;
+  examples: { code: string; title: string; company: string }[];
+};
+
+export type SkillRecommendations = { totalJobs: number; jobsWithSkills: number; skills: SkillRecommendation[] };
+
 export type Contact = {
   id: number;
   companyId: number;

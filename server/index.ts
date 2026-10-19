@@ -124,6 +124,37 @@ function listApplications() {
   });
 }
 
+// Skills you do not know yet, ranked by how many job posts mention them, with a path if one exists.
+function listRecommendations() {
+  const skills = db
+    .prepare(
+      `SELECT s.id, s.name, s.status, COUNT(js.job_id) AS demand
+         FROM skills s JOIN job_skills js ON js.skill_id = s.id
+        WHERE s.status != 'know' GROUP BY s.id ORDER BY demand DESC, s.name LIMIT 12`,
+    )
+    .all() as { id: number; name: string; status: string; demand: number }[];
+  const totals = db
+    .prepare(
+      "SELECT COUNT(*) AS jobs, SUM(EXISTS (SELECT 1 FROM job_skills WHERE job_id = jobs.id)) AS withSkills FROM jobs",
+    )
+    .get() as { jobs: number; withSkills: number };
+  const paths = db.prepare("SELECT id, skill FROM learning_paths").all() as { id: number; skill: string }[];
+  const examples = db.prepare(
+    `SELECT j.code, j.title, c.name AS company
+       FROM job_skills js JOIN jobs j ON j.id = js.job_id JOIN companies c ON c.id = j.company_id
+      WHERE js.skill_id = ? ORDER BY j.priority DESC, j.id DESC LIMIT 3`,
+  );
+  return {
+    totalJobs: totals.jobs,
+    jobsWithSkills: totals.withSkills ?? 0,
+    skills: skills.map((skill) => ({
+      ...skill,
+      pathId: paths.find((path) => path.skill.toLowerCase() === skill.name.toLowerCase())?.id ?? null,
+      examples: examples.all(skill.id),
+    })),
+  };
+}
+
 function listSkills() {
   return db
     .prepare(
@@ -858,6 +889,50 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     } else {
       throw new HttpError(405, "Method not allowed");
     }
+    return true;
+  }
+
+  // Recommended skills to learn, ranked by job-post demand.
+  if (resource === "skill-recommendations" && method === "GET" && id === undefined) {
+    send(res, 200, listRecommendations());
+    return true;
+  }
+
+  // Start a draft learning path for a skill: { skill }. Steps are generic starters from the
+  // skill's study links; edit them on the Path page.
+  if (resource === "skill-path" && method === "POST" && id === undefined) {
+    const body = await readJson(req);
+    const name = text(body, "skill", true)!;
+    const skill = db.prepare("SELECT id, name FROM skills WHERE name = ?").get(name) as
+      | { id: number; name: string }
+      | undefined;
+    if (!skill) {
+      throw new HttpError(404, "No skill with that name");
+    }
+    if (db.prepare("SELECT 1 FROM learning_paths WHERE lower(skill) = lower(?)").get(skill.name)) {
+      throw new HttpError(409, "A path for that skill already exists");
+    }
+    const demand = (
+      db.prepare("SELECT COUNT(*) AS n FROM job_skills WHERE skill_id = ?").get(skill.id) as { n: number }
+    ).n;
+    const links = studyLinks(skill.name);
+    const info = db
+      .prepare("INSERT INTO learning_paths (title, goal, skill) VALUES (?, ?, ?)")
+      .run(
+        `Learn ${skill.name}`,
+        `${demand} saved job posts ask for ${skill.name}. Get hands-on exposure and be able to talk about it in interviews.`,
+        skill.name,
+      );
+    const steps: [string, string, string][] = [
+      [`Get the big picture of ${skill.name}`, "Read the overview or roadmap, note the core concepts.", links?.roadmap ?? links?.docs[0]?.url ?? ""],
+      [`Work through the ${skill.name} docs`, "Follow the official getting-started guide end to end.", links?.docs[0]?.url ?? ""],
+      [`Build a small project with ${skill.name}`, "Something you can show: a repo or demo that uses it for real.", ""],
+      [`Practice ${skill.name} interview questions`, "Use the Learn page cards for this topic and write your own answers.", ""],
+      [`Mark ${skill.name} as known`, "Once you have shipped something with it, update the Skills page.", ""],
+    ];
+    const add = db.prepare("INSERT INTO learning_steps (path_id, title, notes, url, position) VALUES (?, ?, ?, ?, ?)");
+    steps.forEach(([title, notes, url], index) => add.run(Number(info.lastInsertRowid), title, notes, url, index + 1));
+    send(res, 201, listRecommendations());
     return true;
   }
 

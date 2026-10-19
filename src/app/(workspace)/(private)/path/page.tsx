@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
-import { useResource, type LearningPath, type LearningStep, type Preference } from "@/lib/api";
+import { useResource, type LearningPath, type LearningStep, type Preference, type SkillRecommendations } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const NEXT_STATUS: Record<LearningStep["status"], LearningStep["status"]> = { todo: "doing", doing: "done", done: "todo" };
@@ -97,6 +97,7 @@ function PathCard({ path, onChange }: { path: LearningPath; onChange: (sub: stri
 export default function LearningPathPage() {
   const paths = useResource<LearningPath[]>("learning-paths");
   const prefs = useResource<Preference[]>("preferences");
+  const recs = useResource<SkillRecommendations>("skill-recommendations");
   const [pathTitle, setPathTitle] = useState("");
   const [pref, setPref] = useState("");
   const [kind, setKind] = useState<Preference["kind"]>("like");
@@ -108,6 +109,50 @@ export default function LearningPathPage() {
         description="Step-by-step plans for skills the postings ask for. Tap a step's status to move it along."
       />
       {paths.error ? <p className="text-sm text-destructive">{paths.error}</p> : null}
+
+      <section className="grid gap-2">
+        <h2 className="text-sm font-medium text-muted-foreground">Recommended next</h2>
+        <p className="text-xs text-muted-foreground">
+          Skills you do not know yet, ranked by how many saved job posts mention them
+          {recs.data ? ` (skills found in ${recs.data.jobsWithSkills} of ${recs.data.totalJobs} posts; add descriptions to improve this)` : ""}.
+        </p>
+        <Card className="py-0">
+          <CardContent className="px-0">
+            <ul className="divide-y">
+              {(recs.data?.skills ?? []).map((skill) => (
+                <li className="flex items-start gap-3 px-4 py-3" key={skill.id}>
+                  <span className="w-10 shrink-0 text-right text-lg font-semibold tabular-nums">{skill.demand}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium">
+                      {skill.name} <span className="text-xs font-normal text-muted-foreground">{skill.status}</span>
+                    </p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {skill.examples.map((job) => `${job.title} (${job.company})`).join(" · ")}
+                    </p>
+                  </div>
+                  {skill.pathId ? (
+                    <span className="shrink-0 text-xs text-muted-foreground">Path started</span>
+                  ) : (
+                    <Button
+                      onClick={() => {
+                        void recs.mutate("skill-path", "POST", { skill: skill.name }).then(() => paths.reload());
+                      }}
+                      size="sm"
+                      type="button"
+                      variant="outline"
+                    >
+                      Start a path
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ul>
+            {recs.data && recs.data.skills.length === 0 ? (
+              <p className="p-6 text-center text-sm text-muted-foreground">No skills to recommend yet.</p>
+            ) : null}
+          </CardContent>
+        </Card>
+      </section>
 
       <form
         className="flex gap-2"
