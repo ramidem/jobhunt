@@ -54,3 +54,12 @@ The Dashboard funnel counts saved, applied, replied, interviewing and offers by 
 - The server is a launch agent (`com.ramidem.jobhunt`); restart with `launchctl kickstart -k gui/$(id -u)/com.ramidem.jobhunt`.
 - The static site is built with `npm run build` into `out/`; the server serves it.
 - Quality gates before committing: `npm run lint`, `npm run typecheck`, `npm run build`.
+
+## Build status
+
+- Phase 1 intake: done (import endpoints, codes, direct links, company research by hand).
+- Phase 2: briefs on companies, Outreach page (drafts you copy and send), daily prep task `job-hunt-priority-prep` (drafts only). Per-job resume tailoring button still open (see TODO page).
+- Phase 3: Interviews page with rounds, prep and offers. Auto-generated prep briefs, mock scoring and offer comparison still open.
+- Phase 4: Dashboard funnel and the Monday task `job-hunt-monday-summary`. Reply-rate insights wait for data.
+
+The TODO page in the app is the live list of what is left.
