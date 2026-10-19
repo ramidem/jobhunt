@@ -186,7 +186,7 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
                     {item.degree}, {item.institution}
                     {item.location ? `, ${item.location}` : ""}
                   </Text>
-                  <Text>{item.dates}</Text>
+                  {item.dates ? <Text>{item.dates}</Text> : null}
                 </View>
                 {item.details.map((detail) => (
                   <Bullet key={detail}>{detail}</Bullet>

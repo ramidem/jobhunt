@@ -22,7 +22,7 @@ MVP shipped: sidebar workspace with `/resume` (paste a job description, get a ke
 
 - [ ] Bullet linter: 3 to 6 keywords per bullet, 3 to 6 bullets per role (about 3 under 3 years, 4 to 5 over 4 years), no duplicate keyword within a bullet, flag numbers, slashes, "learned", and unexplained jargon.
 - [ ] Soft skills are inferred for a senior engineer, except daily standups (confirmed by Med). Review: partnering with stakeholders (Alignly), setting priorities and explaining choices to non-technical teams (FCCD), mentoring and code review (MLhuillier), guiding developers (Coaxis), responding to review feedback (MyPetCare). Also confirm: HTML and CSS (FCCD), REST APIs (MLhuillier), CI/CD with Cloud Build (Coaxis).
-- [ ] Earlier: confirm claims that were written to match the format: HTML and CSS (dropped from the resume when bullets were sorted by date; add back to a bullet only if confirmed), "AI-augmented" lead wording, Lesson Planner "Word documents" wording, education wording (Med did not graduate; shown as "not completed", add attended years).
+- [ ] Earlier: confirm claims that were written to match the format: HTML and CSS (dropped from the resume when bullets were sorted by date; add back to a bullet only if confirmed), "AI-augmented" lead wording, Lesson Planner "Word documents" wording, education wording (Med did not graduate; shown as coursework with no status, add attended years).
 - [ ] Per-role keyword templates (full stack, backend, Python, etc.) in the tailor, with the stack and cloud in the first bullet.
 - [ ] Visa or work-authorization line for the target country; never write "open to relocation".
 - [ ] Application timing: apply within the first 100 applicants; track posting age in `/applications`.

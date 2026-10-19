@@ -29,7 +29,7 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
                   {item.degree}, {item.institution}
                   {item.location ? `, ${item.location}` : ""}
                 </span>
-                <time>{item.dates}</time>
+                {item.dates ? <time>{item.dates}</time> : null}
               </li>
             ))}
           </ul>

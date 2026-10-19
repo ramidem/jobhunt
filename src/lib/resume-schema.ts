@@ -33,7 +33,7 @@ export const resumeSchema = z.object({
       institution: z.string().min(1),
       location: z.string().optional(),
       degree: z.string().min(1),
-      dates: z.string().min(1),
+      dates: z.string().optional(),
       details: z.array(z.string().min(1)).default([]),
     }),
   ),
