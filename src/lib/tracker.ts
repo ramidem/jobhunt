@@ -1,6 +1,7 @@
 export const APPLICATIONS_KEY = "tracker.applications.v1";
 export const SKILLS_KEY = "tracker.skills.v1";
 export const SEEDED_KEY = "tracker.seeded.v1";
+export const HIDDEN_QUALIFICATIONS_KEY = "tracker.hiddenQualifications.v1";
 
 export const APPLICATION_STATUSES = [
   "Saved",
