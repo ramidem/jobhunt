@@ -1,6 +1,6 @@
 "use client";
 
-import { BookOpen, Check, ExternalLink, Map as MapIcon, Plus, RotateCcw, X } from "lucide-react";
+import { BookOpen, Check, ExternalLink, Map as MapIcon, Mic, Plus, RotateCcw, Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -23,9 +23,17 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
-import { api, useResource, type LearnCard, type LearnOverview, type StudyLinks } from "@/lib/api";
+import {
+  api,
+  useResource,
+  type LearnCard,
+  type LearnGuide,
+  type LearnOverview,
+  type StudyLinks,
+} from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const KIND_LABEL: Record<LearnCard["kind"], string> = {
@@ -60,6 +68,30 @@ function Links({ links }: { links: StudyLinks }) {
           {doc.label}
         </a>
       ))}
+    </div>
+  );
+}
+
+function ScriptBlock({ script }: { script: string }) {
+  return (
+    <div className="rounded-lg border-l-4 border-primary bg-muted/40 p-3">
+      <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
+        <Mic aria-hidden="true" className="size-3.5" />
+        Say it like this
+      </p>
+      <p className="text-base leading-relaxed whitespace-pre-wrap">{script}</p>
+    </div>
+  );
+}
+
+function FeedbackBlock({ feedback }: { feedback: string }) {
+  return (
+    <div className="rounded-lg border p-3 text-sm">
+      <p className="mb-1 flex items-center gap-1.5 text-xs font-medium text-muted-foreground uppercase">
+        <Sparkles aria-hidden="true" className="size-3.5" />
+        Feedback on your last answer
+      </p>
+      <p className="whitespace-pre-wrap">{feedback}</p>
     </div>
   );
 }
@@ -141,6 +173,8 @@ function StudyCard({ card, onGrade }: { card: LearnCard; onGrade: (grade: number
                     <p className="whitespace-pre-wrap">{draft}</p>
                   </div>
                 ) : null}
+                {card.script ? <ScriptBlock script={card.script} /> : null}
+                {card.feedback ? <FeedbackBlock feedback={card.feedback} /> : null}
                 <div className="rounded-lg bg-muted/60 p-3 text-sm">
                   <p className="text-xs font-medium text-muted-foreground uppercase">
                     {card.kind === "flashcard" ? "Answer" : "What a strong answer covers"}
@@ -163,7 +197,18 @@ function StudyCard({ card, onGrade }: { card: LearnCard; onGrade: (grade: number
                 </div>
               </div>
             ) : (
-              <Button onClick={() => setRevealed(true)} type="button">
+              <Button
+                onClick={() => {
+                  setRevealed(true);
+                  if (draft.trim()) {
+                    // Saved for the morning feedback pass; failures don't block studying.
+                    void api("learn-answers", { method: "POST", body: { cardId: card.id, answer: draft.trim() } }).catch(
+                      () => undefined,
+                    );
+                  }
+                }}
+                type="button"
+              >
                 Show answer
               </Button>
             )}
@@ -366,6 +411,38 @@ function AddCardSheet({ topics, onSaved }: { topics: string[]; onSaved: () => vo
   );
 }
 
+function Guides() {
+  const { data, error } = useResource<LearnGuide[]>("learn-guides");
+  if (error) return <p className="text-sm text-destructive">{error}</p>;
+  if (!data) return null;
+  return (
+    <div className="grid grid-cols-1 gap-4">
+      <p className="text-sm text-muted-foreground">
+        Short answers built from your own projects. Read them aloud a few times before an interview. [Brackets] are
+        where you drop in a specific example.
+      </p>
+      <ul className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+        {data.map((guide) => (
+          <li key={guide.id}>
+            <Card>
+              <CardHeader>
+                <CardDescription>
+                  <Badge variant="secondary">{guide.topic}</Badge>
+                </CardDescription>
+                <CardTitle className="text-lg leading-snug">{guide.prompt}</CardTitle>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 gap-3">
+                <ScriptBlock script={guide.script} />
+                {guide.feedback ? <FeedbackBlock feedback={guide.feedback} /> : null}
+              </CardContent>
+            </Card>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function LearnPage() {
   const { data, error, reload } = useResource<LearnOverview>("learn");
   const [session, setSession] = useState<{ topic: string | null } | null>(null);
@@ -395,10 +472,30 @@ export default function LearnPage() {
       </PageHeader>
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
+      {data?.digest && !session ? (
+        <Card className="border-primary/40">
+          <CardContent className="flex items-start gap-3 text-sm">
+            <Sparkles aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+            <p>
+              <span className="font-medium">This morning: </span>
+              {data.digest.text}
+            </p>
+          </CardContent>
+        </Card>
+      ) : null}
+
       {session ? (
         <Session onDone={endSession} topic={session.topic} />
       ) : stats ? (
-        <>
+        <Tabs defaultValue="study">
+          <TabsList className="grid w-full grid-cols-2 sm:w-80">
+            <TabsTrigger value="study">Study</TabsTrigger>
+            <TabsTrigger value="guides">Read-aloud guides</TabsTrigger>
+          </TabsList>
+          <TabsContent className="mt-4 grid grid-cols-1 gap-6" value="guides">
+            <Guides />
+          </TabsContent>
+          <TabsContent className="mt-4 grid grid-cols-1 gap-6" value="study">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {[
               ["Due now", stats.due],
@@ -447,7 +544,8 @@ export default function LearnPage() {
               </li>
             ))}
           </ul>
-        </>
+          </TabsContent>
+        </Tabs>
       ) : null}
     </PageBody>
   );

@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { scripts } from "./learn-scripts.ts";
 import { seedCards } from "./learn-seed.ts";
 import { knownSkills, leads } from "./seed-data.ts";
 
@@ -183,6 +184,23 @@ const migrations: [string, string][] = [
     CREATE UNIQUE INDEX jobs_code ON jobs(code);
     `,
   ],
+  [
+    "005-learn-answers",
+    `
+    -- A short first-person answer to read aloud before interviews.
+    ALTER TABLE learn_cards ADD COLUMN script TEXT NOT NULL DEFAULT '';
+
+    -- What I typed when practicing, and feedback the morning task writes back.
+    CREATE TABLE learn_answers (
+      id INTEGER PRIMARY KEY,
+      card_id INTEGER NOT NULL REFERENCES learn_cards(id) ON DELETE CASCADE,
+      answer TEXT NOT NULL,
+      written_on TEXT NOT NULL,
+      feedback TEXT NOT NULL DEFAULT '',
+      reviewed_on TEXT NOT NULL DEFAULT ''
+    );
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching
@@ -322,6 +340,14 @@ function seed(db: DatabaseSync) {
       }
     }
     markSeeded(db, "seed.learn-cards");
+  }
+
+  if (!seeded(db, "seed.learn-scripts")) {
+    const setScript = db.prepare("UPDATE learn_cards SET script = ? WHERE prompt = ? AND script = ''");
+    for (const [prompt, script] of Object.entries(scripts)) {
+      setScript.run(script, prompt);
+    }
+    markSeeded(db, "seed.learn-scripts");
   }
 
   if (!seeded(db, "seed.todos")) {

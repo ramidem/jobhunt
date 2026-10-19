@@ -184,6 +184,7 @@ export type LearnTopic = {
 };
 
 export type LearnOverview = {
+  digest: { text: string; on: string } | null;
   topics: LearnTopic[];
   stats: { due: number; fresh: number; cards: number; reviewedToday: number; streak: number };
 };
@@ -197,8 +198,19 @@ export type LearnCard = {
   choices: string[];
   correct: number | null;
   explanation: string;
+  script: string;
+  feedback: string | null;
   reps: number;
   links: StudyLinks;
+};
+
+export type LearnGuide = {
+  id: number;
+  topic: string;
+  kind: LearnCard["kind"];
+  prompt: string;
+  script: string;
+  feedback: string | null;
 };
 
 export type Todo = {

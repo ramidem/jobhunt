@@ -302,7 +302,9 @@ function learnOverview() {
     ...INTERVIEW_TOPICS.map((name) => topic(name, "interview")),
     ...skills.map((skill) => topic(skill.name, skill.status)),
   ];
+  const digest = db.prepare("SELECT value FROM meta WHERE key = 'learn.digest'").get() as { value: string } | undefined;
   return {
+    digest: digest ? JSON.parse(digest.value) : null,
     topics,
     stats: {
       due: topics.reduce((sum, t) => sum + t.due, 0),
@@ -322,7 +324,10 @@ function learnDeck(topic: string | null, limit: number) {
   const scope = topic ? "lower(c.topic) = lower(?)" : learnScopeSql();
   const params = topic ? [topic] : INTERVIEW_TOPICS;
   const select = `SELECT c.id, c.topic, c.kind, c.prompt, c.answer, c.choices, c.correct, c.explanation,
-                         c.reps, c.interval_days AS intervalDays, c.due_on AS dueOn FROM learn_cards c`;
+                         c.script, c.reps, c.interval_days AS intervalDays, c.due_on AS dueOn,
+                         (SELECT feedback FROM learn_answers a WHERE a.card_id = c.id AND a.feedback != ''
+                           ORDER BY a.id DESC LIMIT 1) AS feedback
+                    FROM learn_cards c`;
   const due = db
     .prepare(`${select} WHERE ${scope} AND c.due_on != '' AND c.due_on <= ? ORDER BY c.due_on LIMIT ?`)
     .all(...params, today, limit) as CardRow[];
@@ -364,6 +369,19 @@ function reviewCard(id: number, grade: number) {
   ).run(ease, interval, reps, lapses, localDay(interval), today, id);
   db.prepare("INSERT INTO learn_reviews (card_id, grade, reviewed_on) VALUES (?, ?, ?)").run(id, grade, today);
   return { id, intervalDays: interval, dueOn: localDay(interval) };
+}
+
+// Every card with a read-aloud script, for rehearsing before an interview.
+function learnGuides() {
+  return db
+    .prepare(
+      `SELECT c.id, c.topic, c.kind, c.prompt, c.script,
+              (SELECT feedback FROM learn_answers a WHERE a.card_id = c.id AND a.feedback != ''
+                ORDER BY a.id DESC LIMIT 1) AS feedback
+         FROM learn_cards c WHERE c.script != ''
+        ORDER BY CASE c.topic WHEN 'Behavioral' THEN 0 WHEN 'Soft skills' THEN 1 WHEN 'System design' THEN 2 ELSE 3 END, c.topic, c.id`,
+    )
+    .all();
 }
 
 function listTodos() {
@@ -676,19 +694,90 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     if (kind === "mcq" && (choices.length < 2 || typeof body.correct !== "number" || !choices[body.correct])) {
       throw new HttpError(400, "Multiple choice needs at least two choices and a valid correct index");
     }
+    const topic = text(body, "topic", true)!;
+    const prompt = text(body, "prompt", true)!;
+    const exists = db
+      .prepare("SELECT id FROM learn_cards WHERE lower(topic) = lower(?) AND lower(prompt) = lower(?)")
+      .get(topic, prompt);
+    if (exists) {
+      throw new HttpError(409, "A card with this question already exists");
+    }
     db.prepare(
-      `INSERT INTO learn_cards (topic, kind, prompt, answer, choices, correct, explanation, source)
-       VALUES (?, ?, ?, ?, ?, ?, ?, 'manual')`,
+      `INSERT INTO learn_cards (topic, kind, prompt, answer, choices, correct, explanation, script, source)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     ).run(
-      text(body, "topic", true)!,
+      topic,
       kind,
-      text(body, "prompt", true)!,
+      prompt,
       text(body, "answer") ?? "",
       JSON.stringify(choices),
       kind === "mcq" ? (body.correct as number) : null,
       text(body, "explanation") ?? "",
+      text(body, "script") ?? "",
+      text(body, "source") || "manual",
     );
     send(res, 201, learnOverview());
+    return true;
+  }
+
+  if (resource === "learn-guides" && method === "GET" && id === undefined) {
+    send(res, 200, learnGuides());
+    return true;
+  }
+
+  if (resource === "learn-answers") {
+    if (method === "GET" && id === undefined) {
+      // Answers still waiting for feedback, with what's needed to judge them.
+      send(
+        res,
+        200,
+        db
+          .prepare(
+            `SELECT a.id, a.card_id AS cardId, a.answer, a.written_on AS writtenOn, c.topic, c.kind,
+                    c.prompt, c.answer AS modelAnswer, c.script
+               FROM learn_answers a JOIN learn_cards c ON c.id = a.card_id
+              WHERE a.feedback = '' ORDER BY a.id`,
+          )
+          .all(),
+      );
+    } else if (method === "POST" && id === undefined) {
+      const body = await readJson(req);
+      if (typeof body.cardId !== "number") {
+        throw new HttpError(400, "cardId must be a number");
+      }
+      db.prepare("INSERT INTO learn_answers (card_id, answer, written_on) VALUES (?, ?, ?)").run(
+        body.cardId,
+        text(body, "answer", true)!,
+        localDay(),
+      );
+      send(res, 201, { ok: true });
+    } else if (method === "PATCH" && id !== undefined) {
+      const body = await readJson(req);
+      update("learn_answers", id, { feedback: text(body, "feedback", true), reviewed_on: localDay() });
+      send(res, 200, { ok: true });
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    return true;
+  }
+
+  // Lets the morning task refresh a card's script or bring a weak card back today.
+  if (resource === "learn-cards" && method === "PATCH" && id !== undefined) {
+    const body = await readJson(req);
+    update("learn_cards", id, {
+      script: text(body, "script"),
+      due_on: body.dueToday === true ? localDay() : undefined,
+    });
+    send(res, 200, { ok: true });
+    return true;
+  }
+
+  if (resource === "learn-digest" && method === "PUT" && id === undefined) {
+    const body = await readJson(req);
+    db.prepare(
+      "INSERT INTO meta (key, value) VALUES ('learn.digest', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+    ).run(JSON.stringify({ text: text(body, "text", true), on: localDay() }));
+    send(res, 200, { ok: true });
     return true;
   }
 
