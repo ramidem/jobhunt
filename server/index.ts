@@ -4,6 +4,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { linkJobSkills, openDb, upsertCompany } from "./db.ts";
+import { studyLinks } from "./learn-links.ts";
 import { classifyLines } from "./role-lines.ts";
 import { detectSkills } from "./skill-detect.ts";
 
@@ -260,6 +261,119 @@ function dashboard() {
       .prepare("SELECT id, title FROM qualification_roles WHERE active = 1 ORDER BY title")
       .all(),
   };
+}
+
+const INTERVIEW_TOPICS = ["Behavioral", "Soft skills", "System design"];
+const CARD_KINDS = ["flashcard", "mcq", "practice", "soft"];
+const localDay = (offsetDays = 0) =>
+  new Date(Date.now() + offsetDays * 864e5).toLocaleDateString("en-CA");
+
+// Topics in study scope: skills marked I know / Learning, plus the interview topics.
+function learnScopeSql() {
+  return `(lower(c.topic) IN (SELECT lower(name) FROM skills WHERE status IN ('know', 'learning'))
+           OR c.topic IN (${INTERVIEW_TOPICS.map(() => "?").join(", ")}))`;
+}
+
+function learnOverview() {
+  const today = localDay();
+  const skills = db
+    .prepare("SELECT name, status FROM skills WHERE status IN ('know', 'learning') ORDER BY status DESC, name")
+    .all() as { name: string; status: string }[];
+  const counts = db
+    .prepare(
+      `SELECT lower(topic) AS topic, COUNT(*) AS cards,
+              SUM(CASE WHEN reps = 0 AND lapses = 0 THEN 1 ELSE 0 END) AS fresh,
+              SUM(CASE WHEN due_on != '' AND due_on <= ? THEN 1 ELSE 0 END) AS due
+         FROM learn_cards GROUP BY lower(topic)`,
+    )
+    .all(today) as { topic: string; cards: number; fresh: number; due: number }[];
+  const byTopic = new Map(counts.map((row) => [row.topic, row]));
+  const topic = (name: string, status: string) => {
+    const row = byTopic.get(name.toLowerCase());
+    return { name, status, cards: row?.cards ?? 0, fresh: row?.fresh ?? 0, due: row?.due ?? 0, links: studyLinks(name) };
+  };
+  const reviewedToday = (db.prepare("SELECT COUNT(*) AS n FROM learn_reviews WHERE reviewed_on = ?").get(today) as { n: number }).n;
+  const days = (db.prepare("SELECT DISTINCT reviewed_on AS d FROM learn_reviews ORDER BY d DESC LIMIT 400").all() as { d: string }[]).map((r) => r.d);
+  let streak = 0;
+  for (let offset = days[0] === today ? 0 : 1; days.includes(localDay(-offset)); offset += 1) {
+    streak += 1;
+  }
+  const topics = [
+    ...INTERVIEW_TOPICS.map((name) => topic(name, "interview")),
+    ...skills.map((skill) => topic(skill.name, skill.status)),
+  ];
+  return {
+    topics,
+    stats: {
+      due: topics.reduce((sum, t) => sum + t.due, 0),
+      fresh: topics.reduce((sum, t) => sum + t.fresh, 0),
+      cards: topics.reduce((sum, t) => sum + t.cards, 0),
+      reviewedToday,
+      streak,
+    },
+  };
+}
+
+type CardRow = Record<string, unknown> & { choices: string };
+
+// Due cards first, then new ones, shuffled so kinds and topics mix.
+function learnDeck(topic: string | null, limit: number) {
+  const today = localDay();
+  const scope = topic ? "lower(c.topic) = lower(?)" : learnScopeSql();
+  const params = topic ? [topic] : INTERVIEW_TOPICS;
+  const select = `SELECT c.id, c.topic, c.kind, c.prompt, c.answer, c.choices, c.correct, c.explanation,
+                         c.reps, c.interval_days AS intervalDays, c.due_on AS dueOn FROM learn_cards c`;
+  const due = db
+    .prepare(`${select} WHERE ${scope} AND c.due_on != '' AND c.due_on <= ? ORDER BY c.due_on LIMIT ?`)
+    .all(...params, today, limit) as CardRow[];
+  const fresh = db
+    .prepare(`${select} WHERE ${scope} AND c.reps = 0 AND c.lapses = 0 AND c.due_on = '' ORDER BY random() LIMIT ?`)
+    .all(...params, Math.max(0, limit - due.length)) as CardRow[];
+  const cards = [...due, ...fresh].map((card) => ({ ...card, choices: JSON.parse(card.choices), links: studyLinks(String(card.topic)) }));
+  for (let i = cards.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  return cards;
+}
+
+// SM-2 style scheduling. grade: 0 again, 1 hard, 2 good, 3 easy.
+function reviewCard(id: number, grade: number) {
+  const card = db.prepare("SELECT ease, interval_days AS interval, reps, lapses FROM learn_cards WHERE id = ?").get(id) as
+    | { ease: number; interval: number; reps: number; lapses: number }
+    | undefined;
+  if (!card) {
+    throw new HttpError(404, "Card not found");
+  }
+  let { ease, interval, reps, lapses } = card;
+  if (grade === 0) {
+    reps = 0;
+    lapses += 1;
+    interval = 0;
+    ease = Math.max(1.3, ease - 0.2);
+  } else {
+    reps += 1;
+    if (reps === 1) interval = grade === 3 ? 3 : 1;
+    else if (reps === 2) interval = grade === 1 ? 3 : grade === 3 ? 6 : 4;
+    else interval = Math.max(interval + 1, Math.round(interval * ease * (grade === 1 ? 0.8 : grade === 3 ? 1.3 : 1)));
+    ease = Math.max(1.3, ease + (grade === 1 ? -0.15 : grade === 3 ? 0.15 : 0));
+  }
+  const today = localDay();
+  db.prepare(
+    `UPDATE learn_cards SET ease = ?, interval_days = ?, reps = ?, lapses = ?, due_on = ?, last_reviewed = ? WHERE id = ?`,
+  ).run(ease, interval, reps, lapses, localDay(interval), today, id);
+  db.prepare("INSERT INTO learn_reviews (card_id, grade, reviewed_on) VALUES (?, ?, ?)").run(id, grade, today);
+  return { id, intervalDays: interval, dueOn: localDay(interval) };
+}
+
+function listTodos() {
+  return db
+    .prepare(
+      `SELECT id, title, notes, done, created_at AS createdAt, done_at AS doneAt
+         FROM todos ORDER BY done, position, id`,
+    )
+    .all()
+    .map((row) => ({ ...(row as Record<string, unknown>), done: (row as { done: number }).done === 1 }));
 }
 
 // Upserts a scraped posting: company, hiring contact, job fields and detected skills.
@@ -523,6 +637,78 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       throw new HttpError(405, "Method not allowed");
     }
     send(res, method === "POST" ? 201 : 200, listCompanies());
+    return true;
+  }
+
+  if (resource === "learn" && method === "GET" && id === undefined) {
+    send(res, 200, learnOverview());
+    return true;
+  }
+
+  if (resource === "learn-deck" && method === "GET" && id === undefined) {
+    const params = new URL(req.url ?? "/", "http://localhost").searchParams;
+    const limit = Math.min(50, Math.max(1, Number(params.get("limit") ?? 20) || 20));
+    send(res, 200, learnDeck(params.get("topic") || null, limit));
+    return true;
+  }
+
+  if (resource === "learn-review" && method === "POST" && id === undefined) {
+    const body = await readJson(req);
+    if (typeof body.cardId !== "number" || ![0, 1, 2, 3].includes(body.grade as number)) {
+      throw new HttpError(400, "cardId must be a number and grade 0-3");
+    }
+    send(res, 200, reviewCard(body.cardId, body.grade as number));
+    return true;
+  }
+
+  if (resource === "learn-cards" && method === "POST" && id === undefined) {
+    const body = await readJson(req);
+    const kind = oneOf(text(body, "kind"), CARD_KINDS, "kind") ?? "flashcard";
+    const choices = Array.isArray(body.choices) ? body.choices.filter((c): c is string => typeof c === "string" && !!c.trim()) : [];
+    if (kind === "mcq" && (choices.length < 2 || typeof body.correct !== "number" || !choices[body.correct])) {
+      throw new HttpError(400, "Multiple choice needs at least two choices and a valid correct index");
+    }
+    db.prepare(
+      `INSERT INTO learn_cards (topic, kind, prompt, answer, choices, correct, explanation, source)
+       VALUES (?, ?, ?, ?, ?, ?, ?, 'manual')`,
+    ).run(
+      text(body, "topic", true)!,
+      kind,
+      text(body, "prompt", true)!,
+      text(body, "answer") ?? "",
+      JSON.stringify(choices),
+      kind === "mcq" ? (body.correct as number) : null,
+      text(body, "explanation") ?? "",
+    );
+    send(res, 201, learnOverview());
+    return true;
+  }
+
+  if (resource === "todos") {
+    if (method === "GET" && id === undefined) {
+      send(res, 200, listTodos());
+      return true;
+    }
+    if (method === "POST" && id === undefined) {
+      const body = await readJson(req);
+      db.prepare(
+        "INSERT INTO todos (title, notes, position) VALUES (?, ?, (SELECT COALESCE(MAX(position), 0) + 1 FROM todos))",
+      ).run(text(body, "title", true)!, text(body, "notes") ?? "");
+    } else if (method === "PATCH" && id !== undefined) {
+      const body = await readJson(req);
+      const done = typeof body.done === "boolean" ? body.done : undefined;
+      update("todos", id, {
+        title: text(body, "title"),
+        notes: text(body, "notes"),
+        done: done === undefined ? undefined : done ? 1 : 0,
+        done_at: done === undefined ? undefined : done ? new Date().toISOString() : "",
+      });
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM todos WHERE id = ?").run(id);
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listTodos());
     return true;
   }
 

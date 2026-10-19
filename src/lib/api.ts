@@ -170,3 +170,41 @@ export function useResource<T>(path: string) {
 
   return { data, error, mutate, reload: load };
 }
+
+export type StudyLinks = { roadmap?: string; docs: { label: string; url: string }[] } | null;
+
+export type LearnTopic = {
+  name: string;
+  status: "know" | "learning" | "interview";
+  cards: number;
+  fresh: number;
+  due: number;
+  links: StudyLinks;
+};
+
+export type LearnOverview = {
+  topics: LearnTopic[];
+  stats: { due: number; fresh: number; cards: number; reviewedToday: number; streak: number };
+};
+
+export type LearnCard = {
+  id: number;
+  topic: string;
+  kind: "flashcard" | "mcq" | "practice" | "soft";
+  prompt: string;
+  answer: string;
+  choices: string[];
+  correct: number | null;
+  explanation: string;
+  reps: number;
+  links: StudyLinks;
+};
+
+export type Todo = {
+  id: number;
+  title: string;
+  notes: string;
+  done: boolean;
+  createdAt: string;
+  doneAt: string;
+};

@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLink, Mail, MessageSquarePlus, Plus, Trash2 } from "lucide-react";
+import { ExternalLink, Mail, MessageSquarePlus, Plus, Search, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
@@ -45,6 +45,8 @@ export default function ApplicationsPage() {
   const [role, setRole] = useState("");
   const [url, setUrl] = useState("");
   const [filter, setFilter] = useState<ApplicationStatus | "All">("All");
+  const [query, setQuery] = useState("");
+  const [limit, setLimit] = useState(30);
 
   function add(event: React.FormEvent) {
     event.preventDefault();
@@ -61,7 +63,12 @@ export default function ApplicationsPage() {
     void mutate(`applications/${id}`, "PATCH", changes);
   }
 
-  const visible = applications.filter((item) => filter === "All" || item.status === filter);
+  const needle = query.trim().toLowerCase();
+  const visible = applications.filter(
+    (item) =>
+      (filter === "All" || item.status === filter) &&
+      (!needle || `${item.role} ${item.company} ${item.location} ${item.source}`.toLowerCase().includes(needle)),
+  );
 
   return (
     <PageBody>
@@ -111,6 +118,24 @@ export default function ApplicationsPage() {
         </CardContent>
       </Card>
 
+      <div className="relative">
+        <Search
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
+        />
+        <Input
+          aria-label="Search jobs"
+          className="bg-background pl-9"
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setLimit(30);
+          }}
+          placeholder="Search role, company, location or source"
+          type="search"
+          value={query}
+        />
+      </div>
+
       <div
         aria-label="Filter by status"
         className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0"
@@ -144,8 +169,8 @@ export default function ApplicationsPage() {
         <p className="py-8 text-center text-sm text-muted-foreground">No applications here yet.</p>
       ) : null}
 
-      <ul className="grid grid-cols-1 gap-4">
-        {visible.map((item) => (
+      <ul className="grid grid-cols-1 items-start gap-4 xl:grid-cols-2">
+        {visible.slice(0, limit).map((item) => (
           <li key={item.id}>
             <Card>
               <CardHeader>
@@ -317,6 +342,11 @@ export default function ApplicationsPage() {
           </li>
         ))}
       </ul>
+      {visible.length > limit ? (
+        <Button className="self-center" onClick={() => setLimit(limit + 30)} variant="outline">
+          Show more ({visible.length - limit} left)
+        </Button>
+      ) : null}
     </PageBody>
   );
 }

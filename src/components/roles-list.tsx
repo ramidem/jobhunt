@@ -70,7 +70,7 @@ export function RolesList() {
         </p>
       </div>
 
-      <ul className="grid grid-cols-1 gap-4">
+      <ul className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 2xl:grid-cols-3">
         {visible.map((role) => (
           <li key={role.id}>
             <Card className={role.active ? "ring-2 ring-primary/70" : undefined}>

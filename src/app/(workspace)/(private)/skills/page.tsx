@@ -1,6 +1,7 @@
 "use client";
 
-import { Plus, Trash2 } from "lucide-react";
+import { GraduationCap, Plus, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,14 @@ export default function SkillsPage() {
       <PageHeader
         title="Skills"
         description="What you know and what your saved roles ask for."
-      />
+      >
+        <Button asChild>
+          <Link href="/learn">
+            <GraduationCap aria-hidden="true" />
+            Learn
+          </Link>
+        </Button>
+      </PageHeader>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 

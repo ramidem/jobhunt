@@ -91,6 +91,7 @@ function AddContactSheet({ company, onSaved }: { company: Company; onSaved: () =
 export default function CompaniesPage() {
   const { data, error, mutate, reload } = useResource<Company[]>("companies");
   const [query, setQuery] = useState("");
+  const [limit, setLimit] = useState(30);
   const companies = data ?? [];
   const needle = query.trim().toLowerCase();
   const visible = companies.filter(
@@ -123,8 +124,8 @@ export default function CompaniesPage() {
         />
       </div>
 
-      <ul className="grid grid-cols-1 gap-4">
-        {visible.map((company) => (
+      <ul className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+        {visible.slice(0, limit).map((company) => (
           <li key={company.id}>
             <Card>
               <CardHeader>
@@ -297,6 +298,11 @@ export default function CompaniesPage() {
           </li>
         ))}
       </ul>
+      {visible.length > limit ? (
+        <Button className="self-center" onClick={() => setLimit(limit + 30)} variant="outline">
+          Show more ({visible.length - limit} left)
+        </Button>
+      ) : null}
     </PageBody>
   );
 }

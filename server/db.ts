@@ -1,6 +1,7 @@
 import { mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
+import { seedCards } from "./learn-seed.ts";
 import { knownSkills, leads } from "./seed-data.ts";
 
 const root = join(import.meta.dirname, "..");
@@ -130,6 +131,49 @@ const migrations: [string, string][] = [
     ALTER TABLE qualification_roles ADD COLUMN active INTEGER NOT NULL DEFAULT 0;
     `,
   ],
+  [
+    "003-learn-and-todos",
+    `
+    -- Study cards with SM-2 style spaced-repetition state. topic is a skill name or an
+    -- interview topic (Behavioral, Soft skills, System design).
+    CREATE TABLE learn_cards (
+      id INTEGER PRIMARY KEY,
+      topic TEXT NOT NULL COLLATE NOCASE,
+      kind TEXT NOT NULL CHECK (kind IN ('flashcard', 'mcq', 'practice', 'soft')),
+      prompt TEXT NOT NULL,
+      answer TEXT NOT NULL DEFAULT '',
+      choices TEXT NOT NULL DEFAULT '[]',
+      correct INTEGER,
+      explanation TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT 'seed',
+      ease REAL NOT NULL DEFAULT 2.5,
+      interval_days INTEGER NOT NULL DEFAULT 0,
+      reps INTEGER NOT NULL DEFAULT 0,
+      lapses INTEGER NOT NULL DEFAULT 0,
+      due_on TEXT NOT NULL DEFAULT '',
+      last_reviewed TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    );
+    CREATE INDEX learn_cards_topic ON learn_cards(topic, due_on);
+
+    CREATE TABLE learn_reviews (
+      id INTEGER PRIMARY KEY,
+      card_id INTEGER NOT NULL REFERENCES learn_cards(id) ON DELETE CASCADE,
+      grade INTEGER NOT NULL CHECK (grade BETWEEN 0 AND 3),
+      reviewed_on TEXT NOT NULL
+    );
+
+    CREATE TABLE todos (
+      id INTEGER PRIMARY KEY,
+      title TEXT NOT NULL,
+      notes TEXT NOT NULL DEFAULT '',
+      done INTEGER NOT NULL DEFAULT 0,
+      position INTEGER NOT NULL DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+      done_at TEXT NOT NULL DEFAULT ''
+    );
+    `,
+  ],
 ];
 
 function migrate(db: DatabaseSync) {
@@ -210,6 +254,29 @@ function seed(db: DatabaseSync) {
       db.prepare("INSERT INTO applications (job_id) VALUES (?)").run(id);
     }
     markSeeded(db, "seed.linkedin-2026-10-19");
+  }
+
+  if (!seeded(db, "seed.learn-cards")) {
+    const insert = db.prepare(
+      `INSERT INTO learn_cards (topic, kind, prompt, answer, choices, correct, explanation)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    );
+    for (const card of seedCards) {
+      if (card.kind === "mcq") {
+        insert.run(card.topic, card.kind, card.prompt, "", JSON.stringify(card.choices), card.correct, card.explanation);
+      } else {
+        insert.run(card.topic, card.kind, card.prompt, card.answer, "[]", null, "");
+      }
+    }
+    markSeeded(db, "seed.learn-cards");
+  }
+
+  if (!seeded(db, "seed.todos")) {
+    db.prepare("INSERT INTO todos (title, notes, position) VALUES (?, ?, 0)").run(
+      "Code review",
+      "Review the job-hunt workspace code (server/ and src/) before pushing to GitHub.",
+    );
+    markSeeded(db, "seed.todos");
   }
 
   if (!seeded(db, "seed.qualifications")) {
