@@ -1,16 +1,29 @@
 "use client";
 
-import { BookOpenCheck, Briefcase, FileText, Home, ListChecks } from "lucide-react";
+import {
+  BookOpenCheck,
+  Briefcase,
+  Building2,
+  FileText,
+  Globe,
+  LayoutDashboard,
+  ListChecks,
+  Menu,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/", label: "Public resume", short: "Resume", icon: Home },
-  { href: "/resume", label: "Tailor resume", short: "Tailor", icon: FileText },
-  { href: "/applications", label: "Applications", short: "Jobs", icon: Briefcase },
-  { href: "/qualifications", label: "Qualifications", short: "Quals", icon: ListChecks },
-  { href: "/skills", label: "Skills", short: "Skills", icon: BookOpenCheck },
+  { href: "/dashboard", label: "Dashboard", short: "Home", icon: LayoutDashboard, tab: true },
+  { href: "/applications", label: "Applications", short: "Jobs", icon: Briefcase, tab: true },
+  { href: "/companies", label: "Companies", short: "Companies", icon: Building2, tab: true },
+  { href: "/skills", label: "Skills", short: "Skills", icon: BookOpenCheck, tab: true },
+  { href: "/resume", label: "Tailor resume", short: "Tailor", icon: FileText, tab: false },
+  { href: "/qualifications", label: "Qualifications", short: "Quals", icon: ListChecks, tab: false },
+  { href: "/", label: "Public resume", short: "Resume", icon: Globe, tab: false },
 ];
 
 function useIsActive() {
@@ -47,6 +60,14 @@ export function WorkspaceSidebar() {
 
 export function WorkspaceTabBar() {
   const isActive = useIsActive();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const more = links.filter((link) => !link.tab);
+  const moreActive = more.some((link) => isActive(link.href));
+  const tabClass = (active: boolean) =>
+    cn(
+      "flex h-14 w-full flex-col items-center justify-center gap-1 text-[11px] text-muted-foreground",
+      active && "font-medium text-foreground",
+    );
 
   return (
     <nav
@@ -54,21 +75,49 @@ export function WorkspaceTabBar() {
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden print:hidden"
     >
       <ul className="grid grid-cols-5">
-        {links.map(({ href, short, icon: Icon }) => (
-          <li key={href}>
-            <Link
-              aria-current={isActive(href) ? "page" : undefined}
-              className={cn(
-                "flex h-14 flex-col items-center justify-center gap-1 text-[11px] text-muted-foreground",
-                isActive(href) && "font-medium text-foreground",
-              )}
-              href={href}
-            >
-              <Icon aria-hidden="true" className="size-5" />
-              {short}
-            </Link>
-          </li>
-        ))}
+        {links
+          .filter((link) => link.tab)
+          .map(({ href, short, icon: Icon }) => (
+            <li key={href}>
+              <Link aria-current={isActive(href) ? "page" : undefined} className={tabClass(isActive(href))} href={href}>
+                <Icon aria-hidden="true" className="size-5" />
+                {short}
+              </Link>
+            </li>
+          ))}
+        <li>
+          <Sheet onOpenChange={setMoreOpen} open={moreOpen}>
+            <SheetTrigger asChild>
+              <button className={tabClass(moreActive)} type="button">
+                <Menu aria-hidden="true" className="size-5" />
+                More
+              </button>
+            </SheetTrigger>
+            <SheetContent className="rounded-t-xl pb-[calc(1rem+env(safe-area-inset-bottom))]" side="bottom">
+              <SheetHeader>
+                <SheetTitle>More</SheetTitle>
+              </SheetHeader>
+              <ul className="grid gap-1 px-4">
+                {more.map(({ href, label, icon: Icon }) => (
+                  <li key={href}>
+                    <Link
+                      aria-current={isActive(href) ? "page" : undefined}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-3 text-base hover:bg-muted",
+                        isActive(href) && "bg-muted font-medium",
+                      )}
+                      href={href}
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      <Icon aria-hidden="true" className="size-5 text-muted-foreground" />
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </SheetContent>
+          </Sheet>
+        </li>
       </ul>
     </nav>
   );

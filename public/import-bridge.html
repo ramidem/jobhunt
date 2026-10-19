@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Import bridge</title>
+    <style>
+      body { font: 14px system-ui, sans-serif; margin: 24px; color: #171717; background: #fff; }
+    </style>
+  </head>
+  <body>
+    <p id="status">Waiting for postings…</p>
+    <script>
+      // Job sites block requests to this server from their pages, so a scraping script opens
+      // this page and hands the postings over with postMessage; this page saves them.
+      const allowed = ["https://www.linkedin.com"];
+      const status = document.getElementById("status");
+      window.addEventListener("message", async (event) => {
+        if (!allowed.includes(event.origin) || !event.data || !Array.isArray(event.data.jobs)) {
+          return;
+        }
+        status.textContent = `Saving ${event.data.jobs.length} postings…`;
+        try {
+          const response = await fetch("/api/import", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ jobs: event.data.jobs }),
+          });
+          const result = await response.json();
+          status.textContent = response.ok
+            ? `Saved ${result.length} postings (${result.filter((r) => r.created).length} new).`
+            : `Failed: ${result.error}`;
+          event.source.postMessage({ ok: response.ok, result }, event.origin);
+        } catch (error) {
+          status.textContent = `Failed: ${error.message}`;
+          event.source.postMessage({ ok: false, error: error.message }, event.origin);
+        }
+      });
+      if (window.opener) {
+        for (const origin of allowed) {
+          window.opener.postMessage({ ready: true }, origin);
+        }
+      }
+    </script>
+  </body>
+</html>

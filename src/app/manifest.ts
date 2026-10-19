@@ -7,7 +7,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Med Aduh · Job Hunt",
     short_name: "Job Hunt",
     description: "Resume and job-hunt workspace.",
-    start_url: "/",
+    start_url: "/dashboard/",
     scope: "/",
     display: "standalone",
     background_color: "#f2f2f2",

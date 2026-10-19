@@ -76,12 +76,71 @@ CREATE TABLE IF NOT EXISTS meta (
 );
 `;
 
+// Applied once each, in order, after the base schema. Never edit a shipped entry; add a new one.
+const migrations: [string, string][] = [
+  [
+    "001-contacts",
+    `
+    ALTER TABLE companies ADD COLUMN linkedin_url TEXT NOT NULL DEFAULT '';
+    ALTER TABLE companies ADD COLUMN website TEXT NOT NULL DEFAULT '';
+    ALTER TABLE companies ADD COLUMN industry TEXT NOT NULL DEFAULT '';
+    ALTER TABLE companies ADD COLUMN size TEXT NOT NULL DEFAULT '';
+    ALTER TABLE companies ADD COLUMN notes TEXT NOT NULL DEFAULT '';
+
+    CREATE TABLE contacts (
+      id INTEGER PRIMARY KEY,
+      company_id INTEGER REFERENCES companies(id) ON DELETE SET NULL,
+      name TEXT NOT NULL,
+      title TEXT NOT NULL DEFAULT '',
+      linkedin_url TEXT UNIQUE,
+      email TEXT NOT NULL DEFAULT '',
+      phone TEXT NOT NULL DEFAULT '',
+      notes TEXT NOT NULL DEFAULT '',
+      created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+    );
+
+    ALTER TABLE jobs ADD COLUMN location TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN work_type TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN employment_type TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN salary TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN posted_on TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN applicants TEXT NOT NULL DEFAULT '';
+    ALTER TABLE jobs ADD COLUMN contact_id INTEGER REFERENCES contacts(id) ON DELETE SET NULL;
+    ALTER TABLE jobs ADD COLUMN scraped_at TEXT NOT NULL DEFAULT '';
+
+    -- Every outreach or reply, so it's clear who has been contacted and when.
+    CREATE TABLE contact_log (
+      id INTEGER PRIMARY KEY,
+      company_id INTEGER NOT NULL REFERENCES companies(id) ON DELETE CASCADE,
+      contact_id INTEGER REFERENCES contacts(id) ON DELETE SET NULL,
+      job_id INTEGER REFERENCES jobs(id) ON DELETE SET NULL,
+      channel TEXT NOT NULL DEFAULT 'LinkedIn',
+      direction TEXT NOT NULL DEFAULT 'out' CHECK (direction IN ('out', 'in')),
+      happened_on TEXT NOT NULL,
+      summary TEXT NOT NULL DEFAULT '',
+      follow_up_on TEXT NOT NULL DEFAULT ''
+    );
+    CREATE INDEX contact_log_company ON contact_log(company_id, happened_on);
+    `,
+  ],
+];
+
+function migrate(db: DatabaseSync) {
+  for (const [key, sql] of migrations) {
+    if (!seeded(db, `migration.${key}`)) {
+      db.exec(sql);
+      markSeeded(db, `migration.${key}`);
+    }
+  }
+}
+
 export function openDb() {
   mkdirSync(dirname(dbPath), { recursive: true });
   const db = new DatabaseSync(dbPath);
   db.exec(schema);
   db.exec("BEGIN");
   try {
+    migrate(db);
     seed(db);
     db.exec("COMMIT");
   } catch (error) {

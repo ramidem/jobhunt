@@ -1,8 +1,10 @@
 "use client";
 
-import { ExternalLink, Plus, Trash2 } from "lucide-react";
+import { ExternalLink, Mail, MessageSquarePlus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
+import { formatDay } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -36,7 +38,7 @@ function NotesField({ id, value, onSave }: { id: string; value: string; onSave: 
 }
 
 export default function ApplicationsPage() {
-  const { data, error, mutate } = useResource<Application[]>("applications");
+  const { data, error, mutate, reload } = useResource<Application[]>("applications");
   const applications = data ?? [];
   const ready = data !== null;
   const [company, setCompany] = useState("");
@@ -70,10 +72,10 @@ export default function ApplicationsPage() {
       <Card>
         <CardContent>
           <form
-            className="grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1.4fr_auto] lg:items-end"
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1.4fr_auto] lg:items-end"
             onSubmit={add}
           >
-            <div className="grid gap-1.5">
+            <div className="grid grid-cols-1 gap-1.5">
               <Label htmlFor="new-company">Company</Label>
               <Input
                 id="new-company"
@@ -82,7 +84,7 @@ export default function ApplicationsPage() {
                 value={company}
               />
             </div>
-            <div className="grid gap-1.5">
+            <div className="grid grid-cols-1 gap-1.5">
               <Label htmlFor="new-role">Role</Label>
               <Input
                 id="new-role"
@@ -91,7 +93,7 @@ export default function ApplicationsPage() {
                 value={role}
               />
             </div>
-            <div className="grid gap-1.5 sm:col-span-2 lg:col-span-1">
+            <div className="grid grid-cols-1 gap-1.5 sm:col-span-2 lg:col-span-1">
               <Label htmlFor="new-url">Posting URL</Label>
               <Input
                 id="new-url"
@@ -142,7 +144,7 @@ export default function ApplicationsPage() {
         <p className="py-8 text-center text-sm text-muted-foreground">No applications here yet.</p>
       ) : null}
 
-      <ul className="grid gap-4">
+      <ul className="grid grid-cols-1 gap-4">
         {visible.map((item) => (
           <li key={item.id}>
             <Card>
@@ -150,7 +152,9 @@ export default function ApplicationsPage() {
                 <CardTitle className="leading-snug">{item.role}</CardTitle>
                 <CardDescription className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <span>{item.company}</span>
-                  {item.details ? <span>{item.details}</span> : null}
+                  {[item.location, item.workType, item.employmentType].filter(Boolean).length > 0 ? (
+                    <span>{[item.location, item.workType, item.employmentType].filter(Boolean).join(" · ")}</span>
+                  ) : null}
                   {item.matchPercent !== null ? (
                     <Badge variant="secondary">{item.matchPercent}% match</Badge>
                   ) : null}
@@ -171,7 +175,68 @@ export default function ApplicationsPage() {
                   </Button>
                 </CardAction>
               </CardHeader>
-              <CardContent className="grid gap-3">
+              <CardContent className="grid grid-cols-1 gap-3">
+                <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm sm:grid-cols-4">
+                  {(
+                    [
+                      ["Posted", item.postedOn ? formatDay(item.postedOn) : ""],
+                      ["Applicants", item.applicants.replace(/people clicked apply/, "clicked apply")],
+                      ["Pay", item.salary],
+                      ["Source", item.source],
+                    ] as const
+                  )
+                    .filter(([, value]) => value)
+                    .map(([label, value]) => (
+                      <div className="min-w-0" key={label}>
+                        <dt className="text-xs text-muted-foreground">{label}</dt>
+                        <dd className="truncate" title={value}>
+                          {value}
+                        </dd>
+                      </div>
+                    ))}
+                </dl>
+                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-muted/50 p-3 text-sm">
+                  <div className="min-w-0">
+                    {item.contactName ? (
+                      <p>
+                        {item.contactLinkedin ? (
+                          <a className="font-medium hover:underline" href={item.contactLinkedin} rel="noreferrer" target="_blank">
+                            {item.contactName}
+                          </a>
+                        ) : (
+                          <span className="font-medium">{item.contactName}</span>
+                        )}
+                        {item.contactTitle ? (
+                          <span className="text-muted-foreground"> · {item.contactTitle.split("|")[0].trim()}</span>
+                        ) : null}
+                      </p>
+                    ) : (
+                      <p className="text-muted-foreground">No hiring contact listed</p>
+                    )}
+                    {item.contactEmail ? (
+                      <a className="inline-flex items-center gap-1 text-muted-foreground hover:text-foreground" href={`mailto:${item.contactEmail}`}>
+                        <Mail aria-hidden="true" className="size-3.5" />
+                        {item.contactEmail}
+                      </a>
+                    ) : null}
+                    <p className="text-xs text-muted-foreground">
+                      {item.lastContactedOn ? `Last contact ${formatDay(item.lastContactedOn)}` : "Not contacted yet"}
+                    </p>
+                  </div>
+                  <LogContactSheet
+                    company={{ id: item.companyId, name: item.company }}
+                    contacts={item.contactId && item.contactName ? [{ id: item.contactId, name: item.contactName }] : []}
+                    defaultContactId={item.contactId}
+                    defaultJobId={item.jobId}
+                    jobs={[{ id: item.jobId, title: item.role }]}
+                    onSaved={reload}
+                  >
+                    <Button size="sm" variant="outline">
+                      <MessageSquarePlus aria-hidden="true" />
+                      Log contact
+                    </Button>
+                  </LogContactSheet>
+                </div>
                 {item.skills.some((skill) => skill.status !== "know") ? (
                   <div className="flex flex-wrap items-center gap-1.5 text-xs">
                     <span className="text-muted-foreground">Missing:</span>
@@ -189,7 +254,7 @@ export default function ApplicationsPage() {
                   </div>
                 ) : null}
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-[10rem_11rem_1fr] sm:items-end">
-                  <div className="grid gap-1.5">
+                  <div className="grid grid-cols-1 gap-1.5">
                     <Label>Status</Label>
                     <Select
                       onValueChange={(value) =>
@@ -215,7 +280,7 @@ export default function ApplicationsPage() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div className="grid gap-1.5">
+                  <div className="grid grid-cols-1 gap-1.5">
                     <Label htmlFor={`applied-${item.id}`}>Applied on</Label>
                     <Input
                       id={`applied-${item.id}`}
@@ -233,7 +298,7 @@ export default function ApplicationsPage() {
                     </Button>
                   ) : null}
                 </div>
-                <div className="grid gap-1.5">
+                <div className="grid grid-cols-1 gap-1.5">
                   <Label htmlFor={`notes-${item.id}`}>Notes</Label>
                   <NotesField
                     id={`notes-${item.id}`}
