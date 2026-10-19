@@ -10,7 +10,7 @@ The tracker runs locally (`npm run serve`, SQLite at `data/tracker.db`, gitignor
 - **Read-only on job sites.** Browse like a person: one page at a time with waits. No bulk or automated crawling of signed-in sites (LinkedIn, Indeed). If a site shows a human check, stop and ask; do not work around it.
 - **Public repo.** No personal data, contacts, application history, client names or emails in commits. Seeds that name real companies or people belong in the database, not in git.
 - **No invented facts.** Resume bullets, outreach and interview answers use only what the owner's project records support. Client work uses public names. Unknown details go in `[brackets]`.
-- **Only Active roles.** Searches target roles marked Active on the Roles page (`GET /api/roles`, `active: true`). Stretch roles (DevOps, cloud, AI) are fine, positioned as hands-on exposure plus willingness to learn, never as expertise.
+- **Targets (updated 2026-10-19): pay first.** The goal is a job paying at least PHP 80,000 a month; PHP 150,000 is ideal (`GET /api/targets`). Roles below the owner's experience are fine. Active roles (`GET /api/roles`, `active: true`) stay the preferred match, but any role that fits the owner's skills and posts or likely pays 80k+ is in scope. Rank by pay first (Jobs page pay filter, `payMax`), then fit. Stretch roles (DevOps, cloud, AI) are fine, positioned as hands-on exposure plus willingness to learn, never as expertise. Pay estimates are rough monthly PHP (see `server/pay.ts`); say so when quoting them, and treat unlisted pay as unknown, not low.
 - **Back up before bulk changes:** `sqlite3 data/tracker.db ".backup '<path>'"`.
 
 ## Data model in one minute

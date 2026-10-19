@@ -20,6 +20,9 @@ export type Application = {
   workType: string;
   employmentType: string;
   salary: string;
+  payMin: number | null;
+  payMax: number | null;
+  payHourly: number;
   postedOn: string;
   applicants: string;
   jobDescription: string;
@@ -309,3 +312,5 @@ export type Funnel = {
   bySource: { source: string; saved: number; applied: number; replied: number }[];
   outreach: { sent: number; replied: number; drafts: number };
 };
+
+export type PayTargets = { min: number; ideal: number; currency: "PHP"; per: "month" };

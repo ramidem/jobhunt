@@ -4,7 +4,7 @@ import { createHash } from "node:crypto";
 import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
-import { assignJobCodes, linkJobSkills, openDb, upsertCompany } from "./db.ts";
+import { assignJobCodes, backfillPay, linkJobSkills, openDb, upsertCompany } from "./db.ts";
 import { studyLinks } from "./learn-links.ts";
 import { classifyLines } from "./role-lines.ts";
 import { detectSkills } from "./skill-detect.ts";
@@ -73,6 +73,7 @@ function listApplications() {
       `SELECT a.id, a.job_id AS jobId, j.code, j.title AS role, c.id AS companyId, c.name AS company,
               c.linkedin_url AS companyLinkedin, j.url, j.source, j.details, j.location,
               j.work_type AS workType, j.employment_type AS employmentType, j.salary,
+              j.pay_min_php AS payMin, j.pay_max_php AS payMax, j.pay_hourly AS payHourly,
               j.posted_on AS postedOn, j.applicants, j.description AS jobDescription,
               j.created_at AS createdAt, a.status, a.applied_on AS appliedOn, a.notes,
               c.kind AS companyKind, c.website AS companyWebsite, c.careers_url AS companyCareers, c.brief AS companyBrief,
@@ -609,7 +610,7 @@ function importJob(body: Record<string, unknown>) {
     db.prepare(
       `UPDATE jobs SET company_id = ?, title = ?, url = COALESCE(NULLIF(?, ''), url), description = ?,
          location = ?, work_type = ?, employment_type = ?, salary = ?, posted_on = ?, applicants = ?,
-         contact_id = COALESCE(?, contact_id), scraped_at = ?
+         contact_id = COALESCE(?, contact_id), scraped_at = ?, pay_min_php = NULL, pay_max_php = NULL, pay_hourly = 0
        WHERE id = ?`,
     ).run(...(fields as (string | number | null)[]), jobId);
   } else {
@@ -743,6 +744,7 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
         summary.push({ companyId, name, created: !existing, contactsAdded, jobs: jobResults.length });
       }
       assignJobCodes(db);
+      backfillPay(db);
       db.exec("COMMIT");
     } catch (error) {
       db.exec("ROLLBACK");
@@ -1294,6 +1296,25 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     return true;
   }
 
+  // Pay targets (PHP per month). GET returns them; PUT { min?, ideal? } changes them.
+  if (resource === "targets" && (method === "GET" || method === "PUT") && id === undefined) {
+    if (method === "PUT") {
+      const body = await readJson(req);
+      for (const [key, field] of [["min", "target.pay_min"], ["ideal", "target.pay_ideal"]] as const) {
+        if (typeof body[key] === "number" && body[key] > 0) {
+          db.prepare("INSERT INTO meta (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value").run(
+            field,
+            String(Math.round(body[key] as number)),
+          );
+        }
+      }
+    }
+    const get = (key: string, fallback: number) =>
+      Number((db.prepare("SELECT value FROM meta WHERE key = ?").get(key) as { value: string } | undefined)?.value ?? fallback);
+    send(res, 200, { min: get("target.pay_min", 80000), ideal: get("target.pay_ideal", 150000), currency: "PHP", per: "month" });
+    return true;
+  }
+
   if (resource === "dashboard" && method === "GET" && id === undefined) {
     send(res, 200, dashboard());
     return true;
@@ -1309,6 +1330,7 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
     try {
       const results = (body.jobs as Record<string, unknown>[]).map(importJob);
       assignJobCodes(db);
+      backfillPay(db);
       db.exec("COMMIT");
       send(res, 200, results);
     } catch (error) {

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { JobContactsSheet } from "@/components/workspace/job-contacts-sheet";
 import { LogContactSheet } from "@/components/workspace/log-contact-sheet";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
-import { formatDay } from "@/lib/format";
+import { formatDay, formatMonthlyPay } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { useResource, type Application } from "@/lib/api";
+import { useResource, type Application, type PayTargets } from "@/lib/api";
 import { APPLICATION_STATUSES, type ApplicationStatus } from "@/lib/tracker";
 
 // Saves on blur so typing doesn't send a request per keystroke.
@@ -49,6 +49,8 @@ export default function ApplicationsPage() {
   const [query, setQuery] = useState("");
   const [limit, setLimit] = useState(30);
   const [priorityOnly, setPriorityOnly] = useState(false);
+  const [payFilter, setPayFilter] = useState<"any" | "listed" | "min" | "ideal">("any");
+  const targets = useResource<PayTargets>("targets").data;
 
   function add(event: React.FormEvent) {
     event.preventDefault();
@@ -66,12 +68,21 @@ export default function ApplicationsPage() {
   }
 
   const needle = query.trim().toLowerCase();
-  const visible = applications.filter(
+  const visibleUnsorted = applications.filter(
     (item) =>
       (filter === "All" || item.status === filter) &&
       (!priorityOnly || item.priority) &&
+      (payFilter === "any" ||
+        (payFilter === "listed" && item.payMax !== null) ||
+        (payFilter === "min" && !item.payHourly && item.payMax !== null && item.payMax >= (targets?.min ?? 80000)) ||
+        (payFilter === "ideal" && !item.payHourly && item.payMax !== null && item.payMax >= (targets?.ideal ?? 150000))) &&
       (!needle || `${item.code} ${item.role} ${item.company} ${item.location} ${item.source}`.toLowerCase().includes(needle)),
   );
+
+  const visible =
+    payFilter === "any"
+      ? visibleUnsorted
+      : [...visibleUnsorted].sort((a, b) => (b.payMax ?? 0) - (a.payMax ?? 0));
 
   return (
     <PageBody>
@@ -148,6 +159,21 @@ export default function ApplicationsPage() {
         className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-wrap md:px-0"
         role="group"
       >
+        <Select onValueChange={(value) => setPayFilter(value as typeof payFilter)} value={payFilter}>
+          <SelectTrigger aria-label="Filter by pay" className="h-8 w-auto shrink-0 rounded-full px-3 text-sm md:h-8">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="any">Any pay</SelectItem>
+            <SelectItem value="listed">Pay listed ({applications.filter((item) => item.payMax !== null).length})</SelectItem>
+            <SelectItem value="min">
+              ₱{Math.round((targets?.min ?? 80000) / 1000)}k+ ({applications.filter((item) => !item.payHourly && item.payMax !== null && item.payMax >= (targets?.min ?? 80000)).length})
+            </SelectItem>
+            <SelectItem value="ideal">
+              ₱{Math.round((targets?.ideal ?? 150000) / 1000)}k+ ({applications.filter((item) => !item.payHourly && item.payMax !== null && item.payMax >= (targets?.ideal ?? 150000)).length})
+            </SelectItem>
+          </SelectContent>
+        </Select>
         <Button
           aria-pressed={priorityOnly}
           className="shrink-0 rounded-full"
@@ -200,6 +226,11 @@ export default function ApplicationsPage() {
                     {item.code}
                   </span>
                   {item.role}
+                  {!item.payHourly && item.payMax !== null && item.payMax >= (targets?.ideal ?? 150000) ? (
+                    <Badge className="ml-2 bg-emerald-600 align-middle text-white">₱{Math.round((targets?.ideal ?? 150000) / 1000)}k+</Badge>
+                  ) : !item.payHourly && item.payMax !== null && item.payMax >= (targets?.min ?? 80000) ? (
+                    <Badge className="ml-2 align-middle" variant="secondary">₱{Math.round((targets?.min ?? 80000) / 1000)}k+</Badge>
+                  ) : null}
                   {item.priority ? (
                     <Star aria-label="Priority" className="ml-1.5 inline size-4 fill-amber-400 text-amber-500" />
                   ) : null}
@@ -247,7 +278,7 @@ export default function ApplicationsPage() {
                     [
                       ["Posted", item.postedOn ? formatDay(item.postedOn) : ""],
                       ["Applicants", item.applicants.replace(/people clicked apply/, "clicked apply")],
-                      ["Pay", item.salary],
+                      ["Pay", item.payMax !== null ? `${item.salary}${item.payHourly ? " (hourly)" : /php|₱/i.test(item.salary) ? "" : ` (≈ ${formatMonthlyPay(item.payMin, item.payMax)})`}` : item.salary],
                       ["Source", item.source],
                     ] as const
                   )

@@ -3,6 +3,7 @@ import { mkdirSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { scripts } from "./learn-scripts.ts";
+import { parseMonthlyPhp } from "./pay.ts";
 import { seedCards } from "./learn-seed.ts";
 import { knownSkills, leads } from "./seed-data.ts";
 
@@ -284,6 +285,22 @@ const migrations: [string, string][] = [
     );
     `,
   ],
+  [
+    "009-pay-estimates",
+    `
+    -- Monthly pay in PHP, estimated from the posting's pay text (see server/pay.ts). NULL = not listed.
+    ALTER TABLE jobs ADD COLUMN pay_min_php INTEGER;
+    ALTER TABLE jobs ADD COLUMN pay_max_php INTEGER;
+    `,
+  ],
+  [
+    "010-pay-hourly",
+    `
+    -- 1 when the posting quotes an hourly rate. Those are usually contract or task work, so the
+    -- monthly figure (160 hours) is only a rough comparison and doesn't count toward pay targets.
+    ALTER TABLE jobs ADD COLUMN pay_hourly INTEGER NOT NULL DEFAULT 0;
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching
@@ -347,6 +364,7 @@ export function openDb() {
     migrate(db);
     seed(db);
     assignJobCodes(db);
+    backfillPay(db);
     db.exec("COMMIT");
   } catch (error) {
     db.exec("ROLLBACK");
@@ -372,6 +390,18 @@ export function linkJobSkills(db: DatabaseSync, jobId: number, skills: string[])
   const link = db.prepare("INSERT OR IGNORE INTO job_skills (job_id, skill_id) VALUES (?, ?)");
   for (const name of skills) {
     link.run(jobId, upsertSkill(db, name));
+  }
+}
+
+// Fills estimated monthly pay for jobs whose pay text is set but not yet parsed.
+export function backfillPay(db: DatabaseSync) {
+  const rows = db
+    .prepare("SELECT id, salary FROM jobs WHERE salary != '' AND pay_max_php IS NULL")
+    .all() as { id: number; salary: string }[];
+  const set = db.prepare("UPDATE jobs SET pay_min_php = ?, pay_max_php = ?, pay_hourly = ? WHERE id = ?");
+  for (const row of rows) {
+    const pay = parseMonthlyPhp(row.salary);
+    if (pay) set.run(pay.min, pay.max, pay.hourly ? 1 : 0, row.id);
   }
 }
 
