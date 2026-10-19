@@ -51,12 +51,12 @@ const draftResume = {
     },
     {
       label: "Web",
-      items: ["React", "Next.js", "Node.js", "NestJS", "Strapi", "Zod"],
+      items: ["React", "React Native", "Next.js", "Node.js", "NestJS", "Tailwind CSS", "Strapi", "Zod"],
     },
     {
       label: "Cloud & data",
       items: [
-        "Google Cloud",
+        "Google Cloud (GCP)",
         "Firebase",
         "MySQL",
         "PostgreSQL",
@@ -72,7 +72,7 @@ const draftResume = {
     },
     {
       label: "Practices",
-      items: ["Full-stack architecture", "developer tooling", "testing", "automation"],
+      items: ["Git", "Microservices", "Full-stack architecture", "developer tooling", "testing", "automation"],
     },
   ],
   interests: ["Product systems", "developer experience", "automation"],
