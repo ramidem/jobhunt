@@ -16,9 +16,10 @@ const draftResume = {
   education: [
     {
       institution: "Western Mindanao State University",
-      degree: "Bachelor of Science (BS), Mass Communication/Media Studies",
-      // TODO: replace with the graduation year (e.g. "Graduated 20XX") once confirmed.
-      dates: "Graduated",
+      // Med did not graduate: never write "Graduated" or imply a completed degree.
+      degree: "Mass Communication/Media Studies (Bachelor of Science, not completed)",
+      // TODO: replace with attended years once Med confirms them.
+      dates: "Attended",
       details: [],
     },
   ],
