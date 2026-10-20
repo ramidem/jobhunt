@@ -67,3 +67,15 @@ The TODO page in the app is the live list of what is left.
 ## Pages
 
 One page per phase, switched with the phase dropdown at the top right of each: Phase 1 `/applications` (Jobs), Phase 2 `/outreach`, Phase 3 `/interviews`, Phase 4 `/results`. Companies, Roles, Skills, Learn and TODO support all phases.
+
+## Paused (2026-10-20)
+
+The local server, its launch agent, the Tailscale proxy and the three scheduled tasks are stopped. To start again:
+
+```bash
+launchctl enable gui/$(id -u)/com.ramidem.jobhunt
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.ramidem.jobhunt.plist
+tailscale serve --bg http://127.0.0.1:4173
+```
+
+Then re-enable the scheduled tasks (job-hunt-learn-morning, job-hunt-priority-prep, job-hunt-monday-summary) in the Claude app's Scheduled list.
