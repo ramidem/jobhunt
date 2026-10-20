@@ -364,3 +364,21 @@ export type LibraryItem = {
   size: number;
   createdAt: string;
 };
+
+export type Improvement = {
+  id: number;
+  area: "learning" | "applications" | "other";
+  title: string;
+  why: string;
+  how: string;
+  source: string;
+  dueOn: string;
+  impact: 1 | 2 | 3;
+  status: "open" | "done" | "dismissed";
+  writtenBy: "rule" | "claude" | "me";
+  closedBy: "" | "auto" | "me";
+  createdOn: string;
+  closedOn: string;
+};
+
+export type Improvements = { refreshedOn: string | null; open: Improvement[]; closed: Improvement[] };

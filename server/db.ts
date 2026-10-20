@@ -374,6 +374,30 @@ const migrations: [string, string][] = [
     );
     `,
   ],
+  [
+    "013-improvements",
+    `
+    -- Things to improve. Rows with a signal are flagged by rules (server/improvements.ts) and
+    -- close themselves when the signal clears; rows without one are added by Claude or by hand.
+    CREATE TABLE improvements (
+      id INTEGER PRIMARY KEY,
+      area TEXT NOT NULL DEFAULT 'other' CHECK (area IN ('learning', 'applications', 'other')),
+      title TEXT NOT NULL,
+      why TEXT NOT NULL DEFAULT '',
+      how TEXT NOT NULL DEFAULT '',
+      source TEXT NOT NULL DEFAULT '',
+      due_on TEXT NOT NULL DEFAULT '',
+      impact INTEGER NOT NULL DEFAULT 2 CHECK (impact BETWEEN 1 AND 3),
+      status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'done', 'dismissed')),
+      signal TEXT UNIQUE,
+      written_by TEXT NOT NULL DEFAULT 'rule' CHECK (written_by IN ('rule', 'claude', 'me')),
+      closed_by TEXT NOT NULL DEFAULT '' CHECK (closed_by IN ('', 'auto', 'me')),
+      created_on TEXT NOT NULL,
+      updated_on TEXT NOT NULL,
+      closed_on TEXT NOT NULL DEFAULT ''
+    );
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching

@@ -5,6 +5,7 @@ import { createReadStream, existsSync, statSync } from "node:fs";
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { assignJobCodes, backfillPay, linkJobSkills, openDb, recountSkills, upsertCompany } from "./db.ts";
+import { AREAS, listImprovements, scanImprovements } from "./improvements.ts";
 import { studyLinks } from "./learn-links.ts";
 import { classifyLines } from "./role-lines.ts";
 import { detectSkills } from "./skill-detect.ts";
@@ -1346,6 +1347,61 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       throw new HttpError(405, "Method not allowed");
     }
     send(res, method === "POST" ? 201 : 200, listLibrary());
+    return true;
+  }
+
+  if (resource === "improvements") {
+    if (method === "GET" && id === undefined) {
+      scanImprovements(db);
+    } else if (method === "POST" && id === undefined) {
+      const body = await readJson(req);
+      const today = localDay();
+      const impact = typeof body.impact === "number" && [1, 2, 3].includes(body.impact) ? body.impact : 2;
+      db.prepare(
+        `INSERT INTO improvements (area, title, why, how, source, due_on, impact, written_by, created_on, updated_on)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'claude', ?, ?)`,
+      ).run(
+        oneOf(text(body, "area"), [...AREAS], "area") ?? "other",
+        text(body, "title", true)!,
+        text(body, "why") ?? "",
+        text(body, "how") ?? "",
+        text(body, "source") ?? "",
+        text(body, "dueOn") ?? "",
+        impact,
+        today,
+        today,
+      );
+    } else if (method === "PATCH" && id !== undefined) {
+      // Med sends { status }; Claude sends { why, how, ... } and the row is marked as written by Claude.
+      const body = await readJson(req);
+      const status = oneOf(text(body, "status"), ["open", "done", "dismissed"], "status");
+      const today = localDay();
+      const wrote = body.why !== undefined || body.how !== undefined;
+      update("improvements", id, {
+        title: text(body, "title"),
+        why: text(body, "why"),
+        how: text(body, "how"),
+        source: text(body, "source"),
+        due_on: text(body, "dueOn"),
+        status,
+        closed_by: status === undefined ? undefined : status === "open" ? "" : "me",
+        closed_on: status === undefined ? undefined : status === "open" ? "" : today,
+        written_by: wrote ? "claude" : undefined,
+        updated_on: today,
+      });
+    } else {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listImprovements(db));
+    return true;
+  }
+
+  // The scheduled task calls this after rewriting why/how, so the page can show when.
+  if (resource === "improvements-refreshed" && method === "PUT" && id === undefined) {
+    db.prepare(
+      "INSERT INTO meta (key, value) VALUES ('improvements.refreshed', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+    ).run(localDay());
+    send(res, 200, listImprovements(db));
     return true;
   }
 
