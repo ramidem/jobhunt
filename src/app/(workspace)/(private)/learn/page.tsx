@@ -227,7 +227,7 @@ function Session({ topic, onDone }: { topic: string | null; onDone: () => void }
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    api<LearnCard[]>(`learn-deck?limit=20${topic ? `&topic=${encodeURIComponent(topic)}` : ""}`)
+    api<LearnCard[]>(`learn-deck?limit=15${topic ? `&topic=${encodeURIComponent(topic)}` : ""}`)
       .then(setQueue)
       .catch((reason: Error) => setError(reason.message));
   }, [topic]);
