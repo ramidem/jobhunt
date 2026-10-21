@@ -402,3 +402,9 @@ export type Schedule = {
   blocks: ScheduleBlock[];
   hints: { followUpsDue: number; draftsToSend: number; cardsDue: number };
 };
+
+export type TodayPicks = {
+  drafts: { id: number; company: string; contactName: string | null; code: string | null; jobTitle: string | null }[];
+  jobs: { code: string; company: string; role: string; url: string; contacts: number }[];
+  totals: { drafts: number; priorityJobs: number };
+};

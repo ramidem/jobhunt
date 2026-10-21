@@ -623,6 +623,38 @@ function weekly() {
   };
 }
 
+// The concrete next actions behind the schedule: drafts worth sending first (a named contact at a
+// Priority company) and Priority jobs not applied to yet (ones with a hiring contact first).
+function todayPicks() {
+  const drafts = db
+    .prepare(
+      `SELECT o.id, c.name AS company, ct.name AS contactName, j.code, j.title AS jobTitle
+         FROM outreach o JOIN companies c ON c.id = o.company_id
+         LEFT JOIN contacts ct ON ct.id = o.contact_id LEFT JOIN jobs j ON j.id = o.job_id
+        WHERE o.status = 'draft'
+        ORDER BY (o.contact_id IS NOT NULL) DESC, c.priority DESC, COALESCE(j.priority, 0) DESC, o.id
+        LIMIT 5`,
+    )
+    .all();
+  const jobs = db
+    .prepare(
+      `SELECT j.code, c.name AS company, j.title AS role, j.url,
+              (SELECT COUNT(*) FROM job_contacts jc WHERE jc.job_id = j.id) AS contacts
+         FROM applications a JOIN jobs j ON j.id = a.job_id JOIN companies c ON c.id = j.company_id
+        WHERE a.status = 'Saved' AND j.priority = 1
+        ORDER BY contacts DESC, j.created_at LIMIT 2`,
+    )
+    .all();
+  const totals = db
+    .prepare(
+      `SELECT (SELECT COUNT(*) FROM outreach WHERE status = 'draft') AS drafts,
+              (SELECT COUNT(*) FROM applications a JOIN jobs j ON j.id = a.job_id
+                WHERE a.status = 'Saved' AND j.priority = 1) AS priorityJobs`,
+    )
+    .get();
+  return { drafts, jobs, totals };
+}
+
 // Upserts a scraped posting: company, hiring contact, job fields and detected skills.
 function importJob(body: Record<string, unknown>) {
   const source = text(body, "source", true)!;
@@ -1423,6 +1455,11 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       db.prepare("INSERT OR IGNORE INTO schedule_done (block_id, day) VALUES (?, ?)").run(id, day);
     }
     send(res, 200, listSchedule());
+    return true;
+  }
+
+  if (resource === "today-picks" && method === "GET" && id === undefined) {
+    send(res, 200, todayPicks());
     return true;
   }
 

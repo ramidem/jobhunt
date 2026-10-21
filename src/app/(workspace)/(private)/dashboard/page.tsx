@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
 import { TodayBlocks } from "@/components/workspace/schedule-today";
-import { useResource, type Dashboard, type Schedule } from "@/lib/api";
+import { useResource, type Dashboard, type Schedule, type TodayPicks } from "@/lib/api";
 import { formatDay } from "@/lib/format";
 
 function Stat({ label, value, href }: { label: string; value: number; href: string }) {
@@ -43,6 +43,7 @@ function Bars({ rows, unit }: { rows: { label: string; value: number }[]; unit: 
 export default function DashboardPage() {
   const { data, error } = useResource<Dashboard>("dashboard");
   const { data: schedule, mutate: mutateSchedule } = useResource<Schedule>("schedule");
+  const { data: picks } = useResource<TodayPicks>("today-picks");
 
   return (
     <PageBody>
@@ -63,6 +64,59 @@ export default function DashboardPage() {
                 onToggle={(block, done) => void mutateSchedule(`schedule-done/${block.id}`, "PUT", { day: schedule.today, done })}
                 schedule={schedule}
               />
+            </section>
+          ) : null}
+          {picks && (picks.drafts.length > 0 || picks.jobs.length > 0) ? (
+            <section className="grid gap-3 lg:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Send these first</CardTitle>
+                  <CardDescription>
+                    {picks.totals.drafts} drafts waiting. Edit the [brackets], send, then mark them sent on{" "}
+                    <Link className="underline underline-offset-4" href="/outreach">
+                      Outreach
+                    </Link>
+                    .
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="grid gap-2 text-sm">
+                    {picks.drafts.map((draft) => (
+                      <li key={draft.id}>
+                        <Link className="underline-offset-4 hover:underline" href="/outreach">
+                          {draft.company}
+                          {draft.contactName ? ` · ${draft.contactName}` : ""}
+                        </Link>
+                        {draft.code ? <span className="text-muted-foreground"> · {draft.code}</span> : null}
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Apply to these</CardTitle>
+                  <CardDescription>
+                    {picks.totals.priorityJobs} Priority jobs not applied to yet. Ones with a hiring contact come first.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="grid gap-2 text-sm">
+                    {picks.jobs.map((job) => (
+                      <li key={job.code}>
+                        <Link className="underline-offset-4 hover:underline" href="/applications">
+                          {job.company} · {job.role}
+                        </Link>
+                        <span className="text-muted-foreground">
+                          {" "}
+                          · {job.code}
+                          {job.contacts > 0 ? ` · ${job.contacts} contact${job.contacts === 1 ? "" : "s"}` : ""}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
             </section>
           ) : null}
           <div className="flex flex-wrap items-center gap-1.5 text-sm">
