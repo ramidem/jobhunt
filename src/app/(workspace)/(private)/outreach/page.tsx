@@ -299,7 +299,6 @@ export default function OutreachPage() {
     <PageBody>
       <PageHeader
         description="Drafts for recruiters and hiring managers. You copy and send them yourself; nothing is sent from here."
-        phase
         title="Outreach"
       >
         <NewDraftSheet onSaved={reload} />
