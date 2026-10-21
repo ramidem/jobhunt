@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import { detectSkills } from "./skill-detect.ts";
 import { scripts } from "./learn-scripts.ts";
 import { parseMonthlyPhp } from "./pay.ts";
+import { interviewCards, interviewPaths } from "./learn-seed-interview.ts";
 import { seedCards } from "./learn-seed.ts";
 import { knownSkills, leads } from "./seed-data.ts";
 
@@ -565,6 +566,29 @@ function seed(db: DatabaseSync) {
       }
     }
     markSeeded(db, "seed.learn-cards");
+  }
+
+  if (!seeded(db, "seed.interview-stages-2026-10-21")) {
+    const insert = db.prepare(
+      `INSERT INTO learn_cards (topic, kind, prompt, answer, choices, correct, explanation, script, source)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'seed')`,
+    );
+    const exists = db.prepare("SELECT 1 FROM learn_cards WHERE lower(topic) = lower(?) AND lower(prompt) = lower(?)");
+    for (const card of interviewCards) {
+      if (exists.get(card.topic, card.prompt)) continue;
+      if (card.kind === "mcq") {
+        insert.run(card.topic, card.kind, card.prompt, "", JSON.stringify(card.choices), card.correct, card.explanation, "");
+      } else {
+        insert.run(card.topic, card.kind, card.prompt, card.answer, "[]", null, "", card.script ?? "");
+      }
+    }
+    const addPath = db.prepare("INSERT INTO learning_paths (title, goal, skill) VALUES (?, ?, ?)");
+    const addStep = db.prepare("INSERT INTO learning_steps (path_id, title, notes, url, position) VALUES (?, ?, ?, ?, ?)");
+    for (const path of interviewPaths) {
+      const { lastInsertRowid } = addPath.run(path.title, path.goal, path.skill);
+      path.steps.forEach((step, index) => addStep.run(Number(lastInsertRowid), step.title, step.notes, step.url, index + 1));
+    }
+    markSeeded(db, "seed.interview-stages-2026-10-21");
   }
 
   if (!seeded(db, "seed.learn-scripts")) {

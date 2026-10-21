@@ -331,7 +331,7 @@ function dashboard() {
   };
 }
 
-const INTERVIEW_TOPICS = ["Behavioral", "Soft skills", "System design"];
+const INTERVIEW_TOPICS = ["Behavioral", "Soft skills", "System design", "Algorithms", "Recruiter screen"];
 const CARD_KINDS = ["flashcard", "mcq", "practice", "soft"];
 const localDay = (offsetDays = 0) =>
   new Date(Date.now() + offsetDays * 864e5).toLocaleDateString("en-CA");
