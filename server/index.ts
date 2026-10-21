@@ -632,7 +632,7 @@ function todayPicks() {
          FROM outreach o JOIN companies c ON c.id = o.company_id
          LEFT JOIN contacts ct ON ct.id = o.contact_id LEFT JOIN jobs j ON j.id = o.job_id
         WHERE o.status = 'draft'
-        ORDER BY (o.contact_id IS NOT NULL) DESC, c.priority DESC, COALESCE(j.priority, 0) DESC, o.id
+        ORDER BY (ct.name IS NOT NULL AND ct.name NOT LIKE 'General%') DESC, c.priority DESC, COALESCE(j.priority, 0) DESC, o.id
         LIMIT 5`,
     )
     .all();
