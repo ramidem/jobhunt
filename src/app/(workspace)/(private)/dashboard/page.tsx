@@ -4,7 +4,8 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
-import { useResource, type Dashboard } from "@/lib/api";
+import { TodayBlocks } from "@/components/workspace/schedule-today";
+import { useResource, type Dashboard, type Schedule } from "@/lib/api";
 import { formatDay } from "@/lib/format";
 
 function Stat({ label, value, href }: { label: string; value: number; href: string }) {
@@ -41,6 +42,7 @@ function Bars({ rows, unit }: { rows: { label: string; value: number }[]; unit: 
 
 export default function DashboardPage() {
   const { data, error } = useResource<Dashboard>("dashboard");
+  const { data: schedule, mutate: mutateSchedule } = useResource<Schedule>("schedule");
 
   return (
     <PageBody>
@@ -49,6 +51,20 @@ export default function DashboardPage() {
 
       {data ? (
         <>
+          {schedule ? (
+            <section className="grid gap-2">
+              <h2 className="text-sm font-medium text-muted-foreground">
+                Today ·{" "}
+                <Link className="underline underline-offset-4" href="/schedule">
+                  Schedule
+                </Link>
+              </h2>
+              <TodayBlocks
+                onToggle={(block, done) => void mutateSchedule(`schedule-done/${block.id}`, "PUT", { day: schedule.today, done })}
+                schedule={schedule}
+              />
+            </section>
+          ) : null}
           <div className="flex flex-wrap items-center gap-1.5 text-sm">
             <span className="text-muted-foreground">Targeting:</span>
             {data.activeRoles.length === 0 ? (

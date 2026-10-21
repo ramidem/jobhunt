@@ -57,7 +57,7 @@ Edit `src/data/resume.ts`. The web page, the PDF (`src/components/resume-pdf-doc
 
 - **Data:** SQLite at `data/tracker.db` (gitignored). Schema changes go in the `migrations` list in `server/db.ts`; append new entries and never edit ones that have shipped.
 - **API:** JSON under `/api`, implemented in `server/index.ts`.
-- **Pages:** Applications (phase 1), Outreach (phase 2), Interviews (phase 3), Results (phase 4), plus Dashboard, Companies, Roles, Skills, Learn and TODO. Mobile-first, installable as a PWA.
+- **Pages:** Applications (phase 1), Outreach (phase 2), Interviews (phase 3), Results (phase 4), plus Dashboard, Schedule (weekly routine, seeded Mon-Fri), Companies, Roles, Skills, Learn and TODO. Mobile-first, installable as a PWA.
 - **Playbook:** how the phases work and the rules for operating the tracker are in [`docs/job-hunt-playbook.md`](docs/job-hunt-playbook.md).
 - **Auto-start on macOS (optional):** `ops/com.ramidem.jobhunt.plist` is an example launch agent. Edit the paths for your machine before using it.
 

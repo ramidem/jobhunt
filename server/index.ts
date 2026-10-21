@@ -336,6 +336,31 @@ const CARD_KINDS = ["flashcard", "mcq", "practice", "soft"];
 const localDay = (offsetDays = 0) =>
   new Date(Date.now() + offsetDays * 864e5).toLocaleDateString("en-CA");
 
+const SCHEDULE_KINDS = ["scan", "apply", "outreach", "learn", "practice", "review", "plan", "other"];
+
+// Blocks for the whole week, which of them are done today, and live counts the page shows as hints.
+function listSchedule() {
+  const today = localDay();
+  const weekday = new Date(`${today}T00:00:00`).getDay();
+  const blocks = db
+    .prepare(
+      `SELECT b.id, b.weekday, b.start, b.minutes, b.kind, b.title, b.href,
+              EXISTS (SELECT 1 FROM schedule_done d WHERE d.block_id = b.id AND d.day = ?) AS doneToday
+         FROM schedule_blocks b ORDER BY b.weekday, b.start, b.id`,
+    )
+    .all(today) as { doneToday: number }[];
+  const board = dashboard();
+  const learnDue = db
+    .prepare("SELECT COUNT(*) AS n FROM learn_cards WHERE due_on != '' AND due_on <= ?")
+    .get(today) as { n: number };
+  return {
+    today,
+    weekday,
+    blocks: blocks.map((block) => ({ ...block, doneToday: Boolean(block.doneToday) })),
+    hints: { followUpsDue: board.followUps.length, draftsToSend: board.draftsToSend, cardsDue: learnDue.n },
+  };
+}
+
 // Topics in study scope: skills marked I know / Learning, plus the interview topics.
 function learnScopeSql() {
   return `(lower(c.topic) IN (SELECT lower(name) FROM skills WHERE status IN ('know', 'learning'))
@@ -1347,6 +1372,57 @@ async function handleApi(req: IncomingMessage, res: ServerResponse, path: string
       throw new HttpError(405, "Method not allowed");
     }
     send(res, method === "POST" ? 201 : 200, listLibrary());
+    return true;
+  }
+
+  // Weekly routine: blocks per weekday, checked off per calendar day.
+  if (resource === "schedule") {
+    const body = method === "POST" || method === "PATCH" ? await readJson(req) : {};
+    const fields = () => ({
+      weekday: typeof body.weekday === "number" && body.weekday >= 0 && body.weekday <= 6 ? Math.trunc(body.weekday) : undefined,
+      start: text(body, "start"),
+      minutes: typeof body.minutes === "number" && body.minutes > 0 ? Math.trunc(body.minutes) : undefined,
+      kind: oneOf(text(body, "kind"), SCHEDULE_KINDS, "kind"),
+      title: text(body, "title"),
+      href: text(body, "href"),
+    });
+    if (method === "POST" && id === undefined) {
+      const row = fields();
+      db.prepare("INSERT INTO schedule_blocks (weekday, start, minutes, kind, title, href) VALUES (?, ?, ?, ?, ?, ?)").run(
+        row.weekday ?? 1,
+        row.start || "09:00",
+        row.minutes ?? 30,
+        row.kind ?? "other",
+        text(body, "title", true)!,
+        row.href ?? "",
+      );
+    } else if (method === "PATCH" && id !== undefined) {
+      update("schedule_blocks", id, fields());
+    } else if (method === "DELETE" && id !== undefined) {
+      db.prepare("DELETE FROM schedule_blocks WHERE id = ?").run(id);
+    } else if (method !== "GET" || id !== undefined) {
+      throw new HttpError(405, "Method not allowed");
+    }
+    send(res, method === "POST" ? 201 : 200, listSchedule());
+    return true;
+  }
+
+  // PUT { day, done } checks a block off (or back on) for one calendar day.
+  if (resource === "schedule-done" && method === "PUT" && id !== undefined) {
+    const body = await readJson(req);
+    const day = text(body, "day") || localDay();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) {
+      throw new HttpError(400, "day must be YYYY-MM-DD");
+    }
+    if (!db.prepare("SELECT 1 FROM schedule_blocks WHERE id = ?").get(id)) {
+      throw new HttpError(404, "Not found");
+    }
+    if (body.done === false) {
+      db.prepare("DELETE FROM schedule_done WHERE block_id = ? AND day = ?").run(id, day);
+    } else {
+      db.prepare("INSERT OR IGNORE INTO schedule_done (block_id, day) VALUES (?, ?)").run(id, day);
+    }
+    send(res, 200, listSchedule());
     return true;
   }
 

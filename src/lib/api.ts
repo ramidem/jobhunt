@@ -382,3 +382,23 @@ export type Improvement = {
 };
 
 export type Improvements = { refreshedOn: string | null; open: Improvement[]; closed: Improvement[] };
+
+export type ScheduleKind = "scan" | "apply" | "outreach" | "learn" | "practice" | "review" | "plan" | "other";
+
+export type ScheduleBlock = {
+  id: number;
+  weekday: number;
+  start: string;
+  minutes: number;
+  kind: ScheduleKind;
+  title: string;
+  href: string;
+  doneToday: boolean;
+};
+
+export type Schedule = {
+  today: string;
+  weekday: number;
+  blocks: ScheduleBlock[];
+  hints: { followUpsDue: number; draftsToSend: number; cardsDue: number };
+};
