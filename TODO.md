@@ -12,8 +12,6 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 
 - [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
   - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). One at a time, top to bottom; the first unchecked line is the current one:
-    - [ ] 1a.3 Automated checks (hooks, unit tests and CI are done). Remaining, for you:
-      - [ ] 1a.3.6 You: in GitHub, add branch protection on `develop` and `main` requiring the `build` and `database` checks to pass before merge. Open pull requests early (as drafts) so every push to a feature branch runs CI.
     - [ ] 1a.4 Cookie-based session with `@supabase/ssr` and a `proxy.ts` redirect for signed-out visitors (removes the blank flash from `AuthGate`); verify the user on the server with `getUser()`, never `getSession()`.
     - [ ] 1a.5 Server Components by default, `'use client'` only on small interactive leaves (settings becomes a server page with two client forms); fetch where data is used, `Promise.all` for independent calls, `<Suspense>` for slow parts.
     - [ ] 1a.6 Mutations as Server Actions that check the user and validate input with `zod`; route handlers only for webhooks and outside callers.
