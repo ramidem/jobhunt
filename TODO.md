@@ -12,7 +12,10 @@ Done: email/password sign-in, `AuthGate`, token check on `/api/*`, fail-closed c
 
 ### Current
 
-- [ ] 1. Postgres schema in Supabase as SQL migrations: `profiles` (unique username, reserved names, format rule, trigger on sign-up), core workspace tables with `user_id`, RLS policies, and a test that user B cannot read or write user A's rows.
+- [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
+  - [ ] 1a. Foundation: `supabase/` setup, `profiles`, reserved usernames, sign-up trigger, `username_available()`, pgTAP tests, RLS coverage guard, CI job.
+  - [ ] 1b. Job tracking core: `companies`, `contacts`, `jobs`, `job_skills`, `skills`, `applications`, `contact_log`, `job_contacts` with `user_id`, composite keys, RLS, and the user A / user B isolation test.
+  - Remaining tables are added with item 5, in the pull request that unparks the page using them.
 
 ### Next (in order)
 
