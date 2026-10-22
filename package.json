@@ -13,7 +13,9 @@
     "db:start": "supabase start -x studio,imgproxy,edge-runtime,logflare,vector,mailpit,realtime,storage-api,postgres-meta,supavisor",
     "db:test": "supabase test db",
     "db:stop": "supabase stop",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.0",
@@ -42,7 +44,8 @@
     "lint-staged": "^17.6.0",
     "supabase": "^2.121.0",
     "tailwindcss": "^4.3.3",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^5.0.5"
   },
   "overrides": {
     "postcss": "8.5.16"
