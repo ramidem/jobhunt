@@ -8,14 +8,11 @@ MVP shipped: sidebar workspace with `/resume` (paste a job description, get a ke
 
 Decisions made: multi-user, open email/password sign-up (Google later), Supabase auth + Postgres with RLS, browser calls Supabase directly for CRUD, Cloud Run only for server-only work, Next.js on Vercel without static export, public resume at `/<username>/resume`, domain later.
 
-Done: email/password sign-in, `AuthGate`, token check on `/api/*`, fail-closed config, workspace pages parked in `src/disabled/`, gitflow branches and CI.
-
 ### Current
 
 - [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
-  - [ ] 1a. Foundation: `supabase/` setup, `profiles`, reserved usernames, sign-up trigger, `username_available()`, pgTAP tests, RLS coverage guard, CI job. Applied to the hosted project 2026-10-22. Found by walking through "sign in, then see settings":
-    - [x] Signed-in users could not read their own profile (`where user_id = auth.uid()` needs select on `user_id`). Fixed in `20261022010000_profiles_select_own_user_id.sql` with a test; not yet pushed to the hosted project.
-    - [ ] The existing auth user has no profile row (the trigger only runs on new sign-ups). Decided: insert it by hand once, with a username you pick; no `claim_username()`. New sign-ups get their profile automatically from the trigger.
+  - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). Remaining:
+    - [ ] Run CI: open a pull request from `feature/auth-workspace-plan` into `develop` and confirm the `database` job (`supabase start` + `supabase test db`) and the build job pass on GitHub.
   - [ ] 1b. Job tracking core: `companies`, `contacts`, `jobs`, `job_skills`, `skills`, `applications`, `contact_log`, `job_contacts` with `user_id`, composite keys, RLS, and the user A / user B isolation test.
   - Remaining tables are added with item 5, in the pull request that unparks the page using them.
 
@@ -50,7 +47,6 @@ Done: email/password sign-in, `AuthGate`, token check on `/api/*`, fail-closed c
 ## Resume format (from transcript/01.md, a recruiter's review rules)
 
 - [ ] Bullet linter: 3 to 6 keywords per bullet, 3 to 6 bullets per role (about 3 under 3 years, 4 to 5 over 4 years), no duplicate keyword within a bullet, flag numbers, slashes, "learned", and unexplained jargon.
-- [x] Soft skills for the public resume confirmed and added 2026-10-20 (leading, standups, collaboration, feedback, mentoring and code review); see `projects/confirmed-claims.md`. Original note: soft skills are inferred for a senior engineer, except daily standups (confirmed by Med). Review: partnering with stakeholders (Alignly), setting priorities and explaining choices to non-technical teams (FCCD), mentoring and code review (MLhuillier), guiding developers (Coaxis), responding to review feedback (MyPetCare). HTML and CSS, REST APIs and the CI/CD flow are now confirmed (see `projects/confirmed-claims.md`).
 - [ ] Earlier: confirm claims that were written to match the format: HTML and CSS (dropped from the resume when bullets were sorted by date; add back to a bullet only if confirmed), "AI-augmented" lead wording, Lesson Planner "Word documents" wording.
 - [ ] Per-role keyword templates (full stack, backend, Python, etc.) in the tailor, with the stack and cloud in the first bullet.
 - [ ] Visa or work-authorization line for the target country; never write "open to relocation".
@@ -58,7 +54,6 @@ Done: email/password sign-in, `AuthGate`, token check on `/api/*`, fail-closed c
 
 ## Applications
 
-- [x] Sync storage: superseded by the Supabase Postgres migration (auth list, items 1 and 5).
 - [ ] Kanban view, follow-up reminders, interview notes, contacts, salary.
 - [ ] Import/export (CSV/JSON).
 

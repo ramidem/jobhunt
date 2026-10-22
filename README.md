@@ -102,15 +102,38 @@ Not set up. When it is, the public site is a static export, so Vercel (or any st
 
 ## Database (Supabase)
 
-Schema and Row Level Security live in `supabase/migrations/` as plain SQL. Never edit a shipped migration; add a new one. Tests are pgTAP files in `supabase/tests/database/`.
+Schema, Row Level Security and database tests live in `supabase/`:
+
+- `supabase/migrations/`: plain SQL, applied in filename order (`<timestamp>_<name>.sql`).
+- `supabase/tests/database/`: pgTAP tests. `02_rls_coverage.test.sql` fails if a public table has no RLS or no policy.
+
+Commands (need Docker; the Supabase CLI is a dev dependency):
 
 ```bash
-npm run db:start   # local Supabase stack (needs Docker)
+npm run db:start   # local stack
 npm run db:test    # run the pgTAP tests
 npm run db:stop
 ```
 
-One-time dashboard settings on the hosted project (Authentication): turn on "Allow new users to sign up" and "Confirm email".
+### Making a database change
+
+1. Create a migration: `npx supabase migration new <name>`, then write the SQL. Never edit a migration that has shipped; add a new one.
+2. Every new table in `public` needs `alter table ... enable row level security`, policies, and explicit grants: Supabase can give `anon` and `authenticated` access to new public tables by default, so `revoke all` first and grant only what is needed, as the profiles migration does. Owned tables get a `user_id` column and policies on `(select auth.uid())`.
+3. Add or update a test in `supabase/tests/database/`.
+4. Apply it locally and test: `npx supabase db reset` (a stack started from a backup does not apply new migrations), then `npm run db:test`.
+5. Open a pull request into `develop`; CI runs the `database` job.
+6. After it is merged, push to the hosted project:
+   ```bash
+   npx supabase db push --dry-run   # check the list of migrations
+   npx supabase db push
+   npx supabase migration list      # local and remote versions should match
+   ```
+
+### Hosted project setup (once)
+
+- Dashboard, Authentication: allow new sign-ups and require email confirmation.
+- `npx supabase login`, then `npx supabase link --project-ref <ref>` (the ref is the first part of the project URL).
+- One-off data fixes can run with `npx supabase db query --linked "<sql>"`. Prefer a migration for anything that should be repeatable.
 
 ## Branching (gitflow)
 
