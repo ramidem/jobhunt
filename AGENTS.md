@@ -141,6 +141,10 @@ Before marking the project record done:
 - Run `npm run build`
 - Commit the project files with a conventional commit, usually `docs: add <project> project record`, `docs: synthesize <project> resume entry`, or `docs: update tech stack index`
 
+## Public Resume Site
+
+The public resume is in a separate repo (`ramidem/ramidem.github.io`, folder `resume/`). Before editing it, read `docs/public-resume.md` for the owner's rules, and `projects/confirmed-claims.md` for facts the owner has confirmed. Show a draft first, regenerate the PDF, keep it to one page, and push only after approval.
+
 ## Tailored Resume Workflow
 
 Use this workflow when the user provides a job description, role type, company, or target resume direction.

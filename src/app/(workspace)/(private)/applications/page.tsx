@@ -88,7 +88,6 @@ export default function ApplicationsPage() {
     <PageBody>
       <PageHeader
         description="Saved on your Mac and shared across devices."
-        phase
         title="Applications"
       />
 

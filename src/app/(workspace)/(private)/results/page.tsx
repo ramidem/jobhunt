@@ -43,7 +43,6 @@ export default function ResultsPage() {
     <PageBody>
       <PageHeader
         description="What worked, and what to do this week."
-        phase
         title="Results"
       />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}

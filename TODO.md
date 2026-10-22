@@ -29,7 +29,7 @@ Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server
 ## Resume format (from transcript/01.md, a recruiter's review rules)
 
 - [ ] Bullet linter: 3 to 6 keywords per bullet, 3 to 6 bullets per role (about 3 under 3 years, 4 to 5 over 4 years), no duplicate keyword within a bullet, flag numbers, slashes, "learned", and unexplained jargon.
-- [ ] Soft skills are inferred for a senior engineer, except daily standups (confirmed by Med). Review: partnering with stakeholders (Alignly), setting priorities and explaining choices to non-technical teams (FCCD), mentoring and code review (MLhuillier), guiding developers (Coaxis), responding to review feedback (MyPetCare). Also confirm: HTML and CSS (FCCD), REST APIs (MLhuillier), CI/CD with Cloud Build (Coaxis).
+- [x] Soft skills for the public resume confirmed and added 2026-10-20 (leading, standups, collaboration, feedback, mentoring and code review); see `projects/confirmed-claims.md`. Original note: soft skills are inferred for a senior engineer, except daily standups (confirmed by Med). Review: partnering with stakeholders (Alignly), setting priorities and explaining choices to non-technical teams (FCCD), mentoring and code review (MLhuillier), guiding developers (Coaxis), responding to review feedback (MyPetCare). HTML and CSS, REST APIs and the CI/CD flow are now confirmed (see `projects/confirmed-claims.md`).
 - [ ] Earlier: confirm claims that were written to match the format: HTML and CSS (dropped from the resume when bullets were sorted by date; add back to a bullet only if confirmed), "AI-augmented" lead wording, Lesson Planner "Word documents" wording.
 - [ ] Per-role keyword templates (full stack, backend, Python, etc.) in the tailor, with the stack and cloud in the first bullet.
 - [ ] Visa or work-authorization line for the target country; never write "open to relocation".
@@ -58,3 +58,9 @@ Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server
 
 - [ ] Tests for `tailor.ts` (term extraction, ranking, case-sensitive terms like "Go").
 - [ ] Mobile pass on the workspace layout.
+
+## Study for the resume (priority)
+
+- [ ] Learn: review every claim on the public resume the way an interviewer would, with cards for the tech (JavaScript, TypeScript, React, Node.js, SQL, REST, microservices, Docker, CI/CD, Git, Google Cloud), the approaches (pipeline, service boundaries, access control), and behavioral questions about each project and soft skill. Seeded 2026-10-20; keep adding.
+- [ ] Learning path: "Resume deep dive" comes first. Rehearse each project's what, why and how out loud, and the pipeline flow from pull request to deploy.
+- [ ] Scheduled Learn task: new cards prefer resume topics until the resume deep dive is covered.

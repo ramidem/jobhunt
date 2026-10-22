@@ -5,6 +5,7 @@ import { DatabaseSync } from "node:sqlite";
 import { detectSkills } from "./skill-detect.ts";
 import { scripts } from "./learn-scripts.ts";
 import { parseMonthlyPhp } from "./pay.ts";
+import { interviewCards, interviewPaths } from "./learn-seed-interview.ts";
 import { seedCards } from "./learn-seed.ts";
 import { knownSkills, leads } from "./seed-data.ts";
 
@@ -398,6 +399,40 @@ const migrations: [string, string][] = [
     );
     `,
   ],
+  [
+    "014-schedule",
+    `
+    -- Weekly routine. weekday is 0 (Sunday) to 6 (Saturday); start is HH:MM. schedule_done holds
+    -- one row per block per calendar day it was checked off.
+    CREATE TABLE schedule_blocks (
+      id INTEGER PRIMARY KEY,
+      weekday INTEGER NOT NULL CHECK (weekday BETWEEN 0 AND 6),
+      start TEXT NOT NULL DEFAULT '09:00',
+      minutes INTEGER NOT NULL DEFAULT 30 CHECK (minutes > 0),
+      kind TEXT NOT NULL DEFAULT 'other' CHECK (kind IN ('scan', 'apply', 'outreach', 'learn', 'practice', 'review', 'plan', 'other')),
+      title TEXT NOT NULL,
+      href TEXT NOT NULL DEFAULT ''
+    );
+    CREATE TABLE schedule_done (
+      block_id INTEGER NOT NULL REFERENCES schedule_blocks(id) ON DELETE CASCADE,
+      day TEXT NOT NULL,
+      PRIMARY KEY (block_id, day)
+    );
+
+    WITH days(d) AS (VALUES (1), (2), (3), (4), (5))
+    INSERT INTO schedule_blocks (weekday, start, minutes, kind, title, href)
+    SELECT d, '09:00', 30, 'scan', 'Scan new job posts and save the good ones', '/applications' FROM days
+    UNION ALL SELECT d, '09:30', 45, 'apply', 'Tailor the resume and apply (3 to 5)', '/resume' FROM days
+    UNION ALL SELECT d, '10:15', 30, 'outreach', 'Outreach and follow-ups', '/outreach' FROM days
+    UNION ALL SELECT d, '14:00', 20, 'learn', 'Learn session (15 cards)', '/learn' FROM days;
+
+    INSERT INTO schedule_blocks (weekday, start, minutes, kind, title, href) VALUES
+      (2, '14:30', 60, 'practice', 'Practice: recruiter pitch and behavioral stories', '/learn'),
+      (4, '14:30', 60, 'practice', 'Practice: coding and system design', '/learn'),
+      (5, '14:30', 30, 'review', 'Weekly review: funnel and skill gaps', '/results'),
+      (0, '17:00', 30, 'plan', 'Plan the week: pick priority companies', '/dashboard');
+    `,
+  ],
 ];
 
 // Codes are derived from a stable key so the same posting always gets the same code, matching
@@ -565,6 +600,29 @@ function seed(db: DatabaseSync) {
       }
     }
     markSeeded(db, "seed.learn-cards");
+  }
+
+  if (!seeded(db, "seed.interview-stages-2026-10-21")) {
+    const insert = db.prepare(
+      `INSERT INTO learn_cards (topic, kind, prompt, answer, choices, correct, explanation, script, source)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'seed')`,
+    );
+    const exists = db.prepare("SELECT 1 FROM learn_cards WHERE lower(topic) = lower(?) AND lower(prompt) = lower(?)");
+    for (const card of interviewCards) {
+      if (exists.get(card.topic, card.prompt)) continue;
+      if (card.kind === "mcq") {
+        insert.run(card.topic, card.kind, card.prompt, "", JSON.stringify(card.choices), card.correct, card.explanation, "");
+      } else {
+        insert.run(card.topic, card.kind, card.prompt, card.answer, "[]", null, "", card.script ?? "");
+      }
+    }
+    const addPath = db.prepare("INSERT INTO learning_paths (title, goal, skill) VALUES (?, ?, ?)");
+    const addStep = db.prepare("INSERT INTO learning_steps (path_id, title, notes, url, position) VALUES (?, ?, ?, ?, ?)");
+    for (const path of interviewPaths) {
+      const { lastInsertRowid } = addPath.run(path.title, path.goal, path.skill);
+      path.steps.forEach((step, index) => addStep.run(Number(lastInsertRowid), step.title, step.notes, step.url, index + 1));
+    }
+    markSeeded(db, "seed.interview-stages-2026-10-21");
   }
 
   if (!seeded(db, "seed.learn-scripts")) {
