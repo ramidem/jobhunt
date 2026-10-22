@@ -2,17 +2,35 @@
 
 MVP shipped: sidebar workspace with `/resume` (paste a job description, get a keyword-ranked resume), `/applications`, `/qualifications`, `/skills`.
 
-## Priority: auth decisions (Supabase)
+## Now: auth, user and workspace
 
-Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server/index.ts`). Open decisions:
+**Rule: one item at a time.** Only the item under "Current" is in progress. Finish it (lint, typecheck and build pass, merged into `develop`) before starting the next. Everything below this section is parked until the list here is done. Plan and decisions: `docs/auth-workspace-plan.md`.
 
-- [ ] Scope: gate only the private workspace (current; `/` stays public) or also add visitor sign-in on the public resume.
-- [x] Allowed account: public sign-ups are disabled in Supabase and the user is created by hand. Add an email allowlist only if sign-ups are ever re-enabled.
-- [x] API protection: `/api/*` (except `/api/resume`) verifies the token with Supabase and fails closed when the env vars are missing (`ALLOW_NO_AUTH=1` opts out for the server; the gate only opens in `next dev`).
-- [ ] Static export: `data/qualifications.json` is still bundled into the page JS, so the gate hides the UI but not that data. Serve it through the API if it must stay private.
-- [ ] Add Google login later: enable the provider in Supabase, add `signInWithOAuth`, and allow redirect URLs for localhost, `127.0.0.1:4173`, and production.
+Decisions made: multi-user, open email/password sign-up (Google later), Supabase auth + Postgres with RLS, browser calls Supabase directly for CRUD, Cloud Run only for server-only work, Next.js on Vercel without static export, public resume at `/<username>/resume`, domain later.
+
+### Current
+
+- [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
+  - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). Remaining:
+    - [ ] Run CI: open a pull request from `feature/auth-workspace-plan` into `develop` and confirm the `database` job (`supabase start` + `supabase test db`) and the build job pass on GitHub.
+  - [ ] 1b. Job tracking core: `companies`, `contacts`, `jobs`, `job_skills`, `skills`, `applications`, `contact_log`, `job_contacts` with `user_id`, composite keys, RLS, and the user A / user B isolation test.
+  - Remaining tables are added with item 5, in the pull request that unparks the page using them.
+
+### Next (in order)
+
+- [ ] 2. Inventory `server/index.ts` routes: plain CRUD (becomes direct Supabase calls) vs server-only (goes to Cloud Run).
+- [ ] 3. Sign in and land on `/settings` (redirect after sign-in; page wrapped in `AuthGate`) showing username and email, with a change-password form (`auth.updateUser`; the password itself cannot be shown, Supabase stores only a hash). Sign-up with username, `AuthProvider` / `useAuth()`, sign-out, expired-session redirect, password reset, email confirmation.
+- [ ] 4. Drop `output: "export"`; `(workspace)` route group with one session check; `/` redirects signed-in users to `/dashboard`; deploy to Vercel.
+- [ ] 5. Rewrite `src/lib/api.ts` around `supabase-js`; unpark `dashboard`, then one page per pull request (`applications`, `companies`, the rest).
+- [ ] 6. Cloud Run API for the server-only routes (JWT verified via JWKS, Secret Manager, CORS limited to the app domain).
+- [ ] 7. Per-user public resume: `resumes` table with a published flag, import the current resume as the first user's data, `/<username>/resume` with PDF and JSON, `noindex` until published.
+- [ ] 8. Open sign-up hardening: rate limits, per-user quotas (library uploads), per-user seeding, delete-account flow; move `data/qualifications.json` out of the page bundle.
+- [ ] 9. Google login: enable the Supabase provider, add `signInWithOAuth`, allow redirect URLs for localhost and the Vercel URL.
+
+## Parked until the auth list above is done
 
 ## Before deploying
+
 - [ ] Decide whether `data/guide.md` stays out of the repo (it says "reference only; not published").
 
 ## Tailoring (`/resume`)
@@ -29,7 +47,6 @@ Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server
 ## Resume format (from transcript/01.md, a recruiter's review rules)
 
 - [ ] Bullet linter: 3 to 6 keywords per bullet, 3 to 6 bullets per role (about 3 under 3 years, 4 to 5 over 4 years), no duplicate keyword within a bullet, flag numbers, slashes, "learned", and unexplained jargon.
-- [x] Soft skills for the public resume confirmed and added 2026-10-20 (leading, standups, collaboration, feedback, mentoring and code review); see `projects/confirmed-claims.md`. Original note: soft skills are inferred for a senior engineer, except daily standups (confirmed by Med). Review: partnering with stakeholders (Alignly), setting priorities and explaining choices to non-technical teams (FCCD), mentoring and code review (MLhuillier), guiding developers (Coaxis), responding to review feedback (MyPetCare). HTML and CSS, REST APIs and the CI/CD flow are now confirmed (see `projects/confirmed-claims.md`).
 - [ ] Earlier: confirm claims that were written to match the format: HTML and CSS (dropped from the resume when bullets were sorted by date; add back to a bullet only if confirmed), "AI-augmented" lead wording, Lesson Planner "Word documents" wording.
 - [ ] Per-role keyword templates (full stack, backend, Python, etc.) in the tailor, with the stack and cloud in the first bullet.
 - [ ] Visa or work-authorization line for the target country; never write "open to relocation".
@@ -37,7 +54,6 @@ Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server
 
 ## Applications
 
-- [ ] Sync storage (Firestore is already a dependency) so data isn't tied to one browser.
 - [ ] Kanban view, follow-up reminders, interview notes, contacts, salary.
 - [ ] Import/export (CSV/JSON).
 
