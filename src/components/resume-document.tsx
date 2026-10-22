@@ -18,6 +18,23 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
         <p className="location-line">{resume.location}</p>
       </header>
 
+      <DatedSection title="Work History" items={resume.experience} />
+      <DatedSection title="Projects" items={resume.projects} />
+      <DatedSection title="Leadership & Activities" items={resume.leadership} />
+
+      {resume.skills.length > 0 ? (
+        <section className="resume-section" aria-labelledby="skills">
+          <h2 id="skills">Skills</h2>
+          <ul className="skills-list">
+            {resume.skills.map((group) => (
+              <li key={group.label}>
+                <strong>{group.label}:</strong> {group.items.join(", ")}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
       {resume.education.length > 0 ? (
         <section className="resume-section" aria-labelledby="education">
           <h2 id="education">Education</h2>
@@ -30,23 +47,6 @@ export function ResumeDocument({ resume }: { resume: Resume }) {
                   {item.institution}
                   {item.location ? `, ${item.location}` : ""}
                 </span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
-
-      <DatedSection title="Work History" items={resume.experience} />
-      <DatedSection title="Projects" items={resume.projects} />
-      <DatedSection title="Leadership & Activities" items={resume.leadership} />
-
-      {resume.skills.length > 0 ? (
-        <section className="resume-section" aria-labelledby="skills">
-          <h2 id="skills">Skills</h2>
-          <ul className="skills-list">
-            {resume.skills.map((group) => (
-              <li key={group.label}>
-                <strong>{group.label}:</strong> {group.items.join(", ")}
               </li>
             ))}
           </ul>

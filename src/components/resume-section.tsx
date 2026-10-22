@@ -11,7 +11,7 @@ function WorkItem({ item, nested = false }: { item: DatedItem; nested?: boolean 
     <article className={nested ? "entry nested-entry" : "entry"}>
       <div className="entry-line entry-title">
         <p>
-          {item.role} at {item.organization}
+          {nested ? item.organization : `${item.role} at ${item.organization}`}
           {item.location && !nested ? `, ${item.location}` : ""}
         </p>
         <time>{formatDates(item.start, item.end)}</time>
