@@ -2,17 +2,33 @@
 
 MVP shipped: sidebar workspace with `/resume` (paste a job description, get a keyword-ranked resume), `/applications`, `/qualifications`, `/skills`.
 
-## Priority: auth decisions (Supabase)
+## Now: auth, user and workspace
 
-Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server/index.ts`). Open decisions:
+**Rule: one item at a time.** Only the item under "Current" is in progress. Finish it (lint, typecheck and build pass, merged into `develop`) before starting the next. Everything below this section is parked until the list here is done. Plan and decisions: `docs/auth-workspace-plan.md`.
 
-- [ ] Scope: gate only the private workspace (current; `/` stays public) or also add visitor sign-in on the public resume.
-- [x] Allowed account: public sign-ups are disabled in Supabase and the user is created by hand. Add an email allowlist only if sign-ups are ever re-enabled.
-- [x] API protection: `/api/*` (except `/api/resume`) verifies the token with Supabase and fails closed when the env vars are missing (`ALLOW_NO_AUTH=1` opts out for the server; the gate only opens in `next dev`).
-- [ ] Static export: `data/qualifications.json` is still bundled into the page JS, so the gate hides the UI but not that data. Serve it through the API if it must stay private.
-- [ ] Add Google login later: enable the provider in Supabase, add `signInWithOAuth`, and allow redirect URLs for localhost, `127.0.0.1:4173`, and production.
+Decisions made: multi-user, open email/password sign-up (Google later), Supabase auth + Postgres with RLS, browser calls Supabase directly for CRUD, Cloud Run only for server-only work, Next.js on Vercel without static export, public resume at `/<username>/resume`, domain later.
+
+Done: email/password sign-in, `AuthGate`, token check on `/api/*`, fail-closed config, workspace pages parked in `src/disabled/`, gitflow branches and CI.
+
+### Current
+
+- [ ] 1. Postgres schema in Supabase as SQL migrations: `profiles` (unique username, reserved names, format rule, trigger on sign-up), core workspace tables with `user_id`, RLS policies, and a test that user B cannot read or write user A's rows.
+
+### Next (in order)
+
+- [ ] 2. Inventory `server/index.ts` routes: plain CRUD (becomes direct Supabase calls) vs server-only (goes to Cloud Run).
+- [ ] 3. Sign-up with username, `AuthProvider` / `useAuth()`, sign-out, expired-session redirect, password reset, email confirmation.
+- [ ] 4. Drop `output: "export"`; `(workspace)` route group with one session check; `/` redirects signed-in users to `/dashboard`; deploy to Vercel.
+- [ ] 5. Rewrite `src/lib/api.ts` around `supabase-js`; unpark `dashboard`, then one page per pull request (`applications`, `companies`, the rest).
+- [ ] 6. Cloud Run API for the server-only routes (JWT verified via JWKS, Secret Manager, CORS limited to the app domain).
+- [ ] 7. Per-user public resume: `resumes` table with a published flag, import the current resume as the first user's data, `/<username>/resume` with PDF and JSON, `noindex` until published.
+- [ ] 8. Open sign-up hardening: rate limits, per-user quotas (library uploads), per-user seeding, delete-account flow; move `data/qualifications.json` out of the page bundle.
+- [ ] 9. Google login: enable the Supabase provider, add `signInWithOAuth`, allow redirect URLs for localhost and the Vercel URL.
+
+## Parked until the auth list above is done
 
 ## Before deploying
+
 - [ ] Decide whether `data/guide.md` stays out of the repo (it says "reference only; not published").
 
 ## Tailoring (`/resume`)
@@ -37,7 +53,7 @@ Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server
 
 ## Applications
 
-- [ ] Sync storage (Firestore is already a dependency) so data isn't tied to one browser.
+- [x] Sync storage: superseded by the Supabase Postgres migration (auth list, items 1 and 5).
 - [ ] Kanban view, follow-up reminders, interview notes, contacts, salary.
 - [ ] Import/export (CSV/JSON).
 
