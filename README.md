@@ -108,6 +108,13 @@ UI code never talks to Supabase or `fetch` directly.
 - `src/hooks/`: React state wrapped around a service (`useProfile`).
 - `src/components/` and `src/app/`: render and wire hooks; no data access.
 
+## Tests and git hooks
+
+- `npm test` runs the unit tests (Vitest). Service tests sit next to the services (`src/services/*.test.ts`) and use a fake Supabase client from `src/services/testing/fake-supabase.ts`. `npm run test:watch` re-runs on change.
+- `npm run db:test` runs the database tests (see Database below).
+- Husky hooks (installed by `npm install`): `pre-commit` lints staged files; `pre-push` runs lint, typecheck and `npm test`. `--no-verify` skips them, so CI is the real gate.
+- CI (`.github/workflows/node.js.yml`) runs lint, typecheck, `npm test` and build, plus the database tests, on every pull request and on pushes to `main` and `develop`. Open pull requests early (as drafts) so every push to a feature branch runs CI.
+
 ## Database (Supabase)
 
 Schema, Row Level Security and database tests live in `supabase/`:

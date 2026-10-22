@@ -168,6 +168,7 @@ Apply these when writing or reviewing app code (`src/`). The auth and workspace 
 - One small service per area, built with `createXService(client)` so the client is injected (tests pass a fake). Every method returns `Result<T>` from `src/services/result.ts`.
 - `src/services/container.ts` is the one place services meet the real Supabase client (`authService()`, `profileService()`, ...). Hooks call those; do not call `getSupabase()` anywhere else.
 - Put shared rules in one place (for example `src/lib/username.ts`); do not copy logic between components. The database stays the authority for validation; client checks only give fast feedback.
+- Every new service ships with tests next to it (`*.test.ts`) using `createFakeSupabase()`; run `npm test` before pushing (the pre-push hook does).
 - Add a new feature by adding a service and a hook, not by editing an existing one to do two jobs.
 
 ### React
