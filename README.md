@@ -60,3 +60,12 @@ Project evidence and resume synthesis live under `projects/`.
 - `projects/tech-stack.md`: technology count and review-priority index
 
 The public app shows the most notable work. Role-specific resumes should be generated from the Markdown project records when applying to a specific job.
+
+## Branching (gitflow)
+
+- `main`: production releases only.
+- `develop`: integration branch; feature branches start here and merge back by pull request.
+- `feature/<name>`: branch from `develop`.
+- `release/<version>` and `hotfix/<name>`: branch from `develop` and `main` respectively; merge into both `main` and `develop`.
+
+CI (lint, typecheck, build) runs on pushes and pull requests to `main` and `develop`.
