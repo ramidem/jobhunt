@@ -11,8 +11,17 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 ### Current
 
 - [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
-  - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). Remaining:
-    - [ ] Run CI: open a pull request from `feature/auth-workspace-plan` into `develop` and confirm the `database` job (`supabase start` + `supabase test db`) and the build job pass on GitHub.
+  - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). One at a time, top to bottom; the first unchecked line is the current one:
+    - [ ] 1a.1 Verify the settings page in a browser (sign in as `ramidem`, land on `/settings`, see username and email, change password), then commit.
+    - [ ] 1a.2 Move the auth components onto a service and hook: `AuthGate`, `SignIn` and `SignOutButton` stop calling Supabase directly (`src/services/auth.ts`, `src/hooks/use-session.ts`).
+    - [ ] 1a.3 Add a JS test runner (Vitest) and unit tests for the services using a fake client (`profile`, `account`, `auth`).
+    - [ ] 1a.4 Cookie-based session with `@supabase/ssr` and a `proxy.ts` redirect for signed-out visitors (removes the blank flash from `AuthGate`); verify the user on the server with `getUser()`, never `getSession()`.
+    - [ ] 1a.5 Server Components by default, `'use client'` only on small interactive leaves (settings becomes a server page with two client forms); fetch where data is used, `Promise.all` for independent calls, `<Suspense>` for slow parts.
+    - [ ] 1a.6 Mutations as Server Actions that check the user and validate input with `zod`; route handlers only for webhooks and outside callers.
+    - [ ] 1a.7 Add `loading.tsx`, `error.tsx` and `not-found.tsx` per segment; `import "server-only"` in server-only modules; secrets never in `NEXT_PUBLIC_*`; set security headers (CSP, frame, referrer) in the Next config or `vercel.ts`.
+    - [ ] 1a.8 Upgrade to Next 16 (`middleware` becomes `proxy`), after 1a.4 so middleware is not written twice.
+    - [ ] 1a.9 `/<username>/resume` conventions, applied when that page is built in item 7: `await params`, `notFound()` for unknown users, cache with `revalidateTag` on publish, `generateMetadata` for titles and Open Graph.
+    - Rule for everything above and after: components never call Supabase or `fetch` directly. Layers are `src/services/*` (built with `createXService(client)`, returning `Result<T>`), `src/hooks/*`, then components. `src/lib/api.ts` is rewritten the same way in item 5.
   - [ ] 1b. Job tracking core: `companies`, `contacts`, `jobs`, `job_skills`, `skills`, `applications`, `contact_log`, `job_contacts` with `user_id`, composite keys, RLS, and the user A / user B isolation test.
   - Remaining tables are added with item 5, in the pull request that unparks the page using them.
 

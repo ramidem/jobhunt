@@ -100,6 +100,14 @@ Not set up. When it is, the public site is a static export, so Vercel (or any st
 - set the environment variables above in the host;
 - re-check that no personal data, database files or backups are in the repository.
 
+## Code structure
+
+UI code never talks to Supabase or `fetch` directly.
+
+- `src/services/`: one small service per area (`createProfileService(client)`). The client is passed in, so a test can pass a fake. Every method returns `Result<T>` (`ok` or `fail`).
+- `src/hooks/`: React state wrapped around a service (`useProfile`).
+- `src/components/` and `src/app/`: render and wire hooks; no data access.
+
 ## Database (Supabase)
 
 Schema, Row Level Security and database tests live in `supabase/`:
