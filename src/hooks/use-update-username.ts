@@ -1,10 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
-import { getSupabase } from "@/lib/supabase";
-import { createProfileService } from "@/services/profile";
+import { profileService } from "@/services/container";
 
 export function useUpdateUsername() {
-  const service = useMemo(() => createProfileService(getSupabase()), []);
-  return (userId: string, username: string) => service.updateUsername(userId, username);
+  return (userId: string, username: string) => profileService().updateUsername(userId, username);
 }

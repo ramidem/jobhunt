@@ -1,51 +1,22 @@
 "use client";
 
-import type { Session } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState, type FormEvent } from "react";
+import type { FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
-
-const SessionContext = createContext<Session | null>(null);
-
-export function useSession() {
-  return useContext(SessionContext);
-}
+import { useAuthSession } from "@/hooks/use-auth-session";
+import { useRedirectOnSignOut } from "@/hooks/use-redirect-on-sign-out";
+import { SessionContext } from "@/hooks/use-session";
+import { useSignIn } from "@/hooks/use-sign-in";
+import { useSignOut } from "@/hooks/use-sign-out";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 // Gates the private workspace behind a Supabase email and password session.
 // Without Supabase env vars it only renders the children in development; a production build fails closed.
 export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) {
   const configured = isSupabaseConfigured();
-  const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
-  const [ready, setReady] = useState(!configured);
-
-  useEffect(() => {
-    if (!configured) {
-      return;
-    }
-    let stale = false;
-    const supabase = getSupabase();
-    supabase.auth.getSession().then(({ data }) => {
-      if (!stale) {
-        setSession(data.session);
-        setReady(true);
-      }
-    });
-    const { data } = supabase.auth.onAuthStateChange((event, next) => {
-      setSession(next);
-      // Signing out (or an expired session) sends you to the sign-in page at /.
-      if (event === "SIGNED_OUT" && window.location.pathname !== "/") {
-        router.replace("/");
-      }
-    });
-    return () => {
-      stale = true;
-      data.subscription.unsubscribe();
-    };
-  }, [configured, router]);
+  const { session, ready } = useAuthSession(configured);
+  useRedirectOnSignOut(session);
 
   if (!configured) {
     return process.env.NODE_ENV === "production" ? <NotConfigured /> : children;
@@ -67,22 +38,12 @@ function NotConfigured() {
 }
 
 function SignIn() {
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
+  const { signIn, busy, error } = useSignIn();
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    setBusy(true);
-    setError(null);
-    const { error: failure } = await getSupabase().auth.signInWithPassword({
-      email: String(form.get("email")),
-      password: String(form.get("password")),
-    });
-    if (failure) {
-      setError(failure.message);
-    }
-    setBusy(false);
+    signIn(String(form.get("email")), String(form.get("password")));
   }
 
   return (
@@ -111,11 +72,12 @@ function SignIn() {
 }
 
 export function SignOutButton({ className }: Readonly<{ className?: string }>) {
+  const signOut = useSignOut();
   if (!isSupabaseConfigured()) {
     return null;
   }
   return (
-    <button className={className} onClick={() => getSupabase().auth.signOut()} type="button">
+    <button className={className} onClick={signOut} type="button">
       Sign out
     </button>
   );
