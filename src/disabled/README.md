@@ -5,3 +5,6 @@ Pages parked here are not routed by Next.js. They were moved out of
 
 To re-enable one, move `src/disabled/pages/<name>/` back to
 `src/app/(workspace)/(private)/<name>/`.
+
+Also parked: the public resume home page (`pages/home-page.tsx`, originally `src/app/(workspace)/page.tsx`)
+and the workspace and private layouts (`layouts/`). `/` is now the sign-in page.
