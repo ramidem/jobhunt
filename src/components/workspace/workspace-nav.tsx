@@ -24,6 +24,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { SignOutButton } from "@/components/workspace/auth-gate";
 import { cn } from "@/lib/utils";
 
 type NavLink = { href: string; label: string; short: string; icon: LucideIcon; tab?: boolean };
@@ -114,6 +115,7 @@ export function WorkspaceSidebar() {
           ))}
         </div>
       ))}
+      <SignOutButton className="mt-auto rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" />
     </nav>
   );
 }
@@ -186,6 +188,7 @@ export function WorkspaceTabBar() {
                     </section>
                   );
                 })}
+                <SignOutButton className="w-full rounded-lg px-3 py-3 text-left text-base text-muted-foreground hover:bg-muted" />
               </div>
             </SheetContent>
           </Sheet>

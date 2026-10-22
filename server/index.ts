@@ -28,6 +28,26 @@ class HttpError extends Error {
   }
 }
 
+// Validates the Supabase access token the workspace sends. Without Supabase config it fails
+// closed; set ALLOW_NO_AUTH=1 to run the API unauthenticated on purpose.
+async function requireUser(req: IncomingMessage) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) {
+    if (process.env.ALLOW_NO_AUTH === "1") {
+      return;
+    }
+    throw new HttpError(503, "Auth is not configured: set the Supabase env vars or ALLOW_NO_AUTH=1");
+  }
+  const token = req.headers.authorization?.replace(/^Bearer /, "");
+  const response = token
+    ? await fetch(`${url}/auth/v1/user`, { headers: { apikey: key, Authorization: `Bearer ${token}` } })
+    : null;
+  if (!response?.ok) {
+    throw new HttpError(401, "Sign in required");
+  }
+}
+
 function send(res: ServerResponse, status: number, body: unknown) {
   res.writeHead(status, { "Content-Type": "application/json", "Cache-Control": "no-store" });
   res.end(body === undefined ? "" : JSON.stringify(body));
@@ -1809,6 +1829,9 @@ function serveStatic(res: ServerResponse, path: string) {
 createServer(async (req, res) => {
   const path = new URL(req.url ?? "/", "http://localhost").pathname;
   try {
+    if (path.startsWith("/api/") && path !== "/api/resume") {
+      await requireUser(req);
+    }
     if (path.startsWith("/api/") && (await handleApi(req, res, path))) {
       return;
     }

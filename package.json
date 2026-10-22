@@ -8,11 +8,12 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "serve": "node --no-warnings server/index.ts",
-    "start:local": "next build && node --no-warnings server/index.ts"
+    "serve": "node --no-warnings --env-file-if-exists=.env.local server/index.ts",
+    "start:local": "next build && node --no-warnings --env-file-if-exists=.env.local server/index.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.3.0",
+    "@supabase/supabase-js": "^2.118.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.0",
     "firebase": "^11.10.0",

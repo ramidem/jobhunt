@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AuthGate } from "@/components/workspace/auth-gate";
 
 export const metadata: Metadata = {
   title: "Job hunt workspace",
@@ -8,5 +9,5 @@ export const metadata: Metadata = {
 export default function PrivateLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return children;
+  return <AuthGate>{children}</AuthGate>;
 }
