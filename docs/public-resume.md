@@ -21,3 +21,14 @@ Symph (Fullstack Software Engineer) with a plain summary line, then four project
 
 - A GitHub Pages deploy can fail with a 502. After each push, check `gh run list` and re-run a failed deploy.
 - The page uses a smaller-screen style when printed, so print margins are set explicitly in `@media print`.
+
+## Locked format (approved 2026-10-22)
+
+Do not change the structure below when editing the text. Only wording may change; any change to layout, order or sections needs the owner's approval first. It must stay on one A4 page, for the site, its PDF and the app's PDF.
+
+- Header: name, then one line `location • email • github.com/ramidem • linkedin.com/in/med-aduh` (bullet separators, no phone on the public version; the app version leads with the phone number).
+- `Work History` heading (bold), then Symph (Remote) with the role line "Fullstack Software Engineer" and dates `Nov 2020 – Present`, and one overview bullet.
+- Four project sections, flush left, each with the project name on the left and dates on the right (no "Project:" prefix, no role line, no label): Financial Services Platform (`Jan 2021 – Nov 2025`, four bullets), Content Management Platform (`Jan 2025 – May 2025`, two), HR and Payroll Platform (`Feb 2026 – Jun 2026`, two, the second about role-based access) and Distributor Operations Platform (`May 2026 – Jun 2026`, one).
+- `Education` heading (bold), then the school, the degree on the next line and "Graduated" (no year).
+- No Skills section, no summary or headline under the name, no divider lines. Only the section headings are bold.
+- Bullets: plain "what... so..." sentences with tools in parentheses and the keywords from the owner's list (see above).
