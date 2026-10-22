@@ -18,7 +18,7 @@ To run everything together, as the workspace is meant to be used:
 
 ```bash
 npm run build        # static export into out/
-npm run serve        # serves out/ and the /api on http://127.0.0.1:4173 (Node 22.18+)
+npm run serve        # serves out/ and the /api on http://127.0.0.1:4173 (Node 24+)
 ```
 
 `npm run serve` creates `data/tracker.db` on first start and seeds it. Nothing in `data/` except `qualifications.json` is committed.
