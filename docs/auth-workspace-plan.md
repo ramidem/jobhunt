@@ -1,6 +1,6 @@
 # Auth, user and workspace plan
 
-Status: draft v2, decisions recorded. Branch: `feature/auth-workspace-plan`.
+Status: draft v3, architecture decided. Branch: `feature/auth-workspace-plan`.
 
 ## Decisions
 
@@ -8,6 +8,9 @@ Status: draft v2, decisions recorded. Branch: `feature/auth-workspace-plan`.
 - **Open sign-up.** Anyone can sign in or sign up with email and password. Google login comes after the flow works.
 - **API on GCP.** Cloud Run, not Nx or NestJS (see below).
 - **Public resume at `/<username>/resume`.** Each user picks a unique username.
+- **Split workload.** The browser calls Supabase directly for CRUD under RLS. Cloud Run only serves what needs server code.
+- **Frontend on Vercel.** Next.js without static export.
+- **Domain later.** Use the Vercel and Cloud Run default URLs for now.
 
 ## Where things stand
 
@@ -39,10 +42,7 @@ Browser (Next.js, no static export)
                 in the browser (skill detection, enrichment, seeding, uploads)
 ```
 
-Two ways to split the work; pick one before phase 3:
-
-1. **Supabase-first (recommended).** The browser calls Supabase directly for CRUD, protected by RLS. Cloud Run only keeps the endpoints that need server code. Least code to write and keep.
-2. **API-first.** Everything goes through Cloud Run, which talks to Postgres with the user's id from the JWT. More code, one place for rules, but RLS is still worth keeping as a second lock.
+Split (decided): the browser calls Supabase directly for CRUD, protected by RLS. Cloud Run keeps only the endpoints that need server code, such as skill detection, company enrichment, seeding and file handling. Rules that must hold for every write live in RLS policies and database constraints, not in client code.
 
 ## Cloud Functions, Cloud Run, or Nx + NestJS?
 
@@ -56,8 +56,9 @@ Two ways to split the work; pick one before phase 3:
    - Create the Postgres schema in Supabase: `profiles` (user id, unique `username`, display name), plus the workspace tables from `server/db.ts` with a `user_id` column and RLS policies.
    - Reserved usernames (`api`, `dashboard`, `login`, `settings`, and every top-level route) and a format rule (lowercase letters, digits, hyphens).
    - Sign-up flow asks for a username; a database trigger creates the `profiles` row.
-2. **API on Cloud Run.**
-   - Port `server/db.ts` and `server/index.ts` from `node:sqlite` to Postgres. Migrations move to SQL files.
+2. **Cloud Run API for server-only work.**
+   - Port only the routes that need server code from `server/index.ts`; plain CRUD routes are replaced by direct Supabase calls from the browser (`src/lib/api.ts` is rewritten around `supabase-js`).
+   - Move `server/db.ts` migrations to SQL files in Supabase.
    - Verify the JWT locally with Supabase's JWKS (no network call per request) and pass `{ id, email }` into every handler.
    - Dockerfile, a Cloud Run service, secrets in Secret Manager, CORS limited to the app domain.
 3. **Session and workspace shell.**
@@ -77,9 +78,8 @@ Two ways to split the work; pick one before phase 3:
 
 ## Open questions
 
-- Supabase-first or API-first split (phase 2 scope)?
-- Where does the Next.js frontend run: Vercel, or Cloud Run too? Both support the dynamic `/<username>/resume` route.
-- Domain name, and do you want username-based subdomains later?
+- Which routes in `server/index.ts` are server-only and which are plain CRUD? (An inventory is the first step of phase 2.)
+- Domain name and username subdomains: later.
 - Are users allowed to keep their workspace private but still publish a resume? (The plan assumes yes.)
 - Which workspace features stay single-user only (for example the personal pay targets and the job-hunt playbook)?
 
