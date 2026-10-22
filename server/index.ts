@@ -28,12 +28,16 @@ class HttpError extends Error {
   }
 }
 
-// Validates the Supabase access token the workspace sends. Skipped when Supabase is not configured.
+// Validates the Supabase access token the workspace sends. Without Supabase config it fails
+// closed; set ALLOW_NO_AUTH=1 to run the API unauthenticated on purpose.
 async function requireUser(req: IncomingMessage) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
   if (!url || !key) {
-    return;
+    if (process.env.ALLOW_NO_AUTH === "1") {
+      return;
+    }
+    throw new HttpError(503, "Auth is not configured: set the Supabase env vars or ALLOW_NO_AUTH=1");
   }
   const token = req.headers.authorization?.replace(/^Bearer /, "");
   const response = token

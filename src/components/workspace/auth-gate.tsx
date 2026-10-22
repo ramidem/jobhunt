@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 
 // Gates the private workspace behind a Supabase email and password session.
-// Without Supabase env vars it renders the children, so local development still works.
+// Without Supabase env vars it only renders the children in development; a production build fails closed.
 export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) {
   const configured = isSupabaseConfigured();
   const [session, setSession] = useState<Session | null>(null);
@@ -27,10 +27,23 @@ export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) 
     return () => data.subscription.unsubscribe();
   }, [configured]);
 
-  if (!configured || session) {
+  if (!configured) {
+    return process.env.NODE_ENV === "production" ? <NotConfigured /> : children;
+  }
+  if (session) {
     return children;
   }
   return ready ? <SignIn /> : null;
+}
+
+function NotConfigured() {
+  return (
+    <div className="flex min-h-dvh items-center justify-center p-4">
+      <p className="max-w-sm text-sm text-muted-foreground" role="alert">
+        Auth is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, then rebuild.
+      </p>
+    </div>
+  );
 }
 
 function SignIn() {

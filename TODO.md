@@ -7,8 +7,8 @@ MVP shipped: sidebar workspace with `/resume` (paste a job description, get a ke
 Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server/index.ts`). Open decisions:
 
 - [ ] Scope: gate only the private workspace (current; `/` stays public) or also add visitor sign-in on the public resume.
-- [ ] Allowed account: disable public sign-ups in Supabase and create your user by hand, or add an email allowlist. Today any Supabase user can sign in.
-- [ ] API protection: `/api/*` (except `/api/resume`) verifies the token with Supabase, but the check is skipped when the env vars are missing (fail open). Decide whether to fail closed outside local dev.
+- [x] Allowed account: public sign-ups are disabled in Supabase and the user is created by hand. Add an email allowlist only if sign-ups are ever re-enabled.
+- [x] API protection: `/api/*` (except `/api/resume`) verifies the token with Supabase and fails closed when the env vars are missing (`ALLOW_NO_AUTH=1` opts out for the server; the gate only opens in `next dev`).
 - [ ] Static export: `data/qualifications.json` is still bundled into the page JS, so the gate hides the UI but not that data. Serve it through the API if it must stay private.
 - [ ] Add Google login later: enable the provider in Supabase, add `signInWithOAuth`, and allow redirect URLs for localhost, `127.0.0.1:4173`, and production.
 
