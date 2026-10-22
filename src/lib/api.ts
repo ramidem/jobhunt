@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 import type { ApplicationStatus, SkillStatus } from "@/lib/tracker";
 
 export type JobSkill = { name: string; status: SkillStatus };
@@ -167,9 +168,19 @@ export type Role = {
 export type Roles = { source: string; note: string; roles: Role[] };
 
 export async function api<T>(path: string, init?: { method: string; body?: unknown }): Promise<T> {
+  const headers: Record<string, string> = {};
+  if (init?.body !== undefined) {
+    headers["Content-Type"] = "application/json";
+  }
+  if (isSupabaseConfigured()) {
+    const { data: auth } = await getSupabase().auth.getSession();
+    if (auth.session) {
+      headers.Authorization = `Bearer ${auth.session.access_token}`;
+    }
+  }
   const response = await fetch(`/api/${path}`, {
     method: init?.method ?? "GET",
-    headers: init?.body === undefined ? undefined : { "Content-Type": "application/json" },
+    headers,
     body: init?.body === undefined ? undefined : JSON.stringify(init.body),
   });
   const data = await response.json().catch(() => null);

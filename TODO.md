@@ -2,9 +2,17 @@
 
 MVP shipped: sidebar workspace with `/resume` (paste a job description, get a keyword-ranked resume), `/applications`, `/qualifications`, `/skills`.
 
-## Before deploying
+## Priority: auth decisions (Supabase)
 
-- [ ] Protect the workspace routes (auth or a deploy-time flag). They are `noindex` and disallowed in `robots.ts`, but publicly reachable, and `data/qualifications.json` is bundled into the page.
+Email and password sign-in is wired (`AuthGate`, Bearer token checked in `server/index.ts`). Open decisions:
+
+- [ ] Scope: gate only the private workspace (current; `/` stays public) or also add visitor sign-in on the public resume.
+- [ ] Allowed account: disable public sign-ups in Supabase and create your user by hand, or add an email allowlist. Today any Supabase user can sign in.
+- [ ] API protection: `/api/*` (except `/api/resume`) verifies the token with Supabase, but the check is skipped when the env vars are missing (fail open). Decide whether to fail closed outside local dev.
+- [ ] Static export: `data/qualifications.json` is still bundled into the page JS, so the gate hides the UI but not that data. Serve it through the API if it must stay private.
+- [ ] Add Google login later: enable the provider in Supabase, add `signInWithOAuth`, and allow redirect URLs for localhost, `127.0.0.1:4173`, and production.
+
+## Before deploying
 - [ ] Decide whether `data/guide.md` stays out of the repo (it says "reference only; not published").
 
 ## Tailoring (`/resume`)
