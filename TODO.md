@@ -12,7 +12,13 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 
 - [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
   - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). One at a time, top to bottom; the first unchecked line is the current one:
-    - [ ] 1a.3 Add a JS test runner (Vitest) and unit tests for the services using a fake client (`profile`, `account`, `auth`).
+    - [ ] 1a.3 Automated checks: local hooks, unit tests, CI. One sub-step at a time:
+      - [ ] 1a.3.2 Vitest setup: `vitest.config.ts` with the `@` alias, `test` and `test:watch` scripts, and the fake Supabase client helper (`src/services/testing/fake-client.ts`).
+      - [ ] 1a.3.3 Service tests next to the services (`*.test.ts`): `result`, `profile`, `account` (a wrong current password must not call `updateUser`), `auth`.
+      - [ ] 1a.3.4 Run the tests everywhere: add `npm test` to the `pre-push` hook and to the `build` job in CI (after typecheck).
+      - [ ] 1a.3.5 Prove it: break a service on purpose and confirm the push is blocked locally and the pull request goes red; then revert.
+      - [ ] 1a.3.6 You: in GitHub, add branch protection on `develop` and `main` requiring the `build` and `database` checks to pass before merge. Open pull requests early (as drafts) so every push to a feature branch runs CI.
+      - [ ] 1a.3.7 Docs: README (`npm test` for services, `npm run db:test` for the database, what the hooks do) and `AGENTS.md` (every new service ships with tests).
     - [ ] 1a.4 Cookie-based session with `@supabase/ssr` and a `proxy.ts` redirect for signed-out visitors (removes the blank flash from `AuthGate`); verify the user on the server with `getUser()`, never `getSession()`.
     - [ ] 1a.5 Server Components by default, `'use client'` only on small interactive leaves (settings becomes a server page with two client forms); fetch where data is used, `Promise.all` for independent calls, `<Suspense>` for slow parts.
     - [ ] 1a.6 Mutations as Server Actions that check the user and validate input with `zod`; route handlers only for webhooks and outside callers.
