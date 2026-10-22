@@ -1,73 +1,88 @@
 # Auth, user and workspace plan
 
-Status: draft for review. Branch: `feature/auth-workspace-plan`.
+Status: draft v2, decisions recorded. Branch: `feature/auth-workspace-plan`.
+
+## Decisions
+
+- **Multi-user.** Each user gets their own workspace and public resume.
+- **Open sign-up.** Anyone can sign in or sign up with email and password. Google login comes after the flow works.
+- **API on GCP.** Cloud Run, not Nx or NestJS (see below).
+- **Public resume at `/<username>/resume`.** Each user picks a unique username.
 
 ## Where things stand
 
-- **Auth:** Supabase email and password. `AuthGate` (client) shows the sign-in form. `server/index.ts` checks the Bearer token against Supabase `/auth/v1/user` for every `/api/*` call except `/api/resume`. Sign-ups are off; the one user is created by hand.
-- **Data:** one SQLite file (`data/tracker.db`, local, gitignored) behind a Node HTTP server on `127.0.0.1:4173`. No table has a user column; the whole database is one person's job hunt.
-- **UI:** a static export (`output: "export"`). `/` is the sign-in page. The 14 workspace pages, the public resume and both layouts are parked in `src/disabled/`.
-- **Gap:** the verified user is thrown away. `requireUser` only returns ok or 401, so the API never knows who is calling, and nothing ties a row to a user.
+- **Auth:** Supabase email and password. `AuthGate` (client) and a Bearer token check in `server/index.ts`.
+- **Data:** one SQLite file behind a Node HTTP server. No table has a user column. The resume content is one person's file, `src/data/resume.ts`.
+- **UI:** a static export. `/` is the sign-in page. The workspace pages and the old public resume are parked in `src/disabled/`.
 
-## The decision that shapes everything
+## Why the current shape cannot just be hosted
 
-Is the workspace **single-user** (only you) or **multi-user** (others get their own workspace)?
+- **SQLite on GCP does not persist.** Cloud Run and Cloud Functions have an ephemeral disk. Multi-user needs a real database.
+- **A static export cannot serve `/<username>/resume`.** The usernames are not known at build time. The frontend must drop `output: "export"` (server-rendered or on-demand pages) or fetch the profile on the client.
+- **`ALLOWED_EMAILS` is no longer the lock.** With open sign-up, the lock is per-user data isolation.
 
-| | Single-user (recommended to start) | Multi-user |
-| --- | --- | --- |
-| Auth | Supabase login is the lock; one allowed account | Supabase users are tenants |
-| Data | Keep SQLite as is | Needs `user_id` on every table, or one database per user |
-| Hosting | Local server is fine | Needs a hosted API and database (Supabase Postgres fits) |
-| Cost | Small | Rewrites `server/db.ts` and every query |
-
-Recommendation: ship single-user first, but make `requireUser` return the user and store `user_id` from day one in new tables, so multi-user is a migration and not a rewrite.
-
-## Target shape
+## Architecture
 
 ```
-Browser (static export)
-  / .............. AuthGate: sign in, then the workspace shell
-  /(workspace)/*  pages, rendered only with a session
-        |  Bearer <supabase access token>
-        v
-API (server/index.ts)
-  requireUser(req) -> { id, email }   // verified once per request
-  handlers receive the user
+Browser (Next.js, no static export)
+  /                       sign in / sign up
+  /<username>/resume      public, server-rendered from the user's profile
+  /dashboard, ...         private workspace, session required
         |
-        v
-SQLite today -> user-scoped rows tomorrow
+        |-- Supabase (auth + Postgres with Row Level Security)
+        |       profiles, resumes, and every workspace table carry user_id
+        |       RLS: a user reads and writes only their own rows;
+        |            a public read policy covers the published resume only
+        |
+        '-- Cloud Run API (the existing Node server, ported)
+                verifies the Supabase JWT, runs the work that does not belong
+                in the browser (skill detection, enrichment, seeding, uploads)
 ```
+
+Two ways to split the work; pick one before phase 3:
+
+1. **Supabase-first (recommended).** The browser calls Supabase directly for CRUD, protected by RLS. Cloud Run only keeps the endpoints that need server code. Least code to write and keep.
+2. **API-first.** Everything goes through Cloud Run, which talks to Postgres with the user's id from the JWT. More code, one place for rules, but RLS is still worth keeping as a second lock.
+
+## Cloud Functions, Cloud Run, or Nx + NestJS?
+
+- **Cloud Run (recommended).** `server/index.ts` is one HTTP server with about 1,700 lines of routes. It fits a container as is, after the SQLite calls move to Postgres. Cloud Functions 2nd gen runs on Cloud Run anyway, but it would force splitting that one handler into many functions with no gain.
+- **Cloud Functions.** Worth it only for small separate jobs (a nightly follow-up reminder, a webhook). Add them later next to the API.
+- **Nx + NestJS.** Not needed. The cost is a monorepo move and a rewrite of every route into controllers and modules. Reconsider only with several services or several engineers. A plain TypeScript Cloud Run service with a router and `zod` validation (already a dependency) is enough.
 
 ## Phases
 
-1. **Identity on the server.**
-   - `requireUser` returns `{ id, email }` and the handlers receive it.
-   - Add `ALLOWED_EMAILS` (comma separated). Reject anyone else with 403, even if Supabase accepts the login. This replaces relying on sign-ups being off.
-   - Cache a verified token for about 60 seconds to avoid a Supabase call per request.
-2. **Session UX.**
-   - Move the auth state into one `AuthProvider` (`useAuth()` gives user, loading, signOut) so the gate, nav and API client share it.
-   - Add sign-out, a visible signed-in email, an expired-session redirect (API 401 clears the session), and a password-reset flow.
-3. **Workspace shell.**
-   - Re-create the shell as a route group `(workspace)` with the layout that checks the session once. Pages no longer need their own gate.
-   - `/` signs in; after sign-in it redirects to `/dashboard`.
-   - Unparking order: dashboard, applications, companies, then the rest in small PRs, each one lint, typecheck and build clean.
-4. **Data ownership** (only if multi-user).
-   - New migration adds `user_id TEXT NOT NULL` to each owned table and an index; backfill existing rows with your Supabase user id.
-   - Every query filters by `user.id`; add a test that user B cannot read or write user A rows.
-   - Decide SQLite per user vs hosted Postgres before starting this phase.
-5. **Hardening.**
-   - Fail closed already exists; add a CI check that the production build refuses to run without the Supabase env vars.
-   - Move `data/qualifications.json` behind the API so it is no longer in the page bundle.
-   - Revisit Google login (Supabase provider) once the above is stable.
+1. **Database and identity.**
+   - Create the Postgres schema in Supabase: `profiles` (user id, unique `username`, display name), plus the workspace tables from `server/db.ts` with a `user_id` column and RLS policies.
+   - Reserved usernames (`api`, `dashboard`, `login`, `settings`, and every top-level route) and a format rule (lowercase letters, digits, hyphens).
+   - Sign-up flow asks for a username; a database trigger creates the `profiles` row.
+2. **API on Cloud Run.**
+   - Port `server/db.ts` and `server/index.ts` from `node:sqlite` to Postgres. Migrations move to SQL files.
+   - Verify the JWT locally with Supabase's JWKS (no network call per request) and pass `{ id, email }` into every handler.
+   - Dockerfile, a Cloud Run service, secrets in Secret Manager, CORS limited to the app domain.
+3. **Session and workspace shell.**
+   - One `AuthProvider` (`useAuth()`), sign-out, expired-session redirect, password reset, email confirmation on.
+   - `(workspace)` route group with one session check. `/` redirects signed-in users to `/dashboard`.
+   - Unpark pages one or two at a time, each a small pull request.
+4. **Public resume.**
+   - Move resume content from `src/data/resume.ts` into per-user `resumes` rows with a published flag.
+   - `/<username>/resume` renders the published resume (PDF download and JSON stay), `noindex` until the user publishes.
+   - Your current resume becomes the first user's data, imported once.
+5. **Open sign-up hardening.**
+   - Rate limits on sign-up and on the API, email confirmation required, CAPTCHA if abuse appears.
+   - Per-user storage and row quotas (the library accepts file uploads).
+   - Per-user seeding: new users start empty; the shared seed data (`qualifications.json`, learn cards) becomes shared read-only tables or opt-in imports.
+   - Delete-account flow that removes all of a user's rows.
+6. **Google login.** Enable the Supabase provider, add the redirect URLs, add a "Continue with Google" button.
 
 ## Open questions
 
-- Single-user or multi-user? (Drives phase 4 and hosting.)
-- Where does the API run once this is deployed: still on your machine, or hosted? A static host cannot run `server/index.ts` or SQLite.
-- Keep a public resume at all? Today it is parked; the old `/` was the public page. A public route would need its own plan so it does not share the gate.
-- Which email(s) go in `ALLOWED_EMAILS`?
-- Password reset and email confirmation: use Supabase's email templates, or skip while there is one user?
+- Supabase-first or API-first split (phase 2 scope)?
+- Where does the Next.js frontend run: Vercel, or Cloud Run too? Both support the dynamic `/<username>/resume` route.
+- Domain name, and do you want username-based subdomains later?
+- Are users allowed to keep their workspace private but still publish a resume? (The plan assumes yes.)
+- Which workspace features stay single-user only (for example the personal pay targets and the job-hunt playbook)?
 
 ## Suggested first PR
 
-Phase 1 only: `requireUser` returns the user, `ALLOWED_EMAILS` is enforced, token cache, and a small test. It is server-only, so it is safe to merge while the pages stay parked.
+Phase 1 only: the Postgres schema as SQL migrations (`profiles` and the core tables with `user_id` and RLS), the username rules, and a test that user B cannot read user A's rows. No UI change, so it is safe while the pages stay parked.
