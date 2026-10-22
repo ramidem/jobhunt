@@ -303,7 +303,7 @@ export default function InterviewsPage() {
 
   return (
     <PageBody>
-      <PageHeader description="Rounds, prep briefs and offers." phase title="Interviews" />
+      <PageHeader description="Rounds, prep briefs and offers." title="Interviews" />
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
       <Tabs defaultValue="rounds">
         <div className="flex flex-wrap items-center justify-between gap-3">

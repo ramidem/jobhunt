@@ -74,7 +74,14 @@ const links: Record<string, StudyLinks> = {
   kafka: { roadmap: "https://roadmap.sh/backend", docs: [{ label: "Kafka docs", url: "https://kafka.apache.org/documentation/" }] },
   cypress: { docs: [{ label: "Cypress docs", url: "https://docs.cypress.io/" }] },
   playwright: { docs: [{ label: "Playwright docs", url: "https://playwright.dev/docs/intro" }] },
-  "system design": { roadmap: "https://roadmap.sh/system-design", docs: [] },
+  "system design": {
+    roadmap: "https://roadmap.sh/system-design",
+    docs: [{ label: "System design primer", url: "https://github.com/donnemartin/system-design-primer" }],
+  },
+  algorithms: {
+    roadmap: "https://roadmap.sh/datastructures-and-algorithms",
+    docs: [{ label: "NeetCode 150", url: "https://neetcode.io/practice/practice/neetcode150" }],
+  },
 };
 
 export function studyLinks(name: string): StudyLinks | null {
