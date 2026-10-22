@@ -100,6 +100,18 @@ Not set up. When it is, the public site is a static export, so Vercel (or any st
 - set the environment variables above in the host;
 - re-check that no personal data, database files or backups are in the repository.
 
+## Database (Supabase)
+
+Schema and Row Level Security live in `supabase/migrations/` as plain SQL. Never edit a shipped migration; add a new one. Tests are pgTAP files in `supabase/tests/database/`.
+
+```bash
+npm run db:start   # local Supabase stack (needs Docker)
+npm run db:test    # run the pgTAP tests
+npm run db:stop
+```
+
+One-time dashboard settings on the hosted project (Authentication): turn on "Allow new users to sign up" and "Confirm email".
+
 ## Branching (gitflow)
 
 - `main`: production releases only.

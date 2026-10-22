@@ -61,11 +61,12 @@ Item 1 is done when 1a and 1b are merged. Add a line to `TODO.md` for the later 
 2. **1b (one pull request).** Migration for the eight job-tracking tables with composite keys and policies, the isolation test, and a short mapping note (SQLite column to Postgres column) that item 2 and item 7's import will reuse.
 3. **Wrap up.** Update `TODO.md` (check item 1, move item 2 to Current) and the parent plan.
 
-## Open questions
+## Decisions (answered)
 
-- Scope as split above (1a + 1b now, the rest with each page)? Or all 25 tables in item 1?
-- Ids: `bigint identity` as proposed, or `uuid`? Identity keeps ids stable for the import; uuid is safer if ids ever go in URLs.
-- Can a user change their username? If yes, do old `/<oldname>/resume` links redirect or break?
-- Importing the existing `data/tracker.db` into your user: not in the TODO yet. Add it as its own item after item 5 (one-off script that keeps ids), or do it earlier so the unparked pages have real data to show?
-- Hosted project: use the existing Supabase project that already has your auth user, or create a fresh one for the multi-user schema?
-- Email confirmation on sign-up: required (recommended with open sign-up) or off while building?
+- **Scope:** split as above, piece by piece. Only add tables when a page needs them.
+- **Ids:** `bigint generated always as identity`.
+- **Username changes:** allowed. Assumed default: the old name redirects to the new one for a while (needs a `username_history` table; deferred to item 7, when `/<username>/resume` exists, so 1a does not include it). Say if you would rather let old links break.
+- **Import of `data/tracker.db`:** not now. Later, import only the data a given page needs.
+- **Hosted project:** the existing Supabase project.
+- **Email confirmation:** required on sign-up.
+- **Commits:** nothing is committed or pushed unless asked.
