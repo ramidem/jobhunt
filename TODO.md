@@ -13,14 +13,16 @@ Done: email/password sign-in, `AuthGate`, token check on `/api/*`, fail-closed c
 ### Current
 
 - [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
-  - [ ] 1a. Foundation (written and passing locally 2026-10-22; waiting for review, push to the hosted project and CI): `supabase/` setup, `profiles`, reserved usernames, sign-up trigger, `username_available()`, pgTAP tests, RLS coverage guard, CI job.
+  - [ ] 1a. Foundation: `supabase/` setup, `profiles`, reserved usernames, sign-up trigger, `username_available()`, pgTAP tests, RLS coverage guard, CI job. Applied to the hosted project 2026-10-22. Found by walking through "sign in, then see settings":
+    - [x] Signed-in users could not read their own profile (`where user_id = auth.uid()` needs select on `user_id`). Fixed in `20261022010000_profiles_select_own_user_id.sql` with a test; not yet pushed to the hosted project.
+    - [ ] The existing auth user has no profile row (the trigger only runs on new sign-ups). Decided: insert it by hand once, with a username you pick; no `claim_username()`. New sign-ups get their profile automatically from the trigger.
   - [ ] 1b. Job tracking core: `companies`, `contacts`, `jobs`, `job_skills`, `skills`, `applications`, `contact_log`, `job_contacts` with `user_id`, composite keys, RLS, and the user A / user B isolation test.
   - Remaining tables are added with item 5, in the pull request that unparks the page using them.
 
 ### Next (in order)
 
 - [ ] 2. Inventory `server/index.ts` routes: plain CRUD (becomes direct Supabase calls) vs server-only (goes to Cloud Run).
-- [ ] 3. Sign-up with username, `AuthProvider` / `useAuth()`, sign-out, expired-session redirect, password reset, email confirmation.
+- [ ] 3. Sign in and land on `/settings` (redirect after sign-in; page wrapped in `AuthGate`) showing username and email, with a change-password form (`auth.updateUser`; the password itself cannot be shown, Supabase stores only a hash). Sign-up with username, `AuthProvider` / `useAuth()`, sign-out, expired-session redirect, password reset, email confirmation.
 - [ ] 4. Drop `output: "export"`; `(workspace)` route group with one session check; `/` redirects signed-in users to `/dashboard`; deploy to Vercel.
 - [ ] 5. Rewrite `src/lib/api.ts` around `supabase-js`; unpark `dashboard`, then one page per pull request (`applications`, `companies`, the rest).
 - [ ] 6. Cloud Run API for the server-only routes (JWT verified via JWKS, Secret Manager, CORS limited to the app domain).

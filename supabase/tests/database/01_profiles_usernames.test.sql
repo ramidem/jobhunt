@@ -1,5 +1,5 @@
 begin;
-select plan(16);
+select plan(19);
 
 create function pg_temp.sign_up(id uuid, username text) returns void
 language sql as $$
@@ -56,6 +56,24 @@ select is(
   (select count(*)::int from public.profiles where display_name = 'Everyone'),
   1,
   'a user updates only their own profile row'
+);
+
+select is(
+  (select display_name from public.profiles where username = 'bob'),
+  '',
+  'another user''s profile is left unchanged'
+);
+select throws_ok(
+  $$update public.profiles set user_id = gen_random_uuid()$$,
+  '42501',
+  null,
+  'a user cannot reassign a profile to another user id'
+);
+
+select is(
+  (select username from public.profiles where user_id = (select auth.uid())),
+  'alice-dev',
+  'a signed-in user looks up their own profile by user_id'
 );
 
 select * from finish();
