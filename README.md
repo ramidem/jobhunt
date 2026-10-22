@@ -99,3 +99,12 @@ Not set up. When it is, the public site is a static export, so Vercel (or any st
 - keep the private workspace routes out of the public build (separate project, route group removed from the deploy build, or access control in front of it);
 - set the environment variables above in the host;
 - re-check that no personal data, database files or backups are in the repository.
+
+## Branching (gitflow)
+
+- `main`: production releases only.
+- `develop`: integration branch; feature branches start here and merge back by pull request.
+- `feature/<name>`: branch from `develop`.
+- `release/<version>` and `hotfix/<name>`: branch from `develop` and `main` respectively; merge into both `main` and `develop`.
+
+CI (lint, typecheck, build) runs on pushes and pull requests to `main` and `develop`.
