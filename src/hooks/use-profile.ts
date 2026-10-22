@@ -12,7 +12,11 @@ export function useProfile(userId: string) {
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
+    let stale = false;
     service.getOwn(userId).then((result) => {
+      if (stale) {
+        return;
+      }
       if (result.ok) {
         setProfile(result.data);
         setError(null);
@@ -20,6 +24,9 @@ export function useProfile(userId: string) {
         setError(result.error);
       }
     });
+    return () => {
+      stale = true;
+    };
   }, [service, userId, version]);
 
   const reload = useCallback(() => setVersion((value) => value + 1), []);

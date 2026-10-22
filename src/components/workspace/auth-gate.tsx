@@ -26,10 +26,13 @@ export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) 
     if (!configured) {
       return;
     }
+    let stale = false;
     const supabase = getSupabase();
     supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setReady(true);
+      if (!stale) {
+        setSession(data.session);
+        setReady(true);
+      }
     });
     const { data } = supabase.auth.onAuthStateChange((event, next) => {
       setSession(next);
@@ -38,7 +41,10 @@ export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) 
         router.replace("/");
       }
     });
-    return () => data.subscription.unsubscribe();
+    return () => {
+      stale = true;
+      data.subscription.unsubscribe();
+    };
   }, [configured, router]);
 
   if (!configured) {
