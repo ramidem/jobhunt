@@ -157,3 +157,35 @@ Use this workflow when the user provides a job description, role type, company, 
 6. Keep project dates, role framing, and ownership language consistent with the companion files.
 7. Produce a role-specific resume draft from the Markdown records.
 8. If the user approves, update `src/data/resume.ts` for that tailored version or create a separate export artifact, depending on the requested workflow.
+
+## Code Conventions
+
+Apply these when writing or reviewing app code (`src/`). The auth and workspace build order lives in `TODO.md`.
+
+### Layering (DRY and SOLID)
+
+- Components and pages never call Supabase or `fetch` directly. Layers: `src/services/*` (data access), `src/hooks/*` (React state around a service), then components (render only).
+- One small service per area, built with `createXService(client)` so the client is injected (tests pass a fake). Every method returns `Result<T>` from `src/services/result.ts`.
+- Put shared rules in one place (for example `src/lib/username.ts`); do not copy logic between components. The database stays the authority for validation; client checks only give fast feedback.
+- Add a new feature by adding a service and a hook, not by editing an existing one to do two jobs.
+
+### React
+
+- Keep components small and single-purpose. Pull data and side effects into hooks; leave the component to render.
+- Derive values during render instead of copying them into state. Do not call `setState` in an effect to mirror props or other state.
+- Use effects only to sync with something outside React (subscriptions, timers, requests). Clean up, and ignore stale responses (see `use-username-availability.ts`).
+- Handle user actions in event handlers, not effects.
+- Use stable ids as list keys, never the index. Do not define components inside components.
+- Memoize only when it fixes a measured problem. `useMemo` for a stable service instance is fine.
+- Prefer uncontrolled forms with `FormData`; use controlled inputs only when the UI depends on the value.
+- Accessibility: every input has a label; status and error text uses `role="status"` or `role="alert"`; icon-only buttons have an `aria-label`; everything works by keyboard.
+- TypeScript: no `any`; use discriminated unions (like `Result`); type props as `Readonly`.
+- Expect duplicate effect runs in `next dev` (Strict Mode). Do not "fix" them; check behavior in a production build.
+
+### Next.js
+
+- Server Components by default; add `"use client"` only on small interactive leaves.
+- Mutations go through Server Actions that check the user and validate input with `zod`. Route handlers are for webhooks and outside callers.
+- Secrets never use `NEXT_PUBLIC_*`; server-only modules import `server-only`.
+- Await `params` and `searchParams` (Next 15+). Use `notFound()` for missing records.
+- Use `next/image` and `next/font`; give each route segment `loading.tsx`, `error.tsx` and `not-found.tsx` where it makes sense.
