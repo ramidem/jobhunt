@@ -1,16 +1,24 @@
 "use client";
 
 import type { Session } from "@supabase/supabase-js";
-import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import { createContext, useContext, useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 
+const SessionContext = createContext<Session | null>(null);
+
+export function useSession() {
+  return useContext(SessionContext);
+}
+
 // Gates the private workspace behind a Supabase email and password session.
 // Without Supabase env vars it only renders the children in development; a production build fails closed.
 export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) {
   const configured = isSupabaseConfigured();
+  const router = useRouter();
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(!configured);
 
@@ -23,15 +31,21 @@ export function AuthGate({ children }: Readonly<{ children: React.ReactNode }>) 
       setSession(data.session);
       setReady(true);
     });
-    const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
+    const { data } = supabase.auth.onAuthStateChange((event, next) => {
+      setSession(next);
+      // Signing out (or an expired session) sends you to the sign-in page at /.
+      if (event === "SIGNED_OUT" && window.location.pathname !== "/") {
+        router.replace("/");
+      }
+    });
     return () => data.subscription.unsubscribe();
-  }, [configured]);
+  }, [configured, router]);
 
   if (!configured) {
     return process.env.NODE_ENV === "production" ? <NotConfigured /> : children;
   }
   if (session) {
-    return children;
+    return <SessionContext.Provider value={session}>{children}</SessionContext.Provider>;
   }
   return ready ? <SignIn /> : null;
 }

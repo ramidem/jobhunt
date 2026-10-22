@@ -19,6 +19,7 @@ import {
   Library,
   Menu,
   Route,
+  Settings,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -78,7 +79,42 @@ const groups: { name: string; links: NavLink[] }[] = [
   },
 ];
 
-const links = groups.flatMap((group) => group.links);
+// Only these pages are routed for now; the rest are parked in src/disabled while auth is built.
+const enabledHrefs = new Set<string>();
+
+const visibleGroups = groups
+  .map((group) => ({ ...group, links: group.links.filter((link) => enabledHrefs.has(link.href)) }))
+  .filter((group) => group.links.length > 0);
+
+const links = visibleGroups.flatMap((group) => group.links);
+
+function AccountActions({ className, large }: Readonly<{ className?: string; large?: boolean }>) {
+  const isActive = useIsActive();
+  const active = isActive("/settings");
+
+  return (
+    <div className={cn("flex items-center gap-1", className)}>
+      <SignOutButton
+        className={cn(
+          "flex-1 rounded-lg px-3 text-left text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+          large ? "py-3 text-base" : "py-2 text-sm",
+        )}
+      />
+      <Link
+        aria-current={active ? "page" : undefined}
+        aria-label="Settings"
+        className={cn(
+          "flex items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
+          large ? "size-11" : "size-9",
+          active && "bg-muted text-foreground",
+        )}
+        href="/settings"
+      >
+        <Settings aria-hidden="true" className={large ? "size-5" : "size-4"} />
+      </Link>
+    </div>
+  );
+}
 
 function useIsActive() {
   const pathname = usePathname();
@@ -94,7 +130,7 @@ export function WorkspaceSidebar() {
       className="sticky top-0 hidden h-dvh flex-col gap-0 overflow-y-auto border-r bg-background p-4 md:flex print:hidden"
     >
       <p className="px-3 pb-2 text-sm font-semibold tracking-tight">Job hunt</p>
-      {groups.map((group) => (
+      {visibleGroups.map((group) => (
         <div className="grid gap-0.5 pb-2" key={group.name}>
           <p className="px-3 pb-0.5 pt-2 text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
             {group.name}
@@ -115,7 +151,7 @@ export function WorkspaceSidebar() {
           ))}
         </div>
       ))}
-      <SignOutButton className="mt-auto rounded-lg px-3 py-2 text-left text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" />
+      <AccountActions className="mt-auto" />
     </nav>
   );
 }
@@ -135,7 +171,7 @@ export function WorkspaceTabBar() {
       aria-label="Workspace"
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden print:hidden"
     >
-      <ul className="grid grid-cols-5">
+      <ul className="grid auto-cols-fr grid-flow-col">
         {links
           .filter((link) => link.tab)
           .map(({ href, short, icon: Icon }) => (
@@ -159,7 +195,7 @@ export function WorkspaceTabBar() {
                 <SheetTitle>More</SheetTitle>
               </SheetHeader>
               <div className="grid max-h-[65dvh] gap-3 overflow-y-auto px-4 pb-2">
-                {groups.map((group) => {
+                {visibleGroups.map((group) => {
                   const rest = group.links.filter((link) => !link.tab);
                   if (rest.length === 0) return null;
                   return (
@@ -188,7 +224,7 @@ export function WorkspaceTabBar() {
                     </section>
                   );
                 })}
-                <SignOutButton className="w-full rounded-lg px-3 py-3 text-left text-base text-muted-foreground hover:bg-muted" />
+                <AccountActions large />
               </div>
             </SheetContent>
           </Sheet>
