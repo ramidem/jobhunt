@@ -12,7 +12,6 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 
 - [ ] 1. Postgres schema, RLS and username. Detailed plan: `docs/plan-01-database.md`. Sub-steps, in order:
   - [ ] 1a. Foundation (profiles, usernames, RLS, tests; applied to the hosted project). One at a time, top to bottom; the first unchecked line is the current one:
-    - [ ] 1a.2 Move the auth components onto a service and hook: `AuthGate`, `SignIn` and `SignOutButton` stop calling Supabase directly (`src/services/auth.ts`, `src/hooks/use-session.ts`).
     - [ ] 1a.3 Add a JS test runner (Vitest) and unit tests for the services using a fake client (`profile`, `account`, `auth`).
     - [ ] 1a.4 Cookie-based session with `@supabase/ssr` and a `proxy.ts` redirect for signed-out visitors (removes the blank flash from `AuthGate`); verify the user on the server with `getUser()`, never `getSession()`.
     - [ ] 1a.5 Server Components by default, `'use client'` only on small interactive leaves (settings becomes a server page with two client forms); fetch where data is used, `Promise.all` for independent calls, `<Suspense>` for slow parts.
