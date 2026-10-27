@@ -55,6 +55,31 @@ Item 1b (companies, contacts, and the rest of the tracker tables) stays open. `j
 
 ## Parked until the auth list above is done
 
+## Done: public `/api/resume` contact leak
+
+- [x] `/api/resume` is not part of the static export. That file was the whole resume, including phone and email, and it answered 200 with no sign-in. Phone and email are no longer in `src/data/resume.ts` (or any other module the Next build emits). The public resume body (name, links, experience, skills, education) stays in `src/data/resume.ts` and still renders from the parked public page and PDF components. Signed-in users read their own phone and email from `public.resume_contact` on Settings. RLS allows `select` only where `user_id = auth.uid()`.
+
+### Med: private resume contact
+
+The migration does not insert a row, and the values must not be committed. Nothing here has been applied to the hosted project.
+
+1. Link the CLI once if this machine is not already linked (`npx supabase login`, then `npx supabase link --project-ref <ref>`). Do not change project auth settings.
+2. Apply the new migration only:
+   ```bash
+   npx supabase db push --dry-run
+   npx supabase db push
+   ```
+   The dry run should list `20261027000000_resume_contact` and nothing unexpected.
+3. In the Supabase dashboard SQL editor (it runs as postgres and bypasses RLS), find your user id, then insert your own row. Replace the placeholders. Do not commit them and do not put them in a migration or seed.
+   ```sql
+   select id, email from auth.users;
+
+   insert into public.resume_contact (user_id, email, phone)
+   values ('<auth.users id>', '<email>', '<phone>');
+   ```
+4. Sign in on the site and open Settings. The Resume contact card shows that row. Until step 2, the card shows a load error. Until step 3, it says no contact is stored. A signed-out visitor cannot read the table. Another account cannot read your row.
+5. After the next deploy from `main`, `https://resume-ten-beta-79.vercel.app/api/resume/` should no longer return the resume. Phone and email are not in the built `out/` directory.
+
 ## Before deploying
 
 - [ ] Decide whether `data/guide.md` stays out of the repo (it says "reference only; not published").

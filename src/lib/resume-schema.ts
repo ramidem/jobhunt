@@ -24,8 +24,9 @@ export const resumeSchema = z.object({
   name: z.string().min(1),
   headline: z.string().min(1),
   location: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().optional(),
+  // Omitted from the public resume. Private contact lives in public.resume_contact.
+  email: z.string().email().optional(),
+  phone: z.string().min(1).optional(),
   links: z.array(linkSchema),
   summary: z.string().min(1),
   education: z.array(

@@ -17,17 +17,16 @@ export default function Home() {
           </summary>
           <div className="toolbar-contact-panel">
             <h2>Message Med</h2>
-            <p>
-              <Mail aria-hidden="true" size={14} />
-              <a href={`mailto:${resume.email}`}>{resume.email}</a>
-            </p>
+            {resume.email ? (
+              <p>
+                <Mail aria-hidden="true" size={14} />
+                <a href={`mailto:${resume.email}`}>{resume.email}</a>
+              </p>
+            ) : null}
             <ContactForm />
           </div>
         </details>
         <ResumePdfDownload resume={resume} />
-        <a className="icon-button" href="/api/resume">
-          JSON
-        </a>
       </div>
 
       <ResumeDocument resume={resume} />

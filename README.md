@@ -2,7 +2,7 @@
 
 Two things live in this repo:
 
-1. **A public resume site** (Next.js, static export): the resume page, a PDF download, a JSON copy at `/api/resume`, and a contact form that writes to Firestore from the browser.
+1. **A public resume site** (Next.js, static export): the resume page, a PDF download, and a contact form that writes to Firestore from the browser. Phone and email are not in the export.
 2. **A private job-hunt workspace** (same app, `src/app/(workspace)/(private)`): jobs, companies, contacts, outreach drafts, interviews, a Learn page and results, backed by a local SQLite database and a small local server.
 
 > **Not deployed.** Nothing here is hosted on Vercel yet. The workspace is meant to run locally only, and it needs the local server for its data. Do not deploy the static `out/` folder as-is: it would publish the workspace pages too. Split or protect those routes first (see [Deployment](#deployment)).
@@ -51,7 +51,7 @@ public/                Icons, PWA assets, import bridge page
 
 ## Resume content
 
-Edit `src/data/resume.ts`. The web page, the PDF (`src/components/resume-pdf-document.tsx`) and the structured data all read from it. The machine-readable copy is at `/api/resume`.
+Edit `src/data/resume.ts` for the public resume (name, experience, skills, and the rest). The page, the PDF (`src/components/resume-pdf-document.tsx`) and the structured data read from it. Do not put a phone number or email in that file. Those stay in the `resume_contact` table and are readable only by the signed-in owner (see TODO.md, "Med: private resume contact"). There is no public `/api/resume` file.
 
 ## Job-hunt workspace
 
@@ -144,6 +144,8 @@ npm run db:stop
    npx supabase db push
    npx supabase migration list      # local and remote versions should match
    ```
+
+`resume_contact` holds a user's private resume phone and email. The migration creates the empty table and an owner-only select policy. It does not insert a row. Add yours in the SQL editor after `db push`, using the steps in TODO.md ("Med: private resume contact"). Do not commit the values.
 
 ### Hosted project setup (once)
 

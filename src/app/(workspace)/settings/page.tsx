@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageBody, PageHeader } from "@/components/workspace/page-header";
+import { ResumeContactCard } from "@/components/workspace/resume-contact-card";
 import { useChangePassword } from "@/hooks/use-change-password";
 import { useProfile } from "@/hooks/use-profile";
 import { useSession } from "@/hooks/use-session";
@@ -22,7 +23,10 @@ export default function SettingsPage() {
     <PageBody>
       <PageHeader title="Settings" description="Your account." />
       {user ? (
-        <AccountForm email={user.email ?? ""} userId={user.id} />
+        <>
+          <AccountForm email={user.email ?? ""} userId={user.id} />
+          <ResumeContactCard userId={user.id} />
+        </>
       ) : (
         <p className="text-sm text-muted-foreground">Auth is not configured, so there is no account to show.</p>
       )}

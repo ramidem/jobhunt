@@ -143,10 +143,10 @@ function ExperienceBlock({ item, nested = false }: { item: ExperienceItem; neste
   );
 }
 
-export function ResumePdfDocument({ resume }: { resume: Resume }) {
+export function ResumePdfDocument({ resume }: Readonly<{ resume: Resume }>) {
   const contactItems: { text: string; href?: string }[] = [
     ...(resume.phone ? [{ text: resume.phone }] : []),
-    { text: resume.email, href: `mailto:${resume.email}` },
+    ...(resume.email ? [{ text: resume.email, href: `mailto:${resume.email}` }] : []),
     ...resume.links.map((link) => ({ text: link.label, href: link.href })),
   ];
 

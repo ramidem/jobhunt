@@ -1,12 +1,12 @@
 import type { Resume } from "@/lib/resume-schema";
 
-export function StructuredData({ resume }: { resume: Resume }) {
+export function StructuredData({ resume }: Readonly<{ resume: Resume }>) {
   const data = {
     "@context": "https://schema.org",
     "@type": "Person",
     name: resume.name,
     jobTitle: resume.headline,
-    email: `mailto:${resume.email}`,
+    ...(resume.email ? { email: `mailto:${resume.email}` } : {}),
     address: {
       "@type": "PostalAddress",
       addressLocality: resume.location,

@@ -1,14 +1,14 @@
 import { DatedSection } from "@/components/resume-section";
 import type { Resume } from "@/lib/resume-schema";
 
-export function ResumeDocument({ resume }: { resume: Resume }) {
+export function ResumeDocument({ resume }: Readonly<{ resume: Resume }>) {
   return (
     <section className="resume-paper" aria-label="Resume">
       <header className="resume-header">
         <h1>{resume.name}</h1>
         <p className="contact-line">
           {resume.phone ? <span>{resume.phone}</span> : null}
-          <a href={`mailto:${resume.email}`}>{resume.email}</a>
+          {resume.email ? <a href={`mailto:${resume.email}`}>{resume.email}</a> : null}
           {resume.links.map((link) => (
             <a href={link.href} key={link.href} rel="noreferrer" target="_blank">
               {link.label}

@@ -1816,8 +1816,7 @@ function serveStatic(res: ServerResponse, path: string) {
     createReadStream(join(outDir, "404.html")).pipe(res);
     return;
   }
-  // The exported /api/resume file has no extension.
-  const type = MIME[extname(file)] ?? (path === "/api/resume" ? MIME[".json"] : "application/octet-stream");
+  const type = MIME[extname(file)] ?? "application/octet-stream";
   const immutable = path.startsWith("/_next/static/");
   res.writeHead(200, {
     "Content-Type": type,
@@ -1829,7 +1828,7 @@ function serveStatic(res: ServerResponse, path: string) {
 createServer(async (req, res) => {
   const path = new URL(req.url ?? "/", "http://localhost").pathname;
   try {
-    if (path.startsWith("/api/") && path !== "/api/resume") {
+    if (path.startsWith("/api/")) {
       await requireUser(req);
     }
     if (path.startsWith("/api/") && (await handleApi(req, res, path))) {

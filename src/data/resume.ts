@@ -4,8 +4,9 @@ const draftResume = {
   name: "Medimar Aduh",
   headline: "Fullstack Software Engineer",
   location: "Davao City, Philippines (Remote)",
-  phone: "+63 955 908 7053",
-  email: "im.ramidem@gmail.com",
+  // Phone and email are private. They are not part of this module, so the static export
+  // cannot compile them into a public file. The signed-in user reads their own row from
+  // public.resume_contact. Do not add them back here.
   // Labels are the visible URLs so text-only ATS parsers capture them.
   links: [
     { label: "linkedin.com/in/med-aduh", href: "https://www.linkedin.com/in/med-aduh" },

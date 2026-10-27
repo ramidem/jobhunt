@@ -13,11 +13,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 1,
     },
-    {
-      url: `${siteUrl}/api/resume`,
-      lastModified: resume.updatedAt,
-      changeFrequency: "monthly",
-      priority: 0.4,
-    },
   ];
 }
