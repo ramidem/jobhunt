@@ -33,6 +33,26 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 - [ ] 8. Open sign-up hardening: rate limits, per-user quotas (library uploads), per-user seeding, delete-account flow; move `data/qualifications.json` out of the page bundle.
 - [ ] 9. Google login: enable the Supabase provider, add `signInWithOAuth`, allow redirect URLs for localhost and the Vercel URL.
 
+## Decisions for Med
+
+These are open. Leave them as they are until Med decides.
+
+- [ ] Disabling Supabase sign-ups (only Med's account should exist).
+- [ ] `/api/resume/` publicly exposing Med's phone and email.
+- [ ] Committed `data/.fuse_hidden*` SQLite file.
+- [ ] robots/sitemap pointing to localhost because `NEXT_PUBLIC_SITE_URL` is unset.
+- [ ] Stale README "Not deployed".
+
+## Job posts
+
+Saved postings move off the local SQLite server into Supabase `job_posts`. These migrations are in the repo only. Med applies them to the hosted project with `npx supabase db push` after review. Do not apply them from CI.
+
+- [x] Schema: `job_posts`, computed `url_norm`, RLS (`user_id = auth.uid()`), trigger that sets `needs_update` when a processed description changes and keeps `updated_at` current, pgTAP tests for cross-user isolation and duplicate-URL rejection.
+- [ ] Add-job form and list on the static export (client `supabase-js`, no server route), with the same URL normalization.
+- [ ] Career role: read `new` / `needs_update` rows, `submit_extraction` for extracted fields only, no delete and no edits to `raw_description` or application status.
+
+Item 1b (companies, contacts, and the rest of the tracker tables) stays open. `job_posts` is the posting a person saves, not that full model.
+
 ## Parked until the auth list above is done
 
 ## Before deploying
