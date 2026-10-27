@@ -48,8 +48,10 @@ These are open. Leave them as they are until Med decides.
 Saved postings move off the local SQLite server into Supabase `job_posts`. These migrations are in the repo only. Med applies them to the hosted project with `npx supabase db push` after review. Do not apply them from CI.
 
 - [x] Schema: `job_posts`, computed `url_norm`, RLS (`user_id = auth.uid()`), trigger that sets `needs_update` when a processed description changes and keeps `updated_at` current, pgTAP tests for cross-user isolation and duplicate-URL rejection.
-- [x] Add-job form and list at `/applications` (behind `AuthGate`, client `supabase-js`, no server route). Zod checks the link, description and status. A duplicate shows "already saved" and links to the existing row. `src/lib/job-url.ts` matches `url_norm`.
-- [ ] Career role: read `new` / `needs_update` rows, `submit_extraction` for extracted fields only, no delete and no edits to `raw_description` or application status.
+- [x] Add-job form and list at `/applications` (behind `AuthGate`, client `supabase-js`, no server route). Zod checks the link, description and status. A duplicate shows "already saved" and links to the existing row. The form uses Med's `src/lib/job-url.ts` (null for an invalid link, no second normalizer). That helper sorts query keys with en-US; `normalize_job_url` sorts with the database collation, so mixed-case keys can differ on a C collation (they matched on en_US.utf8). An internal NBSP is null in the helper and accepted by the database, so the form refuses it. The trigger still overwrites `url_norm`.
+- [x] Career role: read `new` / `needs_update` rows, `submit_extraction` for extracted fields only, no delete and no edits to `raw_description` or application status. JSON shape and the sync script are in `docs/career-extraction.md`.
+- [ ] Med: apply the `job_posts` and career migrations to the hosted project (`npx supabase db push`) after review.
+- [ ] Med: create the career role password (`alter role career with login password '...'`) and set `CAREER_DATABASE_URL` locally. Do not commit the password.
 
 Item 1b (companies, contacts, and the rest of the tracker tables) stays open. `job_posts` is the posting a person saves, not that full model.
 

@@ -101,7 +101,8 @@ export function createJobPostsService(client: SupabaseClient) {
         return fail("Choose a status.");
       }
 
-      // Med's helper returns null for a link the database would reject. It does not throw.
+      // Med's helper returns null instead of throwing. An internal NBSP is null here and
+      // still accepted by normalize_job_url, so those links are refused in the form.
       const urlNorm = normalizeJobUrl(parsed.data.url);
       if (!urlNorm) {
         return fail("Enter an http or https link.");
@@ -127,6 +128,8 @@ export function createJobPostsService(client: SupabaseClient) {
         return fail(inserted.error.message);
       }
 
+      // Lookup uses the client normalizer. If the database collation sorts mixed-case
+      // query keys differently, this misses and the form still says the link is saved.
       const existing = await client
         .from("job_posts")
         .select(COLUMNS)

@@ -13,6 +13,7 @@
     "db:start": "supabase start -x studio,imgproxy,edge-runtime,logflare,vector,mailpit,realtime,storage-api,postgres-meta,supavisor",
     "db:test": "supabase test db",
     "db:stop": "supabase stop",
+    "career:sync": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/career-sync.ts",
     "prepare": "husky",
     "test": "vitest run",
     "test:watch": "vitest"
@@ -25,6 +26,7 @@
     "firebase": "^11.10.0",
     "lucide-react": "^0.468.0",
     "next": "^15.1.3",
+    "pg": "^8.23.1",
     "radix-ui": "^1.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -38,6 +40,7 @@
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
     "eslint": "^9.17.0",
