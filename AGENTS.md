@@ -1,4 +1,4 @@
-# Resume Repo Agent Instructions
+# Job Hunt Repo Agent Instructions
 
 ## Project Resume Agent
 

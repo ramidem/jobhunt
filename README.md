@@ -1,4 +1,4 @@
-# Resume
+# Job Hunt
 
 Two things live in this repo:
 
