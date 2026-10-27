@@ -38,7 +38,7 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 These are open. Leave them as they are until Med decides.
 
 - [ ] Disabling Supabase sign-ups (only Med's account should exist).
-- [ ] `/api/resume/` publicly exposing Med's phone and email.
+- [x] `/api/resume/` publicly exposing Med's phone and email. The static file is gone. Phone and email are not in the public build. Signed-in users read their own row from `resume_contact`. Manual steps: "Med: private resume contact" below.
 - [ ] Committed `data/.fuse_hidden*` SQLite file.
 - [ ] robots/sitemap pointing to localhost because `NEXT_PUBLIC_SITE_URL` is unset.
 - [ ] Stale README "Not deployed".
@@ -69,7 +69,7 @@ The migration does not insert a row, and the values must not be committed. Nothi
    npx supabase db push --dry-run
    npx supabase db push
    ```
-   The dry run should list `20261027000000_resume_contact` and nothing unexpected.
+   The dry run should include `20261027010000_resume_contact`. If `20261027000000_job_posts` is still pending, it is listed too; that migration is already on main and should be applied with this one.
 3. In the Supabase dashboard SQL editor (it runs as postgres and bypasses RLS), find your user id, then insert your own row. Replace the placeholders. Do not commit them and do not put them in a migration or seed.
    ```sql
    select id, email from auth.users;
