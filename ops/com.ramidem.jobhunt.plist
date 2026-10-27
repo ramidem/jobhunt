@@ -11,7 +11,7 @@
     <string>server/index.ts</string>
   </array>
   <key>WorkingDirectory</key>
-  <string>/Users/ramidem/Code/Github/resume</string>
+  <string>/Users/ramidem/Code/Github/jobhunt</string>
   <key>RunAtLoad</key>
   <true/>
   <key>KeepAlive</key>
