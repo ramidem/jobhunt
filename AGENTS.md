@@ -175,6 +175,7 @@ Apply these when writing or reviewing app code (`src/`). The auth and workspace 
 - `src/services/container.ts` is the one place services meet the real Supabase client (`authService()`, `profileService()`, ...). Hooks call those; do not call `getSupabase()` anywhere else.
 - Put shared rules in one place (for example `src/lib/username.ts`); do not copy logic between components. The database stays the authority for validation; client checks only give fast feedback.
 - Every new service ships with tests next to it (`*.test.ts`) using `createFakeSupabase()`; run `npm test` before pushing (the pre-push hook does).
+- Hooks and `src/lib` helpers ship with tests too. Hook tests start with `// @vitest-environment jsdom`, use `renderHook` from `@testing-library/react`, and mock `@/services/container`.
 - Add a new feature by adding a service and a hook, not by editing an existing one to do two jobs.
 
 ### React
