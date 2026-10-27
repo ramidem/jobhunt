@@ -2,7 +2,7 @@ import { resumeSchema, type Resume } from "@/lib/resume-schema";
 
 const draftResume = {
   name: "Medimar Aduh",
-  headline: "Software Engineer | Backend-leaning full-stack systems and product delivery",
+  headline: "Fullstack Software Engineer",
   location: "Davao City, Philippines (Remote)",
   phone: "+63 955 908 7053",
   email: "im.ramidem@gmail.com",
@@ -11,13 +11,12 @@ const draftResume = {
     { label: "linkedin.com/in/med-aduh", href: "https://www.linkedin.com/in/med-aduh" },
     { label: "github.com/ramidem", href: "https://github.com/ramidem" },
   ],
-  summary:
-    "Full-stack engineer using AI-assisted workflows to ship reliable product systems, backend services, and operational tooling.",
+  summary: "Built and maintained client web products across finance, retail, HR and healthcare, so teams and customers could get their daily work done in one place.",
   education: [
     {
       institution: "Western Mindanao State University",
       degree: "BS, Mass Communication/Media Studies",
-      dates: "Graduated 2012",
+      dates: "Graduated",
       details: [],
     },
   ],
@@ -25,53 +24,65 @@ const draftResume = {
     {
       organization: "Symph",
       location: "Remote",
-      role: "Software Engineer",
+      role: "Fullstack Software Engineer",
       start: "Nov 2020",
       end: "Present",
-      // Order: Alignly, FCCD, MLhuillier, Coaxis, MyPetCare, Lesson Planner (set by Med).
-      // Written against the Full Stack, AI Engineer, and Cloud qualifications in data/qualifications.json,
-      // with soft skills (leading, collaboration, feedback). Personal projects (RoundSave, Nookbud) are excluded.
       bullets: [
-        "Led AI-augmented development of an HR and payroll platform using TypeScript, React, Next.js, and Firebase on Google Cloud, running daily Agile standups and partnering with client stakeholders to turn their requests into features, so companies could manage employees, time off, and payroll in one system.",
-        "Led AI-augmented development of an internal operations platform using JavaScript, TypeScript, HTML, CSS, React, and Playwright tests, setting priorities with the team and explaining technical choices to non-technical client teams, so sales staff could track accounts, visits, and distributor reports in one place.",
-        "Maintained a financial services platform for nearly five years using React, Node.js, NestJS, REST APIs, SQL, and Jest, mentoring teammates, reviewing their code, and acting on feedback, so branch staff could complete customer verification, money transfers, and daily reports more smoothly.",
-        "Led a content management platform project using Strapi, TypeScript, React, Google Cloud, and CI/CD with Cloud Build, guiding fellow developers and coordinating with the client's team, so their staff could review and manage marketplace content from one admin screen.",
-        "Implemented role-based access control with NestJS, Next.js, TypeScript, and PostgreSQL for a veterinary clinic platform, taking direction on priorities and responding to review feedback, so clinic owners, vets, staff, and pet owners each see only the information meant for them.",
-        "Improved the lesson document export and web pages of an AI-assisted lesson planning platform using Next.js, React, and TypeScript, as part of a team, so teachers could download their lesson plans as Word documents.",
+        "Built and maintained client web products across finance, retail, HR and healthcare, so teams and customers could get their daily work done in one place.",
       ],
-      highlights: [],
+      highlights: [
+        {
+          organization: "Financial Services Platform",
+          role: "Project",
+          start: "Jan 2021",
+          end: "Nov 2025",
+          bullets: [
+          "Maintained a financial services platform for nearly five years (React, TypeScript, JavaScript, HTML, CSS, Node.js, SQL, Google Cloud), so branch staff could verify customers, transfer money and run reports smoothly.",
+          "Built microservices with RESTful APIs for transactions, customer checks and PDF/CSV reports, so staff could review balances and fund transfers.",
+          "Built the online shop checkout with MCash and PayMongo payments, so customers could pay and pick up orders.",
+          "Maintained the database logic behind transfers and reports (stored procedures, SQL) while mentoring teammates, reviewing code in Git and acting on feedback, so reports rolled up by branch and region.",
+          ],
+          links: [],
+        },
+        {
+          organization: "Content Management Platform",
+          role: "Project",
+          start: "Jan 2025",
+          end: "May 2025",
+          bullets: [
+          "Led a content platform from scratch (React), collaborating with the client's team and guiding developers, so staff could manage marketplace content from one screen.",
+          "Set up the Google Cloud DevOps pipeline (Docker, CI/CD), so every change was checked before going live.",
+          ],
+          links: [],
+        },
+        {
+          organization: "HR and Payroll Platform",
+          role: "Project",
+          start: "Feb 2026",
+          end: "Jun 2026",
+          bullets: [
+          "Led a full-stack HR and payroll system from scratch (TypeScript) using AI coding tools, with daily Agile standups, so companies could manage staff, leave and payroll in one place.",
+          "Added role-based access (RBAC), so each person sees only the data they need across staff, leave and payroll.",
+          ],
+          links: [],
+        },
+        {
+          organization: "Distributor Operations Platform",
+          role: "Project",
+          start: "May 2026",
+          end: "Jun 2026",
+          bullets: [
+          "Led a full-stack operations tool from scratch, setting priorities with the team and explaining choices to non-technical staff, so sales teams could track accounts, visits and reports in one place and export them when needed.",
+          ],
+          links: [],
+        },
+      ],
       links: [],
     },
   ],
   projects: [],
   leadership: [],
-  skills: [
-    {
-      label: "Languages",
-      items: ["TypeScript", "JavaScript", "SQL"],
-    },
-    {
-      label: "Web",
-      items: ["React", "React Native", "Next.js", "Node.js", "NestJS", "Tailwind CSS", "Strapi", "Zod"],
-    },
-    {
-      label: "Cloud & data",
-      items: [
-        "Google Cloud (GCP)",
-        "Firebase",
-        "MySQL",
-        "PostgreSQL",
-        "Drizzle ORM",
-        "Firestore",
-        "Firebase Storage",
-        "Vercel",
-      ],
-    },
-    {
-      label: "Practices",
-      items: ["Git", "Microservices", "Full-stack architecture", "developer tooling", "testing", "automation"],
-    },
-  ],
+  skills: [],
   interests: ["Product systems", "developer experience", "automation"],
   updatedAt: new Date("2026-06-30T00:00:00.000Z").toISOString(),
 } satisfies Resume;

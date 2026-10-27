@@ -122,7 +122,7 @@ function ExperienceBlock({ item, nested = false }: { item: ExperienceItem; neste
     <View style={nested ? styles.nestedRow : styles.row}>
       <View style={styles.roleLine}>
         <Text style={styles.italic}>
-          {item.role} at {item.organization}
+          {nested ? item.organization : `${item.role} at ${item.organization}`}
           {item.location && !nested ? `, ${item.location}` : ""}
         </Text>
         <Text style={styles.italic}>{formatDates(item.start, item.end)}</Text>
@@ -158,7 +158,7 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
           <View style={styles.contact}>
             {contactItems.map((item, index) => (
               <View key={item.text} style={styles.contactItem}>
-                {index > 0 ? <Text>|</Text> : null}
+                {index > 0 ? <Text>•</Text> : null}
                 {item.href ? (
                   <Link src={item.href} style={styles.link}>
                     {item.text}
@@ -171,27 +171,6 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
           </View>
           <Text>{resume.location}</Text>
         </View>
-
-        {resume.education.length > 0 ? (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Education</Text>
-            {resume.education.map((item) => (
-              <View key={`${item.institution}-${item.degree}`} style={styles.row}>
-                <View style={styles.roleLine}>
-                  <Text style={styles.educationText}>{item.degree}</Text>
-                  {item.dates ? <Text>{item.dates}</Text> : null}
-                </View>
-                <Text>
-                  {item.institution}
-                  {item.location ? `, ${item.location}` : ""}
-                </Text>
-                {item.details.map((detail) => (
-                  <Bullet key={detail}>{detail}</Bullet>
-                ))}
-              </View>
-            ))}
-          </View>
-        ) : null}
 
         {resume.experience.length > 0 ? (
           <View style={styles.section}>
@@ -225,6 +204,27 @@ export function ResumePdfDocument({ resume }: { resume: Resume }) {
             ))}
           </View>
         ) : null}
+        {resume.education.length > 0 ? (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Education</Text>
+            {resume.education.map((item) => (
+              <View key={`${item.institution}-${item.degree}`} style={styles.row}>
+                <View style={styles.roleLine}>
+                  <Text style={styles.educationText}>{item.degree}</Text>
+                  {item.dates ? <Text>{item.dates}</Text> : null}
+                </View>
+                <Text>
+                  {item.institution}
+                  {item.location ? `, ${item.location}` : ""}
+                </Text>
+                {item.details.map((detail) => (
+                  <Bullet key={detail}>{detail}</Bullet>
+                ))}
+              </View>
+            ))}
+          </View>
+        ) : null}
+
       </Page>
     </Document>
   );

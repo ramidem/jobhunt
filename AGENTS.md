@@ -4,6 +4,14 @@
 
 Use this workflow when a repo is added under `/Users/ramidem/Code/Github/resume-reference` and the goal is to turn that codebase into resume material.
 
+## Branch and Layout Rules (Cursor is also in this repo)
+
+Med works in this app through Cursor, so Claude stays out of the way.
+
+- Work only on the branch `resume/resume`, branched from `develop`. Do not commit to `main` or `develop`, and do not branch from `main`.
+- The job-hunt workspace pages are parked in `src/disabled/` (see `src/disabled/README.md`). Our work belongs there. Do not move anything out of `src/disabled/`, and do not re-enable pages under `src/app/` unless Med asks.
+- Pull `origin/develop` into `resume/resume` before starting new work, so Cursor's changes are picked up. Do not force-push.
+
 ## Public App Strategy
 
 The public app should show the most notable, evidence-backed work rather than trying to be every possible resume at once.
