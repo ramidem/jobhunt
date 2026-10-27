@@ -10,11 +10,16 @@ export function useSignIn() {
   async function signIn(email: string, password: string) {
     setBusy(true);
     setError(null);
-    const result = await authService().signIn(email, password);
-    if (!result.ok) {
-      setError(result.error);
+    try {
+      const result = await authService().signIn(email, password);
+      if (!result.ok) {
+        setError(result.error);
+      }
+    } catch {
+      setError("Could not reach the server. Try again.");
+    } finally {
+      setBusy(false);
     }
-    setBusy(false);
   }
 
   return { signIn, busy, error };

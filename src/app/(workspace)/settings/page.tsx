@@ -63,6 +63,17 @@ function AccountForm({ email, userId }: Readonly<{ email: string; userId: string
     }
 
     setBusy(true);
+    try {
+      await save(form, data, results);
+    } catch {
+      results.push({ ok: false, text: "Could not reach the server. Try again." });
+    } finally {
+      setBusy(false);
+      setMessages(results);
+    }
+  }
+
+  async function save(form: HTMLFormElement, data: FormData, results: Message[]) {
     if (usernameChanged) {
       const result = await updateUsername(userId, username);
       results.push(result.ok ? { ok: true, text: "Username updated." } : { ok: false, text: result.error });
@@ -79,8 +90,6 @@ function AccountForm({ email, userId }: Readonly<{ email: string; userId: string
         setNewPassword("");
       }
     }
-    setBusy(false);
-    setMessages(results);
   }
 
   return (
