@@ -86,3 +86,4 @@ Decisions made: multi-user, open email/password sign-up (Google later), Supabase
 - [ ] Learn: review every claim on the public resume the way an interviewer would, with cards for the tech (JavaScript, TypeScript, React, Node.js, SQL, REST, microservices, Docker, CI/CD, Git, Google Cloud), the approaches (pipeline, service boundaries, access control), and behavioral questions about each project and soft skill. Seeded 2026-10-20; keep adding.
 - [ ] Learning path: "Resume deep dive" comes first. Rehearse each project's what, why and how out loud, and the pipeline flow from pull request to deploy.
 - [ ] Scheduled Learn task: new cards prefer resume topics until the resume deep dive is covered.
+- [x] iPhone Home Screen: manifest `start_url` is `/` (`out/index.html`). `/dashboard/` is not in the static export, so the icon was opening the 404 page.

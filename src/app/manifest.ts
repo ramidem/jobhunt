@@ -7,7 +7,9 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Medimar Aduh · Job Hunt",
     short_name: "Job Hunt",
     description: "Resume and job-hunt workspace.",
-    start_url: "/dashboard/",
+    // Home Screen opens this URL as-is. `/` is out/index.html (200).
+    // `/dashboard/` is not exported, and `/index.html` is a 404.
+    start_url: "/",
     scope: "/",
     display: "standalone",
     background_color: "#f2f2f2",
