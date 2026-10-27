@@ -1,6 +1,7 @@
 import { getSupabase } from "@/lib/supabase";
 import { createAccountService } from "@/services/account";
 import { createAuthService } from "@/services/auth";
+import { createJobPostsService } from "@/services/job-posts";
 import { createProfileService } from "@/services/profile";
 import { createResumeContactService } from "@/services/resume-contact";
 
@@ -10,8 +11,10 @@ let auth: ReturnType<typeof createAuthService> | undefined;
 let profile: ReturnType<typeof createProfileService> | undefined;
 let account: ReturnType<typeof createAccountService> | undefined;
 let resumeContact: ReturnType<typeof createResumeContactService> | undefined;
+let jobPosts: ReturnType<typeof createJobPostsService> | undefined;
 
 export const authService = () => (auth ??= createAuthService(getSupabase()));
 export const profileService = () => (profile ??= createProfileService(getSupabase()));
 export const accountService = () => (account ??= createAccountService(getSupabase()));
 export const resumeContactService = () => (resumeContact ??= createResumeContactService(getSupabase()));
+export const jobPostsService = () => (jobPosts ??= createJobPostsService(getSupabase()));

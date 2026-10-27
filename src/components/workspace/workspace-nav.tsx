@@ -80,7 +80,7 @@ const groups: { name: string; links: NavLink[] }[] = [
 ];
 
 // Only these pages are routed for now; the rest are parked in src/disabled while auth is built.
-const enabledHrefs = new Set<string>();
+const enabledHrefs = new Set<string>(["/applications"]);
 
 const visibleGroups = groups
   .map((group) => ({ ...group, links: group.links.filter((link) => enabledHrefs.has(link.href)) }))

@@ -121,7 +121,7 @@ Schema, Row Level Security and database tests live in `supabase/`:
 
 - `supabase/migrations/`: plain SQL, applied in filename order (`<timestamp>_<name>.sql`).
 - `supabase/tests/database/`: pgTAP tests. `02_rls_coverage.test.sql` fails if a public table has no RLS or no policy.
-- `job_posts` is one saved posting per user. `url_norm` is computed in the database: tracking parameters are stripped, and a LinkedIn `currentJobId` (or `/jobs/view/<id>`) becomes `https://www.linkedin.com/jobs/view/<id>/`. The same normalized link cannot be saved twice by one user. Push this migration to the hosted project only after review (`npx supabase db push`).
+- `job_posts` is one saved posting per user. `url_norm` is computed in the database: tracking parameters are stripped, and a LinkedIn `currentJobId` (or `/jobs/view/<id>`) becomes `https://www.linkedin.com/jobs/view/<id>/`. The same normalized link cannot be saved twice by one user. `/applications` saves and lists those rows from the browser with `supabase-js` (no server route). Push this migration to the hosted project only after review (`npx supabase db push`).
 
 Commands (need Docker; the Supabase CLI is a dev dependency):
 

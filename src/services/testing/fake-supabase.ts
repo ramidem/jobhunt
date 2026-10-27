@@ -8,18 +8,21 @@ type Answer = { data?: unknown; error?: { message: string; code?: string } | nul
 // what was asked. Auth and rpc methods are vi.fn spies; use mockResolvedValueOnce to change an answer.
 export function createFakeSupabase() {
   const queryCalls: unknown[][] = [];
+  const queuedAnswers: Answer[] = [];
   let queryAnswer: Answer = {};
 
   const builder: Record<string, unknown> = {};
-  for (const method of ["select", "update", "eq", "maybeSingle"]) {
+  for (const method of ["select", "insert", "update", "eq", "order", "maybeSingle", "single"]) {
     builder[method] = (...args: unknown[]) => {
       queryCalls.push([method, ...args]);
       return builder;
     };
   }
   // The builder is awaitable, so both `await ...maybeSingle()` and `await ...eq()` resolve to the answer.
-  builder.then = (resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) =>
-    Promise.resolve({ data: null, error: null, ...queryAnswer }).then(resolve, reject);
+  builder.then = (resolve: (value: unknown) => unknown, reject: (reason: unknown) => unknown) => {
+    const next = queuedAnswers.length > 0 ? queuedAnswers.shift() : queryAnswer;
+    return Promise.resolve({ data: null, error: null, ...next }).then(resolve, reject);
+  };
 
   const fake = {
     from: vi.fn((table: string) => {
@@ -49,6 +52,10 @@ export function createFakeSupabase() {
     queryCalls,
     answerQuery: (answer: Answer) => {
       queryAnswer = answer;
+    },
+    // Answers the next awaited query, then the one after that. Falls back to answerQuery.
+    answerQueryOnce: (answer: Answer) => {
+      queuedAnswers.push(answer);
     },
   };
 }

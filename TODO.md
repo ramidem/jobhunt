@@ -48,7 +48,7 @@ These are open. Leave them as they are until Med decides.
 Saved postings move off the local SQLite server into Supabase `job_posts`. These migrations are in the repo only. Med applies them to the hosted project with `npx supabase db push` after review. Do not apply them from CI.
 
 - [x] Schema: `job_posts`, computed `url_norm`, RLS (`user_id = auth.uid()`), trigger that sets `needs_update` when a processed description changes and keeps `updated_at` current, pgTAP tests for cross-user isolation and duplicate-URL rejection.
-- [ ] Add-job form and list on the static export (client `supabase-js`, no server route), with the same URL normalization.
+- [x] Add-job form and list at `/applications` (behind `AuthGate`, client `supabase-js`, no server route). Zod checks the link, description and status. A duplicate shows "already saved" and links to the existing row. `src/lib/job-url.ts` matches `url_norm`.
 - [ ] Career role: read `new` / `needs_update` rows, `submit_extraction` for extracted fields only, no delete and no edits to `raw_description` or application status.
 
 Item 1b (companies, contacts, and the rest of the tracker tables) stays open. `job_posts` is the posting a person saves, not that full model.
