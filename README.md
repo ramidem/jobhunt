@@ -1,5 +1,11 @@
 # Job Hunt
 
+> **Frozen (2026-11-01).** Development moved into Med's OS (`bulakao-os`): the job-hunt workspace now lives at
+> `/jobhunt` there, its tables in the `jobhunt` schema of the OS database, and its API at `/api/jobhunt`. This repo is
+> kept for reference: the SQLite tracker (`data/tracker.db`), the parked pages in `src/disabled/`, the project
+> records in `projects/` and the public resume. Make new changes in the OS (see its `docs/apps.md` and `TODO.md`).
+> The Supabase project this repo used is being retired after its job posts are copied over.
+
 Two things live in this repo:
 
 1. **A public resume site** (Next.js, static export): the resume page, a PDF download, and a contact form that writes to Firestore from the browser. Phone and email are not in the export.
